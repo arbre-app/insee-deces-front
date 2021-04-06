@@ -1,0 +1,140 @@
+body.theme-light {
+    background-color: #f8f9fa;
+}
+
+body.theme-dark {
+    background-color: #1c1c1c;
+}
+
+body.theme-dark, .theme-dark .table, .theme-dark .input-group-text {
+    color: #f6f6f6;
+}
+
+.theme-dark .input-group-text {
+    background-color: #1c1c1c;
+}
+
+.icon {
+    /* Fixes icon alignment */
+    width: 1em;
+    height: 1em;
+    vertical-align: -.1em;
+    display: inline-block;
+}
+
+.block {
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.25rem;
+    padding: 20px;
+}
+
+.theme-light .block {
+    background-color: white;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.theme-dark .block {
+    background-color: #111111;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.4);
+}
+
+.theme-dark .nav-link.active {
+    background-color: #111111;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.theme-dark .nav-link:hover {
+    border: 1px solid gray;
+}
+
+.block-form {
+    margin-top: 20px;
+}
+
+.block-tab {
+    border-top-left-radius: 0;
+}
+
+.block-tab-results {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.tabs {
+    border-bottom: hidden;
+    margin-top: 10px;
+}
+
+table.result-table > thead > tr {
+    border-top: hidden;
+}
+
+.theme-light table.result-table > tbody:nth-child(odd) {
+    background: #f8f8f8;
+}
+
+.theme-dark table.result-table > tbody:nth-child(odd) {
+    background: #212121;
+}
+
+table.result-table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+.color-male {
+    color: #54aa98;
+}
+
+.color-female {
+    color: #755ea1;
+}
+
+.form-row > div {
+    padding: 5px 0;
+}
+
+.width-max {
+    width: 100%;
+}
+
+.link-dark {
+    text-decoration: none;
+}
+
+.theme-light .link-dark {
+    color: #6c757d;
+}
+
+.theme-light .link-dark:hover {
+    color: #212529;
+}
+
+.theme-dark .link-dark {
+    color: #bdbdbd;
+}
+
+.theme-dark .link-dark:hover {
+    color: #ffffff;
+}
+
+.results-per-page-select {
+    display: inline-block;
+}
+
+.theme-dark .form-control, .theme-dark .custom-select {
+    background-color: #2f2f2f;
+    border-color: #8d8d8d;
+    color: white;
+}
+
+.theme-dark .input-group-text, .theme-dark .page-link, .theme-dark .page-item .page-link {
+    border-color: #8d8d8d;
+}
+
+.theme-dark .page-link {
+    background-color: #2f2f2f;
+}
+
+.theme-dark .page-item.disabled .page-link {
+    background-color: #131313;
+}

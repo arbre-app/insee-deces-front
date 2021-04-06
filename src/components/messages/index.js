@@ -1,0 +1,1 @@
+export { NewsMessage } from './NewsMessage';
