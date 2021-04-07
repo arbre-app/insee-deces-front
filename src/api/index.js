@@ -1,18 +1,38 @@
 import qs from 'qs';
-
-export const ENDPOINT = 'https://insee.arbre.app';
+import { API_ENDPOINT } from '../config';
 
 export const EVENT_TYPE_BIRTH = 'birth';
 export const EVENT_TYPE_DEATH = 'death';
 export const ORDER_TYPE_ASCENDING = 'ascending';
 export const ORDER_TYPE_DESCENDING = 'descending';
 
+const FETCH_TIMEOUT = 10_000;
+
 function buildURL(root, parameters) {
-  return `${ENDPOINT}${root}?${qs.stringify(parameters)}`;
+  return `${API_ENDPOINT}${root}?${qs.stringify(parameters)}`;
+}
+
+function timeoutFetch(url) {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error('Timeout'));
+    }, FETCH_TIMEOUT);
+
+    fetch(url)
+      .then(result => result.json())
+      .then(value => {
+        clearTimeout(timer);
+        resolve(value);
+      })
+      .catch(reason => {
+        clearTimeout(timer);
+        reject(reason);
+      });
+  });
 }
 
 export function getPersons(offset, limit, surname, name, placeId, eventType, afterYear, beforeYear, orderType) {
-  return fetch(buildURL('/persons', {
+  return timeoutFetch(buildURL('/persons', {
     offset: offset,
     limit: limit,
     surname: surname,
@@ -26,21 +46,21 @@ export function getPersons(offset, limit, surname, name, placeId, eventType, aft
 }
 
 export function getPlaces(limit, queryPrefix) {
-  return fetch(buildURL('/places', {
+  return timeoutFetch(buildURL('/places', {
     limit: limit,
     prefix: queryPrefix,
   }));
 }
 
 export function getStatisticsGeography(surname, name) {
-  return fetch(buildURL('/stats/geography', {
+  return timeoutFetch(buildURL('/stats/geography', {
     surname: surname,
     name: name,
   }));
 }
 
 export function getStatisticsTime(surname, name, placeId, eventType) {
-  return fetch(buildURL('/stats/time', {
+  return timeoutFetch(buildURL('/stats/time', {
     surname: surname,
     name: name,
     place: placeId,

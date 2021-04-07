@@ -1,16 +1,22 @@
 import { Form } from 'react-bootstrap';
+import { Field, useForm } from 'react-final-form';
 
 export function GivenNameInput(props) {
   return (
-    <>
-      <Form.Label htmlFor="given" srOnly>
-        Prénom(s)
-      </Form.Label>
-      <Form.Control
-        id="given"
-        placeholder="Prénoms(s)"
-        {...props}
-      />
-    </>
+    <Field
+      name="givenName"
+      render={({ input }) => (
+        <>
+          <Form.Label htmlFor={input.name} srOnly>
+            Prénom(s)
+          </Form.Label>
+          <Form.Control
+            placeholder="Prénoms(s)"
+            {...props}
+            {...input}
+          />
+        </>
+      )}
+    />
   );
 }

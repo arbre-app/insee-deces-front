@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { Table } from 'react-bootstrap';
+import { FormattedDate } from 'react-intl';
 import { GenderFemale, GenderMale } from '../icons';
 
 export function ResultListTable({ results }) {
@@ -9,16 +10,16 @@ export function ResultListTable({ results }) {
     return (
       <tbody key={index}>
         <tr>
-          <td rowSpan={2} className="text-center"><GenderCmp className={`icon ${genderColor}`} /></td>
-          <td rowSpan={2}>{entry.surname}</td>
-          <td rowSpan={2}>{entry.name}</td>
+          <td rowSpan={2} className="text-center"><GenderCmp className={`icon icon-gender ${genderColor}`} /></td>
+          <td rowSpan={2}>{entry.nom}</td>
+          <td rowSpan={2}>{entry.prenom}</td>
           <td>Naissance</td>
-          <td>{entry.birthDate}</td>
+          <td><FormattedDate value={entry.birthDate} /></td>
           <td>{entry.birthPlace}</td>
         </tr>
         <tr>
           <td>Décès</td>
-          <td>{entry.deathDate}</td>
+          <td><FormattedDate value={entry.deathDate} /></td>
           <td>{entry.deathPlace}</td>
         </tr>
       </tbody>

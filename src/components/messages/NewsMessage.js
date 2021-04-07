@@ -6,10 +6,10 @@ export function NewsMessage() {
     <Alert variant="info" dismissible>
       <Row>
         <Col xs="x" className="my-auto">
-          <InfoCircleFill className="h4 ml-2" />
+          <InfoCircleFill className="ml-2" style={{ fontSize: '24px' }} />
         </Col>
         <Col>
-          L'interface a été entièrement réécrite et de nouvelles fonctionnalités ont été ajoutées ; n'hésitez pas à nous donner votre retour !
+          L'interface a été entièrement revue et de nouvelles fonctionnalités ont été ajoutées ; n'hésitez pas à nous donner votre retour.
           <br />
           Vous avez toujours la possibilité de revenir à <a href="#">l'ancienne version</a> si vous le désirez.
         </Col>

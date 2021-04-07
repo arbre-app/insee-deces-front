@@ -18,7 +18,7 @@ body.theme-dark, .theme-dark .table, .theme-dark .input-group-text {
     /* Fixes icon alignment */
     width: 1em;
     height: 1em;
-    vertical-align: -.1em;
+    vertical-align: -.15em;
     display: inline-block;
 }
 
@@ -137,4 +137,17 @@ table.result-table > tbody > tr > td {
 
 .theme-dark .page-item.disabled .page-link {
     background-color: #131313;
+}
+
+.icon-gender {
+    font-size: 24px;
+}
+
+table.result-table > tbody > tr > td {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.width-min {
+    min-width: 0 !important;
 }

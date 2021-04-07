@@ -1,82 +1,77 @@
-import { Form } from 'react-bootstrap';
+import { Button} from 'react-bootstrap';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
-import React, { useEffect, useState } from "react";
-
-const SEARCH_URI = 'https://api.github.com/search/users';
+import React, { useState } from "react";
+import { Field } from 'react-final-form';
+import { getPlaces } from '../api';
 
 export function SearchPlaceInput() {
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState([]);
-  const [selected, setSelected] = useState([]);
+  const [editing, setEditing] = useState(false);
+  const [query, setQuery] = useState('');
 
-  const handleSearch = (query) => {
+  const handleSearch = (currentQuery) => {
     setIsLoading(true);
+    setQuery(currentQuery);
 
-    fetch(`${SEARCH_URI}?q=${query}+in:login&page=1&per_page=50`)
-      .then((resp) => resp.json())
-      .then(({ items }) => {
-        const options = items.map((i) => ({
-          avatar_url: i.avatar_url,
-          id: i.id,
-          login: i.login,
-        }));
-
-        setOptions(options);
-        setIsLoading(false);
+    getPlaces(10, currentQuery)
+      .then(({ results }) => {
+        setQuery(q => {
+          if(q.startsWith(currentQuery)) {
+            setOptions(results);
+            setIsLoading(false);
+          }
+          return q;
+        });
       });
   };
 
-  // Bypass client-side filtering by returning `true`. Results are already
-  // filtered by the search endpoint, so no need to do it again.
   const filterBy = () => true;
 
   return (
-    <AsyncTypeahead
-      allowNew={false}
-      filterBy={filterBy}
-      id="async-example"
-      isLoading={isLoading}
-      labelKey="login"
-      minLength={3}
-      onSearch={handleSearch}
-      options={options}
-      placeholder="Search for a Github user..."
-      onBlur={e => {
-        console.log(selected, options);
-        /*if(!selected.length) {
-          setSelected([]);
-        }*/
-      }}
-      renderInput={({ inputRef, referenceElementRef, ...inputProps }) => (
-        <Form.Control
-          id="givenn"
-          placeholder="Prénoms(s)"
-          {...inputProps}
-          ref={(input) => {
-            // Be sure to correctly handle these refs. In many cases, both can simply receive
-            // the underlying input node, but `referenceElementRef can receive a wrapper node if
-            // your custom input is more complex (See TypeaheadInputMulti for an example).
-            inputRef(input);
-            referenceElementRef(input);
-          }}
-        />
-      )}
-      onChange={setSelected}
-      selected={selected}
-      renderMenuItemChildren={(option, props) => (
-        <>
-          <img
-            alt={option.login}
-            src={option.avatar_url}
-            style={{
-              height: '24px',
-              marginRight: '10px',
-              width: '24px',
-            }}
-          />
-          <span>{option.login}</span>
-        </>
-      )}
-    />
+    <>
+      <Field
+        name="placeId"
+        render={({ input: { name, value, onChange } }) =>
+          editing ? (
+            <AsyncTypeahead
+              filterBy={filterBy}
+              id={name}
+              isLoading={false} /* Fix */
+              labelKey="fullname"
+              minLength={1}
+              onSearch={handleSearch}
+              options={options}
+              placeholder="Lieu (commune, département, région ou pays)"
+              emptyLabel="Aucun lieu trouvé."
+              promptText="Entrez un lieu..."
+              searchText="Recherche en cours..."
+              autoFocus
+              highlightOnlyResult
+              onBlur={() => {
+                setEditing(false);
+              }}
+              onChange={value => {
+                onChange(value);
+                setOptions(value);
+                if(value.length) {
+                  setEditing(false);
+                }
+              }}
+              selected={value}
+              renderMenuItemChildren={(option, props) => (
+                <>
+                  <span className={isLoading ? 'text-muted' : null}>{option.fullname}</span>
+                </>
+              )}
+            />
+          ) : (
+            <Button variant="light" className="text-left width-max text-nowrap overflow-hidden" onClick={() => setEditing(true)}>
+              {value.length ? value[0].fullname : <span className="text-muted">Lieu (commune, département, région ou pays)</span>}
+            </Button>
+          )
+        }
+      />
+    </>
   );
 }

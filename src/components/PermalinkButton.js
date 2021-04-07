@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
-import { Link45deg } from 'react-bootstrap-icons';
+import { PinFill } from 'react-bootstrap-icons';
 
 export function PermalinkButton({ url }) {
   return (
@@ -17,7 +17,7 @@ export function PermalinkButton({ url }) {
       }
     >
       <Button variant="info">
-        <Link45deg className="icon" />
+        <PinFill className="icon" />
       </Button>
     </OverlayTrigger>
   );
