@@ -31,7 +31,7 @@ export function SearchPlaceInput() {
   return (
     <>
       <Field
-        name="placeId"
+        name="place"
         render={({ input: { name, value, onChange } }) =>
           editing ? (
             <AsyncTypeahead

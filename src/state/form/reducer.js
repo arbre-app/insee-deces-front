@@ -12,14 +12,14 @@ export default (state = initialState, action) => {
     case LOADING:
       return {
         loading: true,
-        form: { ...state.form, ...action.form },
+        form: state.form,
         data: state.data,
         error: null,
       };
     case SUCCESS:
       return {
         loading: false,
-        form: state.form,
+        form: { ...state.form, ...action.form },
         data: action.data,
         error: null,
       };
@@ -34,10 +34,10 @@ export default (state = initialState, action) => {
       return {
         ...initialState,
         form: {
-          resultsPerPage: state.resultsPerPage,
+          resultsPerPage: state.resultsPerPage, // Preserve this parameter
         },
       };
     default:
-      return initialState;
+      return state;
   }
 };

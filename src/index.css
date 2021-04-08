@@ -151,3 +151,7 @@ table.result-table > tbody > tr > td {
 .width-min {
     min-width: 0 !important;
 }
+
+.container-geography > svg {
+    overflow: visible;
+}

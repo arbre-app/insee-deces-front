@@ -1,22 +1,22 @@
 import PropTypes from 'prop-types';
-import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
+import { Button, FormControl, OverlayTrigger, Popover } from 'react-bootstrap';
 import { PinFill } from 'react-bootstrap-icons';
 
-export function PermalinkButton({ url }) {
+export function PermalinkButton({ url, ...props }) {
   return (
     <OverlayTrigger
       trigger="click"
       placement="top"
       overlay={
         <Popover id="popover-permalink">
-          <Popover.Title as="h3">abc</Popover.Title>
+          <Popover.Title as="h3">Permalien vers cette recherche</Popover.Title>
           <Popover.Content>
-            <strong>Holy guacamole!</strong> Check this info.
+            <FormControl />
           </Popover.Content>
         </Popover>
       }
     >
-      <Button variant="info">
+      <Button variant="info" {...props}>
         <PinFill className="icon" />
       </Button>
     </OverlayTrigger>

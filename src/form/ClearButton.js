@@ -2,7 +2,7 @@ import { Button } from 'react-bootstrap';
 import { ArrowCounterclockwise} from 'react-bootstrap-icons';
 import { useForm } from 'react-final-form';
 import { useDispatch } from 'react-redux';
-import { clearForm } from '../state/actions';
+import { clearForm } from '../state/form/actions';
 
 export function ClearButton() {
   const form = useForm();

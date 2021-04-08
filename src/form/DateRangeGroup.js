@@ -1,5 +1,4 @@
 import { Form, FormControl, InputGroup } from 'react-bootstrap';
-import { ArrowDownUp } from 'react-bootstrap-icons';
 import { Field, useForm } from 'react-final-form';
 
 export const RANGE_BETWEEN = "between";

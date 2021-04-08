@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import { Pagination } from 'react-bootstrap';
+import { FormattedNumber } from 'react-intl';
 
-export function SmallPagination({ currentPage, totalPages }) {
+export function SmallPagination({ currentPage, totalPages, onChange }) {
   const renderPageItems = () => {
     const pages = [];
     if(totalPages <= 7) { // Display all page buttons
@@ -9,34 +10,36 @@ export function SmallPagination({ currentPage, totalPages }) {
     } else {
       if(currentPage <= 3) {
         for(let i = 1; i <= 5; i++) pages.push(i);
-        pages.push(null);
+        pages.push(-1);
         pages.push(totalPages);
       } else if(totalPages - currentPage <= 3) {
         pages.push(1);
-        pages.push(null);
+        pages.push(-1);
         for(let i = totalPages - 4; i <= totalPages; i++) pages.push(i);
       } else {
         pages.push(1);
-        pages.push(null);
+        pages.push(-1);
         for(let i = -1; i <= 1; i++) pages.push(currentPage + i);
-        pages.push(null);
+        pages.push(-2);
         pages.push(totalPages);
       }
     }
-    return pages.map(page => page !== null ? (
-      <Pagination.Item key={page} active={page === currentPage}>
-        {page}
+    return pages.map(page => page > 0 ? (
+      <Pagination.Item key={page} active={page === currentPage} onClick={() => page !== currentPage && onChange(page)}>
+        <FormattedNumber value={page} />
       </Pagination.Item>
     ) : (
-      <Pagination.Ellipsis key={-1} disabled={true} />
+      <Pagination.Ellipsis key={page} disabled={true} />
     ));
   };
 
+  const isFirst = currentPage <= 1, isLast = currentPage >= totalPages;
+
   return (
     <Pagination className="justify-content-center">
-      <Pagination.Prev disabled={currentPage <= 1} />
+      <Pagination.Prev disabled={isFirst} onClick={() => !isFirst && onChange(currentPage - 1)} />
       {renderPageItems()}
-      <Pagination.Next disabled={currentPage >= totalPages} />
+      <Pagination.Next disabled={isLast} onClick={() => !isLast && onChange(currentPage + 1)} />
     </Pagination>
   );
 }
@@ -44,4 +47,5 @@ export function SmallPagination({ currentPage, totalPages }) {
 SmallPagination.propTypes = {
   currentPage: PropTypes.number.isRequired,
   totalPages: PropTypes.number.isRequired,
+  onChange: PropTypes.func.isRequired,
 };

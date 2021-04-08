@@ -1,5 +1,5 @@
-import { getPersons } from '../api';
-import { RANGE_ABOUT, RANGE_BETWEEN, RANGE_EXACT } from '../form/DateRangeGroup';
+import { getPersons } from '../../api';
+import { RANGE_ABOUT, RANGE_BETWEEN, RANGE_EXACT } from '../../form/DateRangeGroup';
 
 export const LOADING = 'form/LOADING';
 export const SUCCESS = 'form/SUCCESS';
@@ -14,7 +14,6 @@ const triggerUpdate = async (dispatch, getState, newData) => {
   };
   dispatch({
     type: LOADING,
-    form: data,
   });
   let yearAfter = '', yearBefore = '';
   if(data.rangeType === RANGE_BETWEEN) {
@@ -39,15 +38,15 @@ const triggerUpdate = async (dispatch, getState, newData) => {
       data.currentPage - 1,
       data.resultsPerPage,
       data.surname,
-      data.name,
-      data.placeId,
+      data.givenName,
+      data.place.length ? data.place[0].id : '',
       data.sortBy,
       yearAfter,
       yearBefore,
       data.sortOrder,
     );
   } catch (error) {
-    console.log(error);
+    console.error(error);
     dispatch({
       type: ERROR,
       error: error,
@@ -56,6 +55,7 @@ const triggerUpdate = async (dispatch, getState, newData) => {
   }
   dispatch({
     type: SUCCESS,
+    form: data,
     data: result,
   });
 };
