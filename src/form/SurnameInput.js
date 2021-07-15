@@ -1,7 +1,8 @@
+import PropTypes from 'prop-types';
 import { Form } from 'react-bootstrap';
 import { Field } from 'react-final-form';
 
-export function SurnameInput(props) {
+export function SurnameInput({ disabled }) {
   return (
     <Field
       name="surname"
@@ -14,7 +15,7 @@ export function SurnameInput(props) {
           <Form.Control
             required
             placeholder="Nom(s) (requis)"
-            {...props}
+            disabled={disabled}
             {...input}
           />
         </>
@@ -22,3 +23,7 @@ export function SurnameInput(props) {
     />
   );
 }
+
+SurnameInput.propTypes = {
+  disabled: PropTypes.bool.isRequired,
+};

@@ -27,7 +27,7 @@ export function Footer() {
           </em>
         </Col>
         <Col xs={12} className="mt-2">
-          <a href="https://github.com/arbre-app/insee-deces-front" rel="noreferrer" className="link-dark">
+          <a href="https://github.com/arbre-app/insee-deces-front" target="_blank" rel="noreferrer" className="link-dark">
             <Github className="icon h2" />
           </a>
         </Col>

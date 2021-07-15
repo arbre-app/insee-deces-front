@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Button, FormControl, OverlayTrigger, Popover } from 'react-bootstrap';
 import { PinFill } from 'react-bootstrap-icons';
 
-export function PermalinkButton({ url, ...props }) {
+export function PermalinkButton({ url, disabled, ...props }) {
   return (
     <OverlayTrigger
       trigger="click"
@@ -16,7 +16,7 @@ export function PermalinkButton({ url, ...props }) {
         </Popover>
       }
     >
-      <Button variant="info" {...props}>
+      <Button variant="info" disabled={disabled} {...props}>
         <PinFill className="icon" />
       </Button>
     </OverlayTrigger>
@@ -25,4 +25,5 @@ export function PermalinkButton({ url, ...props }) {
 
 PermalinkButton.propTypes = {
   url: PropTypes.string.isRequired,
+  disabled: PropTypes.bool.isRequired,
 };

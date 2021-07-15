@@ -8,7 +8,7 @@ import { AdvancedConfigurationButton } from './AdvancedConfigurationButton';
 import { DownloadButton } from './DownloadButton';
 import { PermalinkButton } from './PermalinkButton';
 import { ResultListTable } from './ResultListTable';
-import { SmallPagination } from './SmallPagination';
+import { SmallPagination } from '../form/SmallPagination';
 
 export function BlockResultTabList() {
   const formState = useSelector(state => state.form);
@@ -16,12 +16,13 @@ export function BlockResultTabList() {
   const setCurrentPageDispatch = currentPage => dispatch(setCurrentPage(currentPage));
   const data = formState.data, formData = formState.form;
   const totalPages = Math.ceil(data.count / formData.resultsPerPage);
+  const isLoading = formState.loading;
   return (
     <div className="block block-tab block-tab-results pb-1 pt-2">
       <Row className="px-2">
         <Col sm={3}>
-          <PermalinkButton url={"abcdef"} className="mr-2" />
-          <DownloadButton />
+          <PermalinkButton url={"abcdef"} disabled={isLoading} className="mr-2" />
+          <DownloadButton disabled={isLoading} />
         </Col>
         <Col sm={9} className="text-right">
           <strong><FormattedNumber value={data.count} /> résultats</strong>{' '}
@@ -29,14 +30,14 @@ export function BlockResultTabList() {
           Page <FormattedNumber value={formData.currentPage} /> sur <FormattedNumber value={Math.max(totalPages, 1)} />{' '}
           &middot;
           Résultats par page :{' '}
-          <ResultsPerPageSelect values={RESULTS_PER_PAGE} />
+          <ResultsPerPageSelect values={RESULTS_PER_PAGE} disabled={isLoading} />
           <AdvancedConfigurationButton className="ml-2" />
         </Col>
       </Row>
       {data.count > 0 ? (
         <>
           <ResultListTable results={data.results} />
-          <SmallPagination currentPage={formData.currentPage} totalPages={totalPages} onChange={setCurrentPageDispatch} />
+          <SmallPagination currentPage={formData.currentPage} totalPages={totalPages} onChange={setCurrentPageDispatch} disabled={isLoading} />
         </>
       ) : (
         <div className="text-center mt-2">

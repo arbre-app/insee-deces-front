@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Pagination } from 'react-bootstrap';
 import { FormattedNumber } from 'react-intl';
 
-export function SmallPagination({ currentPage, totalPages, onChange }) {
+export function SmallPagination({ currentPage, totalPages, onChange, disabled }) {
   const renderPageItems = () => {
     const pages = [];
     if(totalPages <= 7) { // Display all page buttons
@@ -25,7 +25,7 @@ export function SmallPagination({ currentPage, totalPages, onChange }) {
       }
     }
     return pages.map(page => page > 0 ? (
-      <Pagination.Item key={page} active={page === currentPage} onClick={() => page !== currentPage && onChange(page)}>
+      <Pagination.Item key={page} active={page === currentPage} onClick={() => page !== currentPage && onChange(page)} disabled={disabled}>
         <FormattedNumber value={page} />
       </Pagination.Item>
     ) : (
@@ -37,9 +37,9 @@ export function SmallPagination({ currentPage, totalPages, onChange }) {
 
   return (
     <Pagination className="justify-content-center">
-      <Pagination.Prev disabled={isFirst} onClick={() => !isFirst && onChange(currentPage - 1)} />
+      <Pagination.Prev disabled={isFirst || disabled} onClick={() => !isFirst && onChange(currentPage - 1)} />
       {renderPageItems()}
-      <Pagination.Next disabled={isLast} onClick={() => !isLast && onChange(currentPage + 1)} />
+      <Pagination.Next disabled={isLast || disabled} onClick={() => !isLast && onChange(currentPage + 1)} />
     </Pagination>
   );
 }
@@ -48,4 +48,5 @@ SmallPagination.propTypes = {
   currentPage: PropTypes.number.isRequired,
   totalPages: PropTypes.number.isRequired,
   onChange: PropTypes.func.isRequired,
+  disabled: PropTypes.bool.isRequired,
 };

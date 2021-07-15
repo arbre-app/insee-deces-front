@@ -27,8 +27,6 @@
     "react-helmet": "^6.1.0",
     "react-intl": "^5.10.16",
     "react-redux": "^7.2.1",
-    "react-router-bootstrap": "^0.25.0",
-    "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0"

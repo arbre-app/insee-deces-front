@@ -1,10 +1,11 @@
+import PropTypes from 'prop-types';
 import { Button} from 'react-bootstrap';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import React, { useState } from "react";
 import { Field } from 'react-final-form';
 import { getPlaces } from '../api';
 
-export function SearchPlaceInput() {
+export function SearchPlaceInput({ disabled }) {
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState([]);
   const [editing, setEditing] = useState(false);
@@ -33,7 +34,7 @@ export function SearchPlaceInput() {
       <Field
         name="place"
         render={({ input: { name, value, onChange } }) =>
-          editing ? (
+          editing && !disabled ? (
             <AsyncTypeahead
               filterBy={filterBy}
               id={name}
@@ -66,7 +67,7 @@ export function SearchPlaceInput() {
               )}
             />
           ) : (
-            <Button variant="light" className="text-left width-max text-nowrap overflow-hidden" onClick={() => setEditing(true)}>
+            <Button variant="light" className="text-left width-max text-nowrap overflow-hidden" onClick={() => setEditing(true)} disabled={disabled}>
               {value.length ? value[0].fullname : <span className="text-muted">Lieu (commune, département, région ou pays)</span>}
             </Button>
           )
@@ -75,3 +76,7 @@ export function SearchPlaceInput() {
     </>
   );
 }
+
+SearchPlaceInput.propTypes = {
+  disabled: PropTypes.bool.isRequired,
+};

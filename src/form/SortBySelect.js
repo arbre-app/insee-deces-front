@@ -1,9 +1,10 @@
+import PropTypes from 'prop-types';
 import { Form, InputGroup } from 'react-bootstrap';
 import { FunnelFill } from 'react-bootstrap-icons';
 import { Field } from 'react-final-form';
 import { EVENT_TYPE_BIRTH, EVENT_TYPE_DEATH } from '../api';
 
-export function SortBySelect() {
+export function SortBySelect({ disabled }) {
   return (
     <Field
       name="sortBy"
@@ -21,6 +22,7 @@ export function SortBySelect() {
             <Form.Control
               as="select"
               custom
+              disabled={disabled}
               {...input}
             >
               <option value={EVENT_TYPE_BIRTH}>Naissance</option>
@@ -32,3 +34,7 @@ export function SortBySelect() {
     />
   );
 }
+
+SortBySelect.propTypes = {
+  disabled: PropTypes.bool.isRequired,
+};

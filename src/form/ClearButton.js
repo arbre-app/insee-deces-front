@@ -1,10 +1,11 @@
+import PropTypes from 'prop-types';
 import { Button } from 'react-bootstrap';
 import { ArrowCounterclockwise} from 'react-bootstrap-icons';
 import { useForm } from 'react-final-form';
 import { useDispatch } from 'react-redux';
 import { clearForm } from '../state/form/actions';
 
-export function ClearButton() {
+export function ClearButton({ disabled }) {
   const form = useForm();
   const dispatch = useDispatch();
   const clearFormDispatch = () => dispatch(clearForm());
@@ -14,7 +15,7 @@ export function ClearButton() {
   };
 
   return (
-    <Button variant="light" disabled={form.loading} className="width-max" onClick={handleClick}>
+    <Button variant="light" disabled={disabled} className="width-max" onClick={handleClick}>
       <ArrowCounterclockwise className="icon" />
       <span className="ml-2 d-inline d-md-none d-lg-inline">
         Réinitialiser
@@ -22,3 +23,7 @@ export function ClearButton() {
     </Button>
   );
 }
+
+ClearButton.propTypes = {
+  disabled: PropTypes.bool.isRequired,
+};

@@ -9,4 +9,4 @@ export { GeographyVisualization } from './GeographyVisualization';
 export { Header } from './Header';
 export { PermalinkButton } from './PermalinkButton';
 export { ResultListTable } from './ResultListTable';
-export { SmallPagination } from './SmallPagination';
+export { SmallPagination } from '../form/SmallPagination';

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Form, FormControl, InputGroup } from 'react-bootstrap';
 import { Field, useForm } from 'react-final-form';
 
@@ -5,7 +6,7 @@ export const RANGE_BETWEEN = "between";
 export const RANGE_EXACT = "exact";
 export const RANGE_ABOUT = "about";
 
-export function DateRangeGroup() {
+export function DateRangeGroup({ disabled }) {
   // TODO missing label
   const form = useForm();
   const type = form.getState().values.rangeType;
@@ -17,6 +18,7 @@ export function DateRangeGroup() {
           <Form.Control
             as="select"
             custom
+            disabled={disabled}
             {...input}
           >
             <option value={RANGE_BETWEEN}>Entre</option>
@@ -30,12 +32,12 @@ export function DateRangeGroup() {
           <Field
             name="yearAfter"
             render={({ input }) => (
-              <FormControl type="number" placeholder="Année" {...input} />
+              <FormControl type="number" placeholder="Année" disabled={disabled} {...input} />
             )} />
           <Field
             name="yearBefore"
             render={({ input }) => (
-              <FormControl type="number" placeholder="Année" {...input} />
+              <FormControl type="number" placeholder="Année" disabled={disabled} {...input} />
             )} />
         </>
       )}
@@ -44,7 +46,7 @@ export function DateRangeGroup() {
           <Field
             name="year"
             render={({ input }) => (
-              <FormControl type="number" placeholder="Année" {...input} />
+              <FormControl type="number" placeholder="Année" disabled={disabled} {...input} />
             )} />
         </>
       )}
@@ -53,7 +55,7 @@ export function DateRangeGroup() {
           <Field
             name="year"
             render={({ input }) => (
-              <FormControl type="number" placeholder="Année" {...input} />
+              <FormControl type="number" placeholder="Année" disabled={disabled} {...input} />
             )} />
           <div className="input-group-prepend input-group-append">
             <span className="input-group-text user-select-none">
@@ -63,10 +65,14 @@ export function DateRangeGroup() {
           <Field
             name="yearPlusMinus"
             render={({ input }) => (
-              <FormControl type="number" placeholder="Année(s)" {...input} />
+              <FormControl type="number" placeholder="Année(s)" disabled={disabled} {...input} />
             )} />
         </>
       )}
     </InputGroup>
   );
 }
+
+DateRangeGroup.propTypes = {
+  disabled: PropTypes.bool.isRequired,
+};
