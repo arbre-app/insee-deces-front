@@ -14,15 +14,24 @@ function buildURL(root, parameters) {
 
 function timeoutFetch(url) {
   return new Promise((resolve, reject) => {
+    const controller = new AbortController();
+    const signal = controller.signal;
     const timer = setTimeout(() => {
+      controller.abort();
       reject(new Error('Timeout'));
     }, FETCH_TIMEOUT);
 
-    fetch(url)
+    fetch(url, { signal })
       .then(result => result.json())
       .then(value => {
         clearTimeout(timer);
-        resolve(value);
+        if (value.code >= 200 && value.code < 400) {
+          resolve(value);
+        } else if (value.code === 503) {
+          reject(new Error()); // TODO
+        } else {
+          reject(new Error());
+        }
       })
       .catch(reason => {
         clearTimeout(timer);

@@ -4,6 +4,7 @@ export const initialState = {
   loading: false,
   form: null,
   data: null,
+  warnings: null,
   error: null,
 };
 
@@ -14,6 +15,7 @@ export default (state = initialState, action) => {
         loading: true,
         form: state.form,
         data: state.data,
+        warnings: null,
         error: null,
       };
     case SUCCESS:
@@ -21,6 +23,7 @@ export default (state = initialState, action) => {
         loading: false,
         form: { ...state.form, ...action.form },
         data: action.data,
+        warnings: action.warnings,
         error: null,
       };
     case ERROR:
@@ -28,6 +31,7 @@ export default (state = initialState, action) => {
         loading: false,
         form: state.form,
         data: null,
+        warnings: null,
         error: action.error,
       };
     case CLEAR_SEARCH:

@@ -26,7 +26,7 @@ export function BlockForm() {
 
   const renderForm = ({ handleSubmit, values, initialValues }) => {
     const unsubmittable = !values.surname || !values.surname.trim();
-    const modified = !deepEqual(values, initialValues);
+    const modified = !deepEqual(values, initialValues, false);
 
     const formState = useSelector(state => state.form);
     const isLoading = formState.loading;
@@ -74,7 +74,7 @@ export function BlockForm() {
     <div className="block block-form">
       <FinalForm
         onSubmit={onSubmit}
-        initialValues={{ surname: '', givenName: '', place: [], sortBy: EVENT_TYPE_BIRTH, rangeType: RANGE_BETWEEN, yearPlusMinus: 5, sortOrder: ORDER_TYPE_ASCENDING, resultsPerPage: RESULTS_PER_PAGE[0] }}
+        initialValues={{ surname: undefined, givenName: undefined, place: [], sortBy: EVENT_TYPE_BIRTH, rangeType: RANGE_BETWEEN, yearPlusMinus: '5', sortOrder: ORDER_TYPE_ASCENDING, resultsPerPage: RESULTS_PER_PAGE[0] }}
         render={renderForm}
       />
     </div>

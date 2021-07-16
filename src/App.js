@@ -1,12 +1,13 @@
+import { useState } from 'react';
 import { Container} from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
 import { useSelector } from 'react-redux';
-import { BlockForm, BlockResultTabs, Footer, Header } from './components';
-import { NewsMessage } from './components/messages';
+import { BlockForm, BlockInformation, BlockResultTabs, Footer, Header, Messages } from './components';
 
 function App() {
 
   const themeState = useSelector(state => state.theme);
+  const [isInformationVisible, setInformationVisible] = useState(false);
 
   return (
     <Container>
@@ -16,13 +17,19 @@ function App() {
 
       <Header />
 
-      <NewsMessage />
+      {isInformationVisible ? (
+        <BlockInformation onBackClick={() => setInformationVisible(false)} />
+      ) : (
+        <>
+          <Messages />
 
-      <BlockForm />
+          <BlockForm />
 
-      <BlockResultTabs />
+          <BlockResultTabs />
+        </>
+      )}
 
-      <Footer />
+      <Footer onInformationClick={() => setInformationVisible(true)} />
     </Container>
   );
 }

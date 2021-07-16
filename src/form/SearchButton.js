@@ -12,7 +12,7 @@ export function SearchButton({ disabled }) {
     </Button>
   );
   const renderTooltip = (
-    <Tooltip id="submit-warning">Vous devez entrer au moins un nom</Tooltip>
+    <Tooltip id="submit-warning">Vous devez entrer au moins un nom pour lancer une recherche</Tooltip>
   );
   return (
     <>

@@ -1,8 +1,8 @@
 /* Taken from https://dmitripavlutin.com/how-to-compare-objects-in-javascript/ */
-export function deepEqual(object1, object2) {
+export function deepEqual(object1, object2, strict = true) {
   const keys1 = Object.keys(object1), keys2 = Object.keys(object2);
 
-  if (keys1.length !== keys2.length) {
+  if (strict && keys1.length !== keys2.length) {
     return false;
   }
 

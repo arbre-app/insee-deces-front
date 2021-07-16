@@ -2,8 +2,10 @@ import PropTypes from 'prop-types';
 import { Form, FormControl, InputGroup } from 'react-bootstrap';
 import { Field, useForm } from 'react-final-form';
 
-export const RANGE_BETWEEN = "between";
 export const RANGE_EXACT = "exact";
+export const RANGE_BETWEEN = "between";
+export const RANGE_AFTER = "after";
+export const RANGE_BEFORE = "before";
 export const RANGE_ABOUT = "about";
 
 export function DateRangeGroup({ disabled }) {
@@ -21,12 +23,23 @@ export function DateRangeGroup({ disabled }) {
             disabled={disabled}
             {...input}
           >
-            <option value={RANGE_BETWEEN}>Entre</option>
             <option value={RANGE_EXACT}>En</option>
+            <option value={RANGE_BETWEEN}>Entre</option>
+            <option value={RANGE_AFTER}>Après</option>
+            <option value={RANGE_BEFORE}>Avant</option>
             <option value={RANGE_ABOUT}>Vers</option>
           </Form.Control>
         )}
       />
+      {(type === RANGE_EXACT || type === RANGE_AFTER || type === RANGE_BEFORE || type === RANGE_ABOUT) && (
+        <>
+          <Field
+            name="year"
+            render={({ input }) => (
+              <FormControl type="number" placeholder="Année" disabled={disabled} {...input} />
+            )} />
+        </>
+      )}
       {type === RANGE_BETWEEN && (
         <>
           <Field
@@ -41,22 +54,8 @@ export function DateRangeGroup({ disabled }) {
             )} />
         </>
       )}
-      {type === RANGE_EXACT && (
-        <>
-          <Field
-            name="year"
-            render={({ input }) => (
-              <FormControl type="number" placeholder="Année" disabled={disabled} {...input} />
-            )} />
-        </>
-      )}
       {type === RANGE_ABOUT && (
         <>
-          <Field
-            name="year"
-            render={({ input }) => (
-              <FormControl type="number" placeholder="Année" disabled={disabled} {...input} />
-            )} />
           <div className="input-group-prepend input-group-append">
             <span className="input-group-text user-select-none">
               &plusmn;
@@ -65,7 +64,7 @@ export function DateRangeGroup({ disabled }) {
           <Field
             name="yearPlusMinus"
             render={({ input }) => (
-              <FormControl type="number" placeholder="Année(s)" disabled={disabled} {...input} />
+              <FormControl type="number" placeholder="Année(s)" min={0} disabled={disabled} {...input} />
             )} />
         </>
       )}

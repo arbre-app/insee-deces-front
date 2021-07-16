@@ -1,9 +1,10 @@
+import PropTypes from 'prop-types';
 import { Col, Row } from 'react-bootstrap';
 import { Github, InfoCircleFill } from 'react-bootstrap-icons';
 import { FormattedDate, FormattedNumber } from 'react-intl';
 import { DB_LAST_UPDATE, DB_TOTAL_RECORDS } from '../config';
 
-export function Footer() {
+export function Footer({ onInformationClick }) {
   return (
     <>
       <Row className="text-center mt-3">
@@ -11,7 +12,10 @@ export function Footer() {
           La base contient <strong><FormattedNumber value={DB_TOTAL_RECORDS} /></strong> fiches (<em><FormattedDate value={DB_LAST_UPDATE} month="long" year="numeric" /></em>)
         </Col>
         <Col xs={12}>
-          <a href="#">
+          <a href="#" onClick={e => {
+            e.preventDefault();
+            onInformationClick();
+          }}>
             <InfoCircleFill className="icon mr-2"/>
             <strong>
               Informations
@@ -35,3 +39,7 @@ export function Footer() {
     </>
   );
 }
+
+Footer.propTypes = {
+  onInformationClick: PropTypes.func.isRequired,
+};
