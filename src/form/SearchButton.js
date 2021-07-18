@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Search } from 'react-bootstrap-icons';
 
-export function SearchButton({ disabled }) {
+export function SearchButton({ disabled, isLoading }) {
   const renderButton = (
     <Button type="submit" disabled={disabled} className="width-max">
       <Search className="icon" />
@@ -16,7 +16,7 @@ export function SearchButton({ disabled }) {
   );
   return (
     <>
-      {disabled && (
+      {disabled && !isLoading && (
         <OverlayTrigger
           placement="top"
           delay={{ hide: 200 }}
@@ -33,4 +33,5 @@ export function SearchButton({ disabled }) {
 
 SearchButton.propTypes = {
   disabled: PropTypes.bool.isRequired,
+  isLoading: PropTypes.bool.isRequired,
 };

@@ -35,7 +35,7 @@ export function DateRangeGroup({ disabled }) {
           </Form.Control>
         )}
       />
-      {(type === RANGE_EXACT || type === RANGE_ABOUT) && (
+      {(type === RANGE_EXACT || type === RANGE_ABOUT || type === RANGE_AFTER || type === RANGE_BEFORE) && (
         <Field
           name="year"
           render={({ input }) => (
@@ -43,21 +43,21 @@ export function DateRangeGroup({ disabled }) {
           )}
         />
       )}
-      {(type === RANGE_AFTER || type === RANGE_BETWEEN) && (
-        <Field
-          name="yearAfter"
-          render={({ input }) => (
-            <FormControl type="number" placeholder="Année" disabled={disabled} {...input} />
-          )}
-        />
-      )}
-      {(type === RANGE_BEFORE || type === RANGE_BETWEEN) && (
-        <Field
-          name="yearBefore"
-          render={({ input }) => (
-            <FormControl type="number" placeholder="Année" disabled={disabled} {...input} />
-          )}
-        />
+      {(type === RANGE_BETWEEN) && (
+        <>
+          <Field
+            name="yearAfter"
+            render={({ input }) => (
+              <FormControl type="number" placeholder="Année" disabled={disabled} {...input} />
+            )}
+          />
+          <Field
+            name="yearBefore"
+            render={({ input }) => (
+              <FormControl type="number" placeholder="Année" disabled={disabled} {...input} />
+            )}
+          />
+        </>
       )}
       {type === RANGE_ABOUT && (
         <>

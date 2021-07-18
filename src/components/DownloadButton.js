@@ -183,7 +183,7 @@ export function DownloadButton({ disabled, ...props }) {
                   <>
                     Tous les résultats {renderCountPreview(formState.data.count)}
                     {!canExportAll && (
-                      <span className="text-warning"><ExclamationTriangleFill className="icon ml-3 mr-2" /><em>Limite dépassée</em></span>
+                      <span className="text-warning"><ExclamationTriangleFill className="icon ml-3 mr-2" />> <FormattedNumber value={MAX_EXPORT_COUNT} /></span>
                     )}
                   </>
                 )} {...input} />

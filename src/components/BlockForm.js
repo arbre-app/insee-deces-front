@@ -68,7 +68,7 @@ export function BlockForm() {
             <SearchPlaceInput disabled={isLoading} />
           </Col>
           <Col xs={{ order: 2 }} md={{ span: 1, order: 0 }} lg={2}>
-            <SearchButton disabled={unsubmittable || isLoading} />
+            <SearchButton disabled={unsubmittable || isLoading} isLoading={isLoading} />
           </Col>
           <Col md={3} xl={{ offset: 1, span: 2 }}>
             <SortBySelect disabled={isLoading} />

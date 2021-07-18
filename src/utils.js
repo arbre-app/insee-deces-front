@@ -20,3 +20,21 @@ export function deepEqual(object1, object2, strict = true) {
 function isObject(object) {
   return object != null && typeof object === 'object';
 }
+
+// (c) Tim Down & community (CC BY-SA 2.5)
+// https://stackoverflow.com/a/2838358
+export function selectElementText(element, win = window) {
+  const doc = win.document;
+  let sel, range;
+  if (win.getSelection && doc.createRange) {
+    sel = win.getSelection();
+    range = doc.createRange();
+    range.selectNodeContents(element);
+    sel.removeAllRanges();
+    sel.addRange(range);
+  } else if (doc.body.createTextRange) {
+    range = doc.body.createTextRange();
+    range.moveToElementText(element);
+    range.select();
+  }
+}

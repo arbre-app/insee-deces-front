@@ -7,12 +7,6 @@ export const ERROR = 'form/ERROR';
 export const CLEAR_SEARCH = 'form/CLEAR_SEARCH';
 
 const listWarnings = (form, { yearAfter, yearBefore }, result) => {
-  // Symbols
-  // Min birth year too late (> 2021)
-  // Max birth date too early (< 1850)
-  // Min death date too late (> 2021)
-  // Max death date too early (< 1970)
-  // Invalid period
   const MIN_YEAR_BIRTH = 1850;
   const MIN_YEAR_DEATH = 1970;
   const maxYear = new Date().getFullYear(); // eg. 2021

@@ -52,11 +52,11 @@ export function generatePermalink(data, isStatsTab) {
       advancedParameters.push([P_AFTER, data.yearAfter || '']);
       advancedParameters.push([P_BEFORE, data.yearBefore || '']);
       hasDate = true;
-    } else if(data.rangeType === RANGE_AFTER && data.yearAfter !== undefined) {
-      advancedParameters.push([P_AFTER, data.yearAfter]);
+    } else if(data.rangeType === RANGE_AFTER && data.year !== undefined) {
+      advancedParameters.push([P_AFTER, data.year]);
       hasDate = true;
-    } else if(data.rangeType === RANGE_BEFORE && data.yearBefore !== undefined) {
-      advancedParameters.push([P_AFTER, data.yearBefore]);
+    } else if(data.rangeType === RANGE_BEFORE && data.year !== undefined) {
+      advancedParameters.push([P_AFTER, data.year]);
       hasDate = true;
     }
   }
@@ -156,9 +156,9 @@ export function extractAndParsePermalink() {
     place: placeFullname ? [{ fullname: placeFullname }] : [], // TODO
     sortBy: event === V_BIRTH ? EVENT_TYPE_BIRTH : event === V_DEATH ? EVENT_TYPE_DEATH : DEFAULT_EVENT_TYPE,
     rangeType: rangeType,
-    year: (rangeType === RANGE_EXACT || rangeType === RANGE_ABOUT) && isNonEmpty(year) ? year : undefined,
-    yearAfter: (rangeType === RANGE_BETWEEN || rangeType === RANGE_AFTER) && isNonEmpty(yearAfter) ? yearAfter : undefined,
-    yearBefore: (rangeType === RANGE_BETWEEN || rangeType === RANGE_BEFORE) && isNonEmpty(yearBefore) ? yearBefore : undefined,
+    year: (rangeType === RANGE_EXACT || rangeType === RANGE_ABOUT) && isNonEmpty(year) ? year : (rangeType === RANGE_AFTER && isNonEmpty(yearAfter) ? yearAfter : (rangeType === RANGE_BEFORE && isNonEmpty(yearBefore) ? yearBefore : undefined)),
+    yearAfter: rangeType === RANGE_BETWEEN && isNonEmpty(yearAfter) ? yearAfter : undefined,
+    yearBefore: rangeType === RANGE_BETWEEN && isNonEmpty(yearBefore) ? yearBefore : undefined,
     yearPlusMinus: isNonEmpty(yearPlusMinus) ? yearPlusMinus : String(DEFAULT_YEAR_PLUS_MINUS),
     sortOrder: order === V_ASCEND ? ORDER_TYPE_ASCENDING : order === V_DESCEND ? ORDER_TYPE_DESCENDING : DEFAULT_ORDER_TYPE,
     currentPage: hasPageInformation ? parseInt(currentPage) : 1,

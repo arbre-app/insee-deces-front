@@ -6,13 +6,13 @@ import { BlockForm, BlockInformation, BlockResultTabs, Footer, Header, Messages 
 
 function App() {
 
-  const themeState = useSelector(state => state.theme);
+  const settingsState = useSelector(state => state.settings);
   const [isInformationVisible, setInformationVisible] = useState(false);
 
   return (
     <Container>
       <Helmet>
-        <body className={themeState.data.theme} />
+        <body className={settingsState.data.theme} />
       </Helmet>
 
       <Header />

@@ -1,11 +1,11 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import formReducer from './state/form/reducer';
-import themeReducer from './state/theme/reducer';
+import settingsReducer from './state/settings/reducer';
 
 const rootReducer = combineReducers({
   form: formReducer,
-  theme: themeReducer,
+  settings: settingsReducer,
 });
 
 const store = createStore(
