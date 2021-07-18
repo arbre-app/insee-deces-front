@@ -5,12 +5,12 @@ import { useForm } from 'react-final-form';
 import { useDispatch } from 'react-redux';
 import { clearForm } from '../state/form/actions';
 
-export function ClearButton({ disabled }) {
+export function ClearButton({ initialValues, disabled }) {
   const form = useForm();
   const dispatch = useDispatch();
   const clearFormDispatch = () => dispatch(clearForm());
   const handleClick = () => {
-    form.reset();
+    form.reset(initialValues);
     clearFormDispatch();
   };
 
@@ -25,5 +25,6 @@ export function ClearButton({ disabled }) {
 }
 
 ClearButton.propTypes = {
+  initialValues: PropTypes.object.isRequired,
   disabled: PropTypes.bool.isRequired,
 };

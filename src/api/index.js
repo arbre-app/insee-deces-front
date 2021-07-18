@@ -6,6 +6,9 @@ export const EVENT_TYPE_DEATH = 'death';
 export const ORDER_TYPE_ASCENDING = 'ascending';
 export const ORDER_TYPE_DESCENDING = 'descending';
 
+export const DEFAULT_EVENT_TYPE = EVENT_TYPE_BIRTH;
+export const DEFAULT_ORDER_TYPE = ORDER_TYPE_ASCENDING;
+
 const FETCH_TIMEOUT = 10_000;
 
 function buildURL(root, parameters) {

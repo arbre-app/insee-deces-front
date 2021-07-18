@@ -8,10 +8,14 @@ export const RANGE_AFTER = "after";
 export const RANGE_BEFORE = "before";
 export const RANGE_ABOUT = "about";
 
+export const DEFAULT_RANGE = RANGE_BETWEEN;
+export const DEFAULT_YEAR_PLUS_MINUS = 5;
+
 export function DateRangeGroup({ disabled }) {
   // TODO missing label
   const form = useForm();
   const type = form.getState().values.rangeType;
+
   return (
     <InputGroup>
       <Field
@@ -31,28 +35,29 @@ export function DateRangeGroup({ disabled }) {
           </Form.Control>
         )}
       />
-      {(type === RANGE_EXACT || type === RANGE_AFTER || type === RANGE_BEFORE || type === RANGE_ABOUT) && (
-        <>
-          <Field
-            name="year"
-            render={({ input }) => (
-              <FormControl type="number" placeholder="Année" disabled={disabled} {...input} />
-            )} />
-        </>
+      {(type === RANGE_EXACT || type === RANGE_ABOUT) && (
+        <Field
+          name="year"
+          render={({ input }) => (
+            <FormControl type="number" placeholder="Année" disabled={disabled} {...input} />
+          )}
+        />
       )}
-      {type === RANGE_BETWEEN && (
-        <>
-          <Field
-            name="yearAfter"
-            render={({ input }) => (
-              <FormControl type="number" placeholder="Année" disabled={disabled} {...input} />
-            )} />
-          <Field
-            name="yearBefore"
-            render={({ input }) => (
-              <FormControl type="number" placeholder="Année" disabled={disabled} {...input} />
-            )} />
-        </>
+      {(type === RANGE_AFTER || type === RANGE_BETWEEN) && (
+        <Field
+          name="yearAfter"
+          render={({ input }) => (
+            <FormControl type="number" placeholder="Année" disabled={disabled} {...input} />
+          )}
+        />
+      )}
+      {(type === RANGE_BEFORE || type === RANGE_BETWEEN) && (
+        <Field
+          name="yearBefore"
+          render={({ input }) => (
+            <FormControl type="number" placeholder="Année" disabled={disabled} {...input} />
+          )}
+        />
       )}
       {type === RANGE_ABOUT && (
         <>

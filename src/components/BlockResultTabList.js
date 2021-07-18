@@ -14,6 +14,14 @@ export function BlockResultTabList() {
   const formState = useSelector(state => state.form);
   const dispatch = useDispatch();
   const setCurrentPageDispatch = currentPage => dispatch(setCurrentPage(currentPage));
+  const handlePageChange = newPage => {
+    setCurrentPageDispatch(newPage);
+    window.scrollTo({ // TODO increase the speed of the animation (too slow!)
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
+  };
   const data = formState.data, formData = formState.form;
   const totalPages = Math.ceil(data.count / formData.resultsPerPage);
   const isLoading = formState.loading;
@@ -21,7 +29,7 @@ export function BlockResultTabList() {
     <div className="block block-tab block-tab-results pb-1 pt-2">
       <Row className="px-2">
         <Col sm={3}>
-          <PermalinkButton url={"abcdef"} disabled={isLoading} className="mr-2" />
+          <PermalinkButton disabled={isLoading} className="mr-2" />
           <DownloadButton disabled={isLoading} />
         </Col>
         <Col sm={9} className="text-right">
@@ -37,7 +45,7 @@ export function BlockResultTabList() {
       {data.count > 0 ? (
         <>
           <ResultListTable results={data.results} />
-          <SmallPagination currentPage={formData.currentPage} totalPages={totalPages} onChange={setCurrentPageDispatch} disabled={isLoading} />
+          <SmallPagination currentPage={formData.currentPage} totalPages={totalPages} onChange={handlePageChange} disabled={isLoading} />
         </>
       ) : (
         <div className="text-center mt-2">

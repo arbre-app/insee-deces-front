@@ -2,9 +2,12 @@ import PropTypes from 'prop-types';
 import { useRef, useState } from 'react';
 import { Button, FormControl, InputGroup, OverlayTrigger, Popover, Tooltip } from 'react-bootstrap';
 import { Clipboard, ClipboardCheck, Link45deg, PinFill } from 'react-bootstrap-icons';
-import Overlay from 'react-bootstrap-typeahead/lib/components/Overlay';
+import { useSelector } from 'react-redux';
+import { generatePermalink } from '../permalink';
 
-export function PermalinkButton({ url, disabled, ...props }) {
+export function PermalinkButton({ disabled, ...props }) {
+  const formState = useSelector(state => state.form);
+  const url = generatePermalink(formState.form, false);
   const [isCopied, setCopied] = useState(false);
   const [isCopiedTooltip, setCopiedTooltip] = useState(false);
   const selectInput = () => {
@@ -45,6 +48,7 @@ export function PermalinkButton({ url, disabled, ...props }) {
                 <OverlayTrigger
                   placement="top"
                   show={isCopiedTooltip}
+                  transition={false}
                   overlay={
                     <Tooltip id="tooltip-permalink-copy">
                       Copié
@@ -69,6 +73,5 @@ export function PermalinkButton({ url, disabled, ...props }) {
 }
 
 PermalinkButton.propTypes = {
-  url: PropTypes.string.isRequired,
   disabled: PropTypes.bool.isRequired,
 };

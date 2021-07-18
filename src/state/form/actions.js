@@ -126,3 +126,8 @@ export const clearForm = () => async dispatch => {
     type: CLEAR_SEARCH,
   });
 };
+
+export const prefillForm = partialFormData => async (dispatch, getState) => {
+  // TODO partial place.fullname
+  await triggerUpdate(dispatch, getState, partialFormData);
+};

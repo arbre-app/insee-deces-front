@@ -1,8 +1,8 @@
 import { Col, Form, Row } from 'react-bootstrap';
-import { Form as FinalForm, useForm } from 'react-final-form';
+import { Form as FinalForm } from 'react-final-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { EVENT_TYPE_BIRTH, ORDER_TYPE_ASCENDING } from '../api';
-import { RESULTS_PER_PAGE } from '../config';
+import { DEFAULT_EVENT_TYPE, DEFAULT_ORDER_TYPE } from '../api';
+import { DEFAULT_RESULTS_PER_PAGE } from '../config';
 import {
   ClearButton,
   DateRangeGroup,
@@ -13,8 +13,9 @@ import {
   SortOrderSelect,
   SurnameInput,
 } from '../form';
-import { RANGE_BETWEEN } from '../form/DateRangeGroup';
-import { submitForm } from '../state/form/actions';
+import { DEFAULT_RANGE, DEFAULT_YEAR_PLUS_MINUS } from '../form/DateRangeGroup';
+import { extractAndParsePermalink } from '../permalink';
+import { prefillForm, submitForm } from '../state/form/actions';
 import { deepEqual } from '../utils';
 
 export function BlockForm() {
@@ -24,7 +25,25 @@ export function BlockForm() {
     submitFormDispatch(data);
   };
 
-  const renderForm = ({ handleSubmit, values, initialValues }) => {
+  const prefillFormDispatch = partialFormData => dispatch(prefillForm(partialFormData));
+  const permalinkData = extractAndParsePermalink();
+  if (permalinkData !== null) {
+    const [permalinkPartialFormData, permalinkIsStatsTab] = permalinkData;
+    prefillFormDispatch(permalinkPartialFormData);
+  }
+
+  const initialValues = {
+    surname: undefined,
+    givenName: undefined,
+    place: [],
+    sortBy: DEFAULT_EVENT_TYPE,
+    rangeType: DEFAULT_RANGE,
+    yearPlusMinus: String(DEFAULT_YEAR_PLUS_MINUS),
+    sortOrder: DEFAULT_ORDER_TYPE,
+    resultsPerPage: DEFAULT_RESULTS_PER_PAGE,
+  };
+
+  const renderForm = ({ handleSubmit, values }) => {
     const unsubmittable = !values.surname || !values.surname.trim();
     const modified = !deepEqual(values, initialValues, false);
 
@@ -62,7 +81,7 @@ export function BlockForm() {
           </Col>
           {resetable && (
             <Col xs={{ order: 1 }} md={1} lg={2} xl={{ offset: 1, span: 2 }}>
-              <ClearButton disabled={isLoading} />
+              <ClearButton initialValues={initialValues} disabled={isLoading} />
             </Col>
           )}
         </Row>
@@ -74,7 +93,7 @@ export function BlockForm() {
     <div className="block block-form">
       <FinalForm
         onSubmit={onSubmit}
-        initialValues={{ surname: undefined, givenName: undefined, place: [], sortBy: EVENT_TYPE_BIRTH, rangeType: RANGE_BETWEEN, yearPlusMinus: '5', sortOrder: ORDER_TYPE_ASCENDING, resultsPerPage: RESULTS_PER_PAGE[0] }}
+        initialValues={permalinkData !== null ? permalinkData[0] : initialValues}
         render={renderForm}
       />
     </div>
