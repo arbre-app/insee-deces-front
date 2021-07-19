@@ -1,5 +1,5 @@
 import { Col, Form, Row } from 'react-bootstrap';
-import { Form as FinalForm } from 'react-final-form';
+import { Form as FinalForm, FormSpy } from 'react-final-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { DEFAULT_EVENT_TYPE, DEFAULT_ORDER_TYPE } from '../api';
 import { DEFAULT_RESULTS_PER_PAGE } from '../config';
@@ -15,7 +15,7 @@ import {
 } from '../form';
 import { DEFAULT_RANGE, DEFAULT_YEAR_PLUS_MINUS } from '../form/DateRangeGroup';
 import { extractAndParsePermalink } from '../permalink';
-import { prefillForm, submitForm } from '../state/form/actions';
+import { prefillForm, setLiveFormData, submitForm } from '../state/form/actions';
 import { deepEqual } from '../utils';
 
 export function BlockForm() {
@@ -31,6 +31,9 @@ export function BlockForm() {
     const [permalinkPartialFormData, permalinkIsStatsTab] = permalinkData;
     prefillFormDispatch(permalinkPartialFormData);
   }
+
+  const setLiveFormDataDispatch = values => dispatch(setLiveFormData(values));
+  const formState = useSelector(state => state.form);
 
   const initialValues = {
     surname: undefined,
@@ -52,6 +55,7 @@ export function BlockForm() {
     const resetable = modified || !!formState.data; // TODO
     return (
       <Form onSubmit={handleSubmit}>
+        <FormSpy onChange={state => setLiveFormDataDispatch(state.values)} subscription={{ values: true }} />
         <Row>
           <Col>
             Recherchez instantanément dans la base des décès enregistrés par l'Insee depuis <strong>1970</strong> :
@@ -93,7 +97,7 @@ export function BlockForm() {
     <div className="block block-form">
       <FinalForm
         onSubmit={onSubmit}
-        initialValues={permalinkData !== null ? permalinkData[0] : initialValues}
+        initialValues={formState.liveForm !== null ? formState.liveForm : (permalinkData !== null ? permalinkData[0] : initialValues)}
         render={renderForm}
       />
     </div>

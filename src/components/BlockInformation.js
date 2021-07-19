@@ -12,6 +12,10 @@ import {
 export function BlockInformation({ onBackClick }) {
   const clickHandler = e => {
     e.preventDefault();
+    window.scrollTo({
+      top: 0,
+      left: 0,
+    });
     onBackClick();
   };
   const renderBackButton = () => (

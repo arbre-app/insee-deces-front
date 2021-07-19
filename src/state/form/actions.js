@@ -5,6 +5,7 @@ export const LOADING = 'form/LOADING';
 export const SUCCESS = 'form/SUCCESS';
 export const ERROR = 'form/ERROR';
 export const CLEAR_SEARCH = 'form/CLEAR_SEARCH';
+export const LIVE = 'form/LIVE';
 
 const listWarnings = (form, { yearAfter, yearBefore }, result) => {
   const MIN_YEAR_BIRTH = 1850;
@@ -34,12 +35,8 @@ const listWarnings = (form, { yearAfter, yearBefore }, result) => {
   return warnings;
 };
 
-const triggerUpdate = async (dispatch, getState, newData) => {
-  const { form: oldData } = getState().form;
-  const data = {
-    ...oldData,
-    ...newData,
-  };
+const triggerUpdate = async (dispatch, newData) => {
+  const data = newData;
   dispatch({
     type: LOADING,
   });
@@ -96,20 +93,22 @@ const triggerUpdate = async (dispatch, getState, newData) => {
 };
 
 export const submitForm = formData => async (dispatch, getState) => {
-  await triggerUpdate(dispatch, getState, {
+  await triggerUpdate(dispatch, {
     ...formData,
     currentPage: 1,
   });
 };
 
 export const setCurrentPage = currentPage => async (dispatch, getState) => {
-  await triggerUpdate(dispatch, getState, {
+  await triggerUpdate(dispatch, {
+    ...getState().form.form,
     currentPage: currentPage,
   });
 };
 
 export const setResultsPerPage = resultsPerPage => async (dispatch, getState) => {
-  await triggerUpdate(dispatch, getState, {
+  await triggerUpdate(dispatch, {
+    ...getState().form.form,
     currentPage: 1,
     resultsPerPage: resultsPerPage,
   });
@@ -123,5 +122,12 @@ export const clearForm = () => async dispatch => {
 
 export const prefillForm = partialFormData => async (dispatch, getState) => {
   // TODO partial place.fullname
-  await triggerUpdate(dispatch, getState, partialFormData);
+  await triggerUpdate(dispatch, partialFormData);
+};
+
+export const setLiveFormData = values => async dispatch => {
+  dispatch({
+    type: LIVE,
+    liveForm: values,
+  });
 };

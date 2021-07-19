@@ -29,7 +29,10 @@ export function DownloadButton({ disabled, ...props }) {
   const canExportAll = formState.data.count <= MAX_EXPORT_COUNT;
   const [show, setShow] = useState(false);
   const [isExporting, setExporting] = useState(false);
-  const handleButtonClick = () => setShow(true);
+  const handleButtonClick = e => {
+    e.target.blur();
+    setShow(true);
+  };
   const handleHide = () => setShow(false);
   const availableFileFormats = {
     [EXTENSION_CSV]: {

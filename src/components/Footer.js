@@ -14,6 +14,11 @@ export function Footer({ onInformationClick }) {
         <Col xs={12}>
           <a href="#" onClick={e => {
             e.preventDefault();
+            e.target.blur();
+            window.scrollTo({
+              top: 0,
+              left: 0,
+            });
             onInformationClick();
           }}>
             <InfoCircleFill className="icon mr-2"/>
