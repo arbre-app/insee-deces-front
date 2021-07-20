@@ -5,9 +5,9 @@ import { Clipboard, ClipboardCheck, Link45deg, PinFill } from 'react-bootstrap-i
 import { useSelector } from 'react-redux';
 import { generatePermalink } from '../permalink';
 
-export function PermalinkButton({ disabled, ...props }) {
+export function PermalinkButton({ disabled, isTabStats, ...props }) {
   const formState = useSelector(state => state.form);
-  const url = generatePermalink(formState.form, false);
+  const url = generatePermalink(formState.form, isTabStats);
   const [isCopied, setCopied] = useState(false);
   const [isCopiedTooltip, setCopiedTooltip] = useState(false);
   const selectInput = () => {
@@ -73,5 +73,11 @@ export function PermalinkButton({ disabled, ...props }) {
 }
 
 PermalinkButton.propTypes = {
-  disabled: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool,
+  isTabStats: PropTypes.bool,
+};
+
+PermalinkButton.defaultProps = {
+  disabled: false,
+  isTabStats: false,
 };

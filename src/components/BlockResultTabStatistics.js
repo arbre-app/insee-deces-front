@@ -1,9 +1,30 @@
+import { Col, Row } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
+import { AdvancedConfigurationButton } from './AdvancedConfigurationButton';
 import { GeographyVisualization } from './GeographyVisualization';
+import { PermalinkButton } from './PermalinkButton';
 
 export function BlockResultTabStatistics() {
+  const formState = useSelector(state => state.form);
+  const { loading: isGeographyLoading, data: statsGeographyData } = formState.statsGeography;
+
+  const geographyQueryString = formState.form !== null && [formState.form.surname, formState.form.givenName].map(s => (s || '').trim()).filter(s => s).join(' ');
+
   return (
-    <div className="block block-tab">
-      <GeographyVisualization data={[{name: 'D-68', count: 1}]} />
+    <div className="block block-tab py-2 px-2">
+      <Row>
+        <Col>
+          <PermalinkButton isTabStats />
+        </Col>
+        <Col className="text-right">
+          <AdvancedConfigurationButton />
+        </Col>
+      </Row>
+      <GeographyVisualization
+        isLoading={isGeographyLoading}
+        data={statsGeographyData !== null ? statsGeographyData.results : null}
+        queryString={geographyQueryString}
+      />
     </div>
   );
 }

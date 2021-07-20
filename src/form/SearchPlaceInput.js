@@ -16,7 +16,7 @@ export function SearchPlaceInput({ disabled }) {
     setQuery(currentQuery);
 
     getPlaces(10, currentQuery)
-      .then(({ results }) => {
+      .then(({ results }) => { // TODO handle errors
         setQuery(q => {
           if(q.startsWith(currentQuery)) {
             setOptions(results);

@@ -1,8 +1,9 @@
-import { EVENT_TYPE_BIRTH, EVENT_TYPE_DEATH, getPersons } from '../../api';
+import { EVENT_TYPE_BIRTH, EVENT_TYPE_DEATH, getPersons, getStatisticsGeography } from '../../api';
 import { RANGE_ABOUT, RANGE_AFTER, RANGE_BEFORE, RANGE_BETWEEN, RANGE_EXACT } from '../../form/DateRangeGroup';
 
 export const LOADING = 'form/LOADING';
 export const SUCCESS = 'form/SUCCESS';
+export const RESULT_STATS_GEOGRAPHY = 'form/RESULT_STATS_GEOGRAPHY';
 export const ERROR = 'form/ERROR';
 export const CLEAR_SEARCH = 'form/CLEAR_SEARCH';
 export const LIVE = 'form/LIVE';
@@ -39,6 +40,7 @@ const triggerUpdate = async (dispatch, newData) => {
   const data = newData;
   dispatch({
     type: LOADING,
+    form: data,
   });
   let yearAfter = undefined, yearBefore = undefined;
   if(data.rangeType === RANGE_BETWEEN) {
@@ -61,6 +63,22 @@ const triggerUpdate = async (dispatch, newData) => {
   } else {
     throw new Error(data.rangeType);
   }
+
+  getStatisticsGeography(data.surname, data.givenName)
+    .then(result =>
+      dispatch({
+        type: RESULT_STATS_GEOGRAPHY,
+        form: data,
+        statsGeography: result,
+      })
+    )
+    .catch(error =>
+      dispatch({
+        type: RESULT_STATS_GEOGRAPHY,
+        form: data,
+        statsGeography: null,
+      })
+    );
 
   let result;
   try {
