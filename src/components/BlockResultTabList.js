@@ -34,18 +34,20 @@ export function BlockResultTabList() {
           <DownloadButton disabled={isLoading} />
         </Col>
         <Col sm={9} className="text-right">
-          <strong><FormattedNumber value={data.count} /> résultats</strong>{' '}
-          &middot;
-          Page <FormattedNumber value={formData.currentPage} /> sur <FormattedNumber value={Math.max(totalPages, 1)} />{' '}
-          &middot;
-          Résultats par page :{' '}
+          <span className={isLoading ? 'group-disabled' : ''}>
+            <strong><FormattedNumber value={data.count} /> résultats</strong>{' '}
+            &middot;
+            Page <FormattedNumber value={formData.currentPage} /> sur <FormattedNumber value={Math.max(totalPages, 1)} />{' '}
+            &middot;
+            Résultats par page :{' '}
+          </span>
           <ResultsPerPageSelect values={RESULTS_PER_PAGE} disabled={isLoading} />
           <AdvancedConfigurationButton className="ml-2" />
         </Col>
       </Row>
       {data.count > 0 ? (
         <>
-          <ResultListTable results={data.results} formData={formData} withHighlights={settingsState.data.matchesHighlighting} />
+          <ResultListTable results={data.results} formData={formData} disabled={isLoading} withHighlights={settingsState.data.matchesHighlighting} />
           <SmallPagination currentPage={formData.currentPage} totalPages={totalPages} onChange={handlePageChange} disabled={isLoading} />
         </>
       ) : (

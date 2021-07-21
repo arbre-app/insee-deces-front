@@ -45,7 +45,6 @@ export function TimeVisualization({ isLoading, data, isBirth }) {
 
         const totalYears = maxYear - minYear + 1;
         const maxCount = Math.max(...Object.values(values).map(({ count }) => count));
-        const dx = width * 5e-4;
         const colorForCount = count => scheme(count / maxCount).hex();
 
         const gTicks = createSVGElement('g');
@@ -63,12 +62,15 @@ export function TimeVisualization({ isLoading, data, isBirth }) {
             const currentData = values[year];
             const { count } = currentData;
             const h = maxHeightBar * count / maxCount;
+            const color = colorForCount(count);
             const rect = createSVGElement('rect', {
-              x: offsetX + widthTicks + widthBar * i - dx,
+              x: offsetX + widthTicks + widthBar * i,
               y: maxHeightBar - h,
-              width: widthBar + 2 * dx,
+              width: widthBar,
               height: h,
-              fill: colorForCount(count),
+              fill: color,
+              stroke: color,
+              'stroke-width': 1,
             });
             gBars.append(rect);
 
@@ -164,8 +166,8 @@ export function TimeVisualization({ isLoading, data, isBirth }) {
   const showTooltip = !isLoading && hoveredElementAndData !== null && data !== null;
 
   return (
-    <Row style={isLoading ? styleLoading : null} className="mt-4">
-      <Col sm={{ offset: 1, span: 10 }} md={{ offset: 2, span: 8 }} lg={{ offset: 3, span: 6 }}>
+    <Row style={isLoading ? styleLoading : null} className="mt-2">
+      <Col xs={12} sm={{ offset: 1, span: 10 }} md={{ offset: 2, span: 8 }}>
         <div className="text-center">
           <h4>Statistiques annuelles</h4>
           <p>

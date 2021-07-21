@@ -3,11 +3,17 @@ import { Container} from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
 import { useSelector } from 'react-redux';
 import { BlockForm, BlockInformation, BlockResultTabs, Footer, Header, Messages } from './components';
+import { BlockApi } from './components/BlockApi';
+
+const PAGE_MAIN = 'main';
+const PAGE_INFORMATIONS = 'infos';
+const PAGE_API = 'api';
 
 function App() {
 
   const settingsState = useSelector(state => state.settings);
-  const [isInformationVisible, setInformationVisible] = useState(false);
+  const [visiblePage, setVisiblePage] = useState(PAGE_MAIN);
+  const [isTabStats, setTabStats] = useState(false);
 
   return (
     <Container>
@@ -17,19 +23,21 @@ function App() {
 
       <Header />
 
-      {isInformationVisible ? (
-        <BlockInformation onBackClick={() => setInformationVisible(false)} />
-      ) : (
+      {visiblePage === PAGE_MAIN ? (
         <>
           <Messages />
 
           <BlockForm />
 
-          <BlockResultTabs />
+          <BlockResultTabs isTabStats={isTabStats} setTabStats={setTabStats} />
         </>
-      )}
+      ) : visiblePage === PAGE_INFORMATIONS ? (
+        <BlockInformation onBackClick={() => setVisiblePage(PAGE_MAIN)} />
+      ) : visiblePage === PAGE_API ? (
+        <BlockApi onBackClick={() => setVisiblePage(PAGE_MAIN)} />
+      ) : null}
 
-      <Footer onInformationClick={() => setInformationVisible(true)} />
+      <Footer onInformationClick={() => setVisiblePage(PAGE_INFORMATIONS)} onApiClick={() => setVisiblePage(PAGE_API)} />
     </Container>
   );
 }

@@ -28,6 +28,11 @@ export function BlockResultTabStatistics() {
         data={statsGeographyData !== null ? statsGeographyData.results : null}
         queryString={geographyQueryString}
       />
+      <Row>
+        <Col xs={{ offset: 1, span: 10 }} md={{ offset: 2, span: 8 }} lg={{ offset: 3, span: 6 }}>
+          <hr />
+        </Col>
+      </Row>
       <TimeVisualization
         isLoading={isTimeLoading}
         data={statsTimeData !== null ? statsTimeData.results : null}

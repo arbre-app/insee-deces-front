@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 import { Col, Row } from 'react-bootstrap';
-import { Github, InfoCircleFill } from 'react-bootstrap-icons';
+import { Github, InfoCircleFill, Tools, Wrench } from 'react-bootstrap-icons';
 import { FormattedDate, FormattedNumber } from 'react-intl';
 import { DB_LAST_UPDATE, DB_TOTAL_RECORDS } from '../config';
+import { InternalLink } from './InternalLink';
 
-export function Footer({ onInformationClick }) {
+export function Footer({ onInformationClick, onApiClick }) {
   return (
     <>
       <Row className="text-center mt-3">
@@ -12,20 +13,12 @@ export function Footer({ onInformationClick }) {
           La base contient <strong><FormattedNumber value={DB_TOTAL_RECORDS} /></strong> fiches (<em><FormattedDate value={DB_LAST_UPDATE} month="long" year="numeric" /></em>)
         </Col>
         <Col xs={12}>
-          <a href="#" onClick={e => {
-            e.preventDefault();
-            e.target.blur();
-            window.scrollTo({
-              top: 0,
-              left: 0,
-            });
-            onInformationClick();
-          }}>
+          <InternalLink onClick={onInformationClick}>
             <InfoCircleFill className="icon mr-2"/>
             <strong>
               Informations
             </strong>
-          </a>
+          </InternalLink>
         </Col>
       </Row>
       <hr />
@@ -34,6 +27,14 @@ export function Footer({ onInformationClick }) {
           <em>
             Réalisé et hébergé par <a href="https://florian.cassayre.me" target="_blank">Florian Cassayre</a> à partir des <a href="https://www.insee.fr/fr/information/4190491" target="_blank" rel="noreferrer">données de l'Insee</a>, sans en être affilié.
           </em>
+        </Col>
+        <Col xs={12}>
+          <InternalLink onClick={onApiClick}>
+            <Tools className="icon mr-2"/>
+            <strong>
+              API
+            </strong>
+          </InternalLink>
         </Col>
         <Col xs={12} className="mt-2">
           <a href="https://github.com/arbre-app/insee-deces-front" target="_blank" rel="noreferrer" className="link-dark">
@@ -47,4 +48,5 @@ export function Footer({ onInformationClick }) {
 
 Footer.propTypes = {
   onInformationClick: PropTypes.func.isRequired,
+  onApiClick: PropTypes.func.isRequired,
 };

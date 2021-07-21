@@ -7,7 +7,7 @@ import { RANGE_ABOUT, RANGE_AFTER, RANGE_BEFORE, RANGE_BETWEEN, RANGE_EXACT } fr
 import { GenderFemale, GenderMale } from '../icons';
 import { selectElementText } from '../utils';
 
-export function ResultListTable({ results, formData, withHighlights }) {
+export function ResultListTable({ results, formData, disabled, withHighlights }) {
   const renderRow = (entry, index) => {
     const GenderCmp = entry.gender ? GenderMale : GenderFemale;
     const genderColor = entry.gender ? 'color-male' : 'color-female';
@@ -92,7 +92,7 @@ export function ResultListTable({ results, formData, withHighlights }) {
   };
 
   return (
-    <Table responsive className="result-table">
+    <Table responsive className={`result-table ${disabled ? 'group-disabled' : ''}`}>
       <thead>
       <tr>
         <th>Sexe</th>
@@ -119,9 +119,11 @@ ResultListTable.propTypes = {
     prenom: PropTypes.string,
   })).isRequired,
   formData: PropTypes.object.isRequired,
+  disabled: PropTypes.bool,
   withHighlights: PropTypes.bool,
 };
 
 ResultListTable.defaultProps = {
+  disabled: false,
   withHighlights: false,
 };

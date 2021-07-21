@@ -1,12 +1,16 @@
+import PropTypes from 'prop-types';
 import { Tab, Table, Tabs } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { BlockResultTabList } from './BlockResultTabList';
 import { BlockResultTabStatistics } from './BlockResultTabStatistics';
 
-export function BlockResultTabs() {
+const TAB_RESULTS = 'results-tab';
+const TAB_STATISTICS = 'statistics-tab';
+
+export function BlockResultTabs({ isTabStats, setTabStats }) {
   const form = useSelector(state => state.form);
   return !!form.data && (
-    <Tabs defaultActiveKey="results-tab" id="search-results" className="tabs" transition={false}>
+    <Tabs activeKey={isTabStats ? TAB_STATISTICS : TAB_RESULTS} onSelect={k => setTabStats(k === TAB_STATISTICS)} id="search-results" className="tabs" transition={false}>
       <Tab eventKey="results-tab" title="Résultats">
         <BlockResultTabList />
       </Tab>
@@ -16,3 +20,8 @@ export function BlockResultTabs() {
     </Tabs>
   );
 }
+
+BlockResultTabs.propTypes = {
+  isTabStats: PropTypes.bool.isRequired,
+  setTabStats: PropTypes.func.isRequired,
+};

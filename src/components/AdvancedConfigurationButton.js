@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Dropdown, DropdownButton} from 'react-bootstrap';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { CheckCircle, CheckSquare, Circle, GearFill, Square } from 'react-bootstrap-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMatchesHighlighting, setTheme } from '../state/settings/action';

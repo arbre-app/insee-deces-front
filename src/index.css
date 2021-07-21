@@ -152,6 +152,10 @@ table.result-table > tbody > tr > td {
     min-width: 0 !important;
 }
 
+.group-disabled {
+    opacity: 50%;
+}
+
 .container-geography svg, .container-time svg {
     overflow: visible;
 }
