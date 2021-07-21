@@ -12,3 +12,4 @@ export { Messages } from './Messages';
 export { PermalinkButton } from './PermalinkButton';
 export { ResultListTable } from './ResultListTable';
 export { SmallPagination } from '../form/SmallPagination';
+export { TimeVisualization } from './TimeVisualization';

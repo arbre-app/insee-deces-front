@@ -1,9 +1,10 @@
-import { EVENT_TYPE_BIRTH, EVENT_TYPE_DEATH, getPersons, getStatisticsGeography } from '../../api';
+import { EVENT_TYPE_BIRTH, EVENT_TYPE_DEATH, getPersons, getStatisticsGeography, getStatisticsTime } from '../../api';
 import { RANGE_ABOUT, RANGE_AFTER, RANGE_BEFORE, RANGE_BETWEEN, RANGE_EXACT } from '../../form/DateRangeGroup';
 
 export const LOADING = 'form/LOADING';
 export const SUCCESS = 'form/SUCCESS';
 export const RESULT_STATS_GEOGRAPHY = 'form/RESULT_STATS_GEOGRAPHY';
+export const RESULT_STATS_TIME = 'form/RESULT_STATS_TIME';
 export const ERROR = 'form/ERROR';
 export const CLEAR_SEARCH = 'form/CLEAR_SEARCH';
 export const LIVE = 'form/LIVE';
@@ -77,6 +78,22 @@ const triggerUpdate = async (dispatch, newData) => {
         type: RESULT_STATS_GEOGRAPHY,
         form: data,
         statsGeography: null,
+      })
+    );
+
+  getStatisticsTime(data.surname, data.givenName, data.place.length ? data.place[0].id : undefined, data.sortBy)
+    .then(result =>
+      dispatch({
+        type: RESULT_STATS_TIME,
+        form: data,
+        statsTime: result,
+      })
+    )
+    .catch(error =>
+      dispatch({
+        type: RESULT_STATS_TIME,
+        form: data,
+        statsTime: null,
       })
     );
 

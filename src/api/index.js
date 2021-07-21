@@ -77,5 +77,9 @@ export function getStatisticsTime(surname, name, placeId, eventType) {
     name: name,
     place: placeId,
     event: eventType,
-  }));
+  }))
+    .then(data => data.results ? { // Temporary 'bug' fix in the API
+      ...data,
+      results: data.results.filter(({ name }) => name !== '1850'),
+    } : data);
 }

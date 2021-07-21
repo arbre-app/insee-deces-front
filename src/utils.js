@@ -38,3 +38,11 @@ export function selectElementText(element, win = window) {
     range.select();
   }
 }
+
+export const NS = 'http://www.w3.org/2000/svg';
+
+export const createSVGElement = (tag, attributes = {}) => {
+  const element = document.createElementNS(NS, tag);
+  Object.entries(attributes).forEach(([key, value]) => element.setAttributeNS(null, key, value));
+  return element;
+};

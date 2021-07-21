@@ -4,8 +4,7 @@ import { Col, Overlay, Row, Tooltip } from 'react-bootstrap';
 import { FormattedNumber, useIntl } from 'react-intl';
 import { ReactComponent as SvgMapFrance } from '../assets/map_france.svg';
 import { scale } from 'chroma-js';
-
-const NS = 'http://www.w3.org/2000/svg';
+import { createSVGElement, NS } from '../utils';
 
 export function GeographyVisualization({ isLoading, data, queryString }) {
   const intl = useIntl();
@@ -52,28 +51,22 @@ export function GeographyVisualization({ isLoading, data, queryString }) {
       }
 
       // Scale
-      const createElement = (tag, attributes = {}) => {
-        const element = document.createElementNS(NS, tag);
-        Object.entries(attributes).forEach(([key, value]) => element.setAttributeNS(null, key, value));
-        return element;
-      };
-
       const scale = div.getElementsByTagName('svg')[1];
       scale.innerHTML = ''; // Clear
 
       const maxSamples = 7;
       const samples = Math.min(max + 1, maxSamples);
       const dx = scaleWidth * 5e-4;
-      const gRect = createElement('g');
+      const gRect = createSVGElement('g');
       scale.append(gRect);
-      const gText = createElement('g');
+      const gText = createSVGElement('g');
       scale.append(gText);
       for(let i = 0; i < samples; i++) {
         const modeledCount = Math.round(i / (samples - 1) * max);
         const x = (i + (maxSamples - samples) / 2) / maxSamples * scaleWidth;
         const w = scaleWidth / maxSamples;
         const s = 3;
-        gRect.append(createElement('rect', {
+        gRect.append(createSVGElement('rect', {
           x: x - dx,
           y: 0,
           width: w + 2 * dx,
@@ -85,7 +78,7 @@ export function GeographyVisualization({ isLoading, data, queryString }) {
 
         if(samples % 2 === 0 ? i === 0 || i === samples - 1 : i % 2 === 0) {
           const fontSize = scaleWidth / 25;
-          const text = createElement('text', {
+          const text = createSVGElement('text', {
             x: x + w / 2,
             y: scaleHeight + s + fontSize,
             'text-anchor': 'middle',

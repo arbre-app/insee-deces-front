@@ -1,4 +1,4 @@
-import { LOADING, SUCCESS, ERROR, CLEAR_SEARCH, LIVE, RESULT_STATS_GEOGRAPHY } from './actions';
+import { LOADING, SUCCESS, ERROR, CLEAR_SEARCH, LIVE, RESULT_STATS_GEOGRAPHY, RESULT_STATS_TIME } from './actions';
 
 const initialStateStats = {
   loading: false,
@@ -12,6 +12,7 @@ export const initialState = {
   liveForm: null,
   data: null,
   statsGeography: initialStateStats,
+  statsTime: initialStateStats,
   warnings: null,
   error: null,
 };
@@ -29,6 +30,10 @@ export default (state = initialState, action) => {
           loading: true,
           data: state.statsGeography !== null ? state.statsGeography.data : null,
         },
+        statsTime: {
+          loading: true,
+          data: state.statsTime !== null ? state.statsTime.data : null,
+        },
         warnings: null,
         error: null,
       };
@@ -40,6 +45,7 @@ export default (state = initialState, action) => {
         liveForm: state.liveForm,
         data: action.data,
         statsGeography: state.statsGeography,
+        statsTime: state.statsTime,
         warnings: action.warnings,
         error: null,
       };
@@ -47,6 +53,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         statsGeography: action.form === state.submittedForm ? { loading: false, data: action.statsGeography } : state.statsGeography,
+      };
+    case RESULT_STATS_TIME:
+      return {
+        ...state,
+        statsTime: action.form === state.submittedForm ? { loading: false, data: action.statsTime } : state.statsTime,
       };
     case ERROR:
       return {
@@ -56,6 +67,7 @@ export default (state = initialState, action) => {
         liveForm: state.liveForm,
         data: null,
         statsGeography: state.statsGeography,
+        statsTime: state.statsTime,
         warnings: null,
         error: action.error,
       };
