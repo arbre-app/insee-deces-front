@@ -5,7 +5,7 @@ import { FormattedDate } from 'react-intl';
 import { EVENT_TYPE_BIRTH, EVENT_TYPE_DEATH } from '../api';
 import { RANGE_ABOUT, RANGE_AFTER, RANGE_BEFORE, RANGE_BETWEEN, RANGE_EXACT } from '../form/DateRangeGroup';
 import { GenderFemale, GenderMale } from '../icons';
-import { selectElementText } from '../utils';
+import { normalizeTextToken, selectElementText, tokenizeAndNormalizeText, tokenizeText } from '../utils';
 
 export function ResultListTable({ results, formData, disabled, withHighlights }) {
   const renderRow = (entry, index) => {
@@ -28,15 +28,7 @@ export function ResultListTable({ results, formData, disabled, withHighlights })
         e.stopPropagation();
       }
     };
-    const removeAccents = text => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-    const tokenizeText = text => {
-      const r = /([^a-zA-Z\u00C0-\u024F\u1E00-\u1EFF]+)/g;
-      return text.split(r);
-    };
-    const normalizeTextToken = token => {
-      return removeAccents(token).toLowerCase();
-    };
-    const tokenizeAndNormalizeText = text => tokenizeText(text).filter((_, i) => i % 2 === 0).map(normalizeTextToken).filter(s => s);
+
     const surnameNeedles = tokenizeAndNormalizeText(formData.surname || '');
     const givenNameNeedles = tokenizeAndNormalizeText(formData.givenName || '');
     const HighlightFuzzy = ({ text, needles }) => {

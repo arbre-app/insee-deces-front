@@ -1,4 +1,11 @@
-import { EVENT_TYPE_BIRTH, EVENT_TYPE_DEATH, getPersons, getStatisticsGeography, getStatisticsTime } from '../../api';
+import {
+  EVENT_TYPE_BIRTH,
+  EVENT_TYPE_DEATH,
+  getPersons,
+  getPlaces,
+  getStatisticsGeography,
+  getStatisticsTime,
+} from '../../api';
 import { RANGE_ABOUT, RANGE_AFTER, RANGE_BEFORE, RANGE_BETWEEN, RANGE_EXACT } from '../../form/DateRangeGroup';
 
 export const LOADING = 'form/LOADING';
@@ -38,11 +45,42 @@ const listWarnings = (form, { yearAfter, yearBefore }, result) => {
 };
 
 const triggerUpdate = async (dispatch, newData) => {
-  const data = newData;
+  let data = newData;
   dispatch({
     type: LOADING,
     form: data,
   });
+
+  if(data.place.length > 0 && data.place[0].id === undefined) { // Need to resolve the id
+    let result;
+    try {
+      result = await getPlaces(1, data.place[0].fullname);
+    } catch (error) { // Handle errors as if the whole transaction failed (atomicity)
+      console.error(error);
+      dispatch({
+        type: ERROR,
+        error: error,
+      });
+      return;
+    }
+    if(result.results.length > 0 && result.results[0].fullname === data.place[0].fullname) { // All good
+      data = {
+        ...data,
+        place: [result.results[0]],
+      };
+    } else { // Place not found, shouldn't happen unless the URL was tampered. We decide to remove the place in this case
+      data = {
+        ...data,
+        place: [],
+      };
+    }
+    // Use this action to update the data
+    dispatch({
+      type: LOADING,
+      form: data,
+    });
+  }
+
   let yearAfter = undefined, yearBefore = undefined;
   if(data.rangeType === RANGE_BETWEEN) {
     yearAfter = data.yearAfter;

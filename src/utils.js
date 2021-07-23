@@ -46,3 +46,13 @@ export const createSVGElement = (tag, attributes = {}) => {
   Object.entries(attributes).forEach(([key, value]) => element.setAttributeNS(null, key, value));
   return element;
 };
+
+export const removeAccents = text => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+export const tokenizeText = text => {
+  const r = /([^a-zA-Z\u00C0-\u024F\u1E00-\u1EFF]+)/g;
+  return text.split(r);
+};
+export const normalizeTextToken = token => {
+  return removeAccents(token).toLowerCase();
+};
+export const tokenizeAndNormalizeText = text => tokenizeText(text).filter((_, i) => i % 2 === 0).map(normalizeTextToken).filter(s => s);

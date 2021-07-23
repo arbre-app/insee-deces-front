@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+import { useEffect } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,11 +16,10 @@ import {
   SurnameInput,
 } from '../form';
 import { DEFAULT_RANGE, DEFAULT_YEAR_PLUS_MINUS } from '../form/DateRangeGroup';
-import { extractAndParsePermalink } from '../permalink';
 import { prefillForm, setLiveFormData, submitForm } from '../state/form/actions';
 import { deepEqual } from '../utils';
 
-export function BlockForm() {
+export function BlockForm({ initialPartialData }) {
   const dispatch = useDispatch();
   const submitFormDispatch = formData => dispatch(submitForm(formData));
   const onSubmit = (data, e) => {
@@ -26,11 +27,11 @@ export function BlockForm() {
   };
 
   const prefillFormDispatch = partialFormData => dispatch(prefillForm(partialFormData));
-  const permalinkData = extractAndParsePermalink();
-  if (permalinkData !== null) {
-    const [permalinkPartialFormData, permalinkIsStatsTab] = permalinkData;
-    prefillFormDispatch(permalinkPartialFormData);
-  }
+  useEffect(() => {
+    if(initialPartialData !== null) {
+      prefillFormDispatch(initialPartialData);
+    }
+  }, []); // Called only once
 
   const setLiveFormDataDispatch = values => dispatch(setLiveFormData(values));
   const formState = useSelector(state => state.form);
@@ -97,9 +98,17 @@ export function BlockForm() {
     <div className="block block-form">
       <FinalForm
         onSubmit={onSubmit}
-        initialValues={formState.liveForm !== null ? formState.liveForm : (permalinkData !== null ? permalinkData[0] : initialValues)}
+        initialValues={formState.liveForm !== null ? formState.liveForm : (initialPartialData !== null ? initialPartialData : initialValues)}
         render={renderForm}
       />
     </div>
   );
 }
+
+BlockForm.propTypes = {
+  initialPartialData: PropTypes.object,
+};
+
+BlockForm.defaultProps = {
+  initialPartialData: null,
+};

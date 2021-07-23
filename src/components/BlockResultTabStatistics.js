@@ -1,7 +1,7 @@
 import { Col, Row } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { EVENT_TYPE_BIRTH } from '../api';
-import { AdvancedConfigurationButton } from './AdvancedConfigurationButton';
+import { SettingsButton } from './SettingsButton';
 import { GeographyVisualization } from './GeographyVisualization';
 import { PermalinkButton } from './PermalinkButton';
 import { TimeVisualization } from './TimeVisualization';
@@ -16,11 +16,11 @@ export function BlockResultTabStatistics() {
   return (
     <div className="block block-tab py-2 px-2">
       <Row>
-        <Col>
+        <Col className="pr-0">
           <PermalinkButton isTabStats />
         </Col>
-        <Col className="text-right">
-          <AdvancedConfigurationButton />
+        <Col className="text-right pl-0">
+          <SettingsButton />
         </Col>
       </Row>
       <GeographyVisualization

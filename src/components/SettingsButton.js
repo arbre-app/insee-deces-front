@@ -7,7 +7,7 @@ import { setMatchesHighlighting, setTheme } from '../state/settings/action';
 export const THEME_LIGHT = 'theme-light';
 export const THEME_DARK = 'theme-dark';
 
-export function AdvancedConfigurationButton({ ...props }) {
+export function SettingsButton({ ...props }) {
   const [isShown, setIsShown] = useState(false);
   const settingsState = useSelector(state => state.settings);
   const dispatch = useDispatch();

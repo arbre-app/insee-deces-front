@@ -24,7 +24,7 @@ export default (state = initialState, action) => {
         loading: true,
         form: state.form,
         submittedForm: action.form,
-        liveForm: state.liveForm,
+        liveForm: action.form, // The sender can request the form data to change
         data: state.data,
         statsGeography: {
           loading: true,

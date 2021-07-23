@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet';
 import { useSelector } from 'react-redux';
 import { BlockForm, BlockInformation, BlockResultTabs, Footer, Header, Messages } from './components';
 import { BlockApi } from './components/BlockApi';
+import { extractAndParsePermalink } from './permalink';
 
 const PAGE_MAIN = 'main';
 const PAGE_INFORMATIONS = 'infos';
@@ -11,9 +12,11 @@ const PAGE_API = 'api';
 
 function App() {
 
+  const permalinkData = extractAndParsePermalink();
+
   const settingsState = useSelector(state => state.settings);
   const [visiblePage, setVisiblePage] = useState(PAGE_MAIN);
-  const [isTabStats, setTabStats] = useState(false);
+  const [isTabStats, setTabStats] = useState(permalinkData !== null && permalinkData[1]);
 
   return (
     <Container>
@@ -27,7 +30,7 @@ function App() {
         <>
           <Messages />
 
-          <BlockForm />
+          <BlockForm initialPartialData={permalinkData !== null ? permalinkData[0] : null} />
 
           <BlockResultTabs isTabStats={isTabStats} setTabStats={setTabStats} />
         </>

@@ -1,4 +1,4 @@
-export { AdvancedConfigurationButton } from './AdvancedConfigurationButton';
+export { SettingsButton } from './SettingsButton';
 export { ApiMethodDocumentation } from './ApiMethodDocumentation';
 export { BackButton } from './BackButton';
 export { BlockForm } from './BlockForm';
