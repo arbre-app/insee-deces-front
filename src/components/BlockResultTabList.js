@@ -42,7 +42,7 @@ export function BlockResultTabList() {
       <Row className="px-2">
         <Col xs={6} sm={3} md={2} className="pr-0">
           <PermalinkButton disabled={isLoading} className="mr-2" />
-          <DownloadButton disabled={isLoading} />
+          <DownloadButton disabled={isLoading || data.count === 0} />
         </Col>
         <Col xs={6} sm={9} md={10} className="text-right pl-0">
           {renderCounts('d-none d-sm-inline')}

@@ -2,7 +2,7 @@ import { Book } from 'react-bootstrap-icons';
 
 export function Header() {
   return (
-    <div className="text-center mt-4">
+    <div className="text-center pt-4">
       <h1>
         <Book className="icon" />
       </h1>

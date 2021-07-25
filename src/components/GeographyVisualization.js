@@ -84,6 +84,7 @@ export function GeographyVisualization({ isLoading, data, queryString }) {
             'text-anchor': 'middle',
             'font-family': 'monospace',
             'font-size': fontSize,
+            'class': 'plot-tick',
           });
           text.append(intl.formatNumber(modeledCount));
           gText.append(text);

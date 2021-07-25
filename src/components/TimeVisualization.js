@@ -120,6 +120,7 @@ export function TimeVisualization({ isLoading, data, isBirth }) {
               'dominant-baseline': 'middle',
               'font-family': 'monospace',
               'font-size': 10,
+              'class': 'plot-tick',
             });
             text.append(intl.formatNumber(currentCount));
             gTicks.append(text);
@@ -143,6 +144,7 @@ export function TimeVisualization({ isLoading, data, isBirth }) {
             'transform': `rotate(-45, ${textX}, ${textY})`,
             'font-family': 'monospace',
             'font-size': 10,
+            'class': 'plot-tick',
           });
           text.append(year);
           gTicks.append(text);

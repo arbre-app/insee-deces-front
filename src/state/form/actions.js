@@ -1,12 +1,11 @@
 import {
   EVENT_TYPE_BIRTH,
   EVENT_TYPE_DEATH,
-  getPersons,
   getPlaces,
   getStatisticsGeography,
   getStatisticsTime,
 } from '../../api';
-import { RANGE_ABOUT, RANGE_AFTER, RANGE_BEFORE, RANGE_BETWEEN, RANGE_EXACT } from '../../form/DateRangeGroup';
+import { extractPeriodFromData, getPersonsFromFormData } from '../../form';
 
 export const LOADING = 'form/LOADING';
 export const SUCCESS = 'form/SUCCESS';
@@ -16,10 +15,12 @@ export const ERROR = 'form/ERROR';
 export const CLEAR_SEARCH = 'form/CLEAR_SEARCH';
 export const LIVE = 'form/LIVE';
 
-const listWarnings = (form, { yearAfter, yearBefore }, result) => {
+const listWarnings = (form, result) => {
   const MIN_YEAR_BIRTH = 1850;
   const MIN_YEAR_DEATH = 1970;
   const maxYear = new Date().getFullYear(); // eg. 2021
+
+  const [yearAfter, yearBefore] = extractPeriodFromData(form);
 
   const warnings = [];
   if (yearAfter !== null && yearBefore !== null) {
@@ -81,28 +82,6 @@ const triggerUpdate = async (dispatch, newData) => {
     });
   }
 
-  let yearAfter = undefined, yearBefore = undefined;
-  if(data.rangeType === RANGE_BETWEEN) {
-    yearAfter = data.yearAfter;
-    yearBefore = data.yearBefore;
-  } else if(data.rangeType === RANGE_AFTER) {
-    yearAfter = data.year;
-  } else if(data.rangeType === RANGE_BEFORE) {
-    yearBefore = data.year;
-  } else if(data.rangeType === RANGE_EXACT) {
-    yearAfter = data.year;
-    yearBefore = data.year;
-  } else if(data.rangeType === RANGE_ABOUT) {
-    const pm = parseInt(data.yearPlusMinus || 5);
-    if(data.year) {
-      const year = parseInt(data.year);
-      yearAfter = year - pm;
-      yearBefore = year + pm;
-    }
-  } else {
-    throw new Error(data.rangeType);
-  }
-
   getStatisticsGeography(data.surname, data.givenName)
     .then(result =>
       dispatch({
@@ -137,17 +116,7 @@ const triggerUpdate = async (dispatch, newData) => {
 
   let result;
   try {
-    result = await getPersons(
-      (data.currentPage - 1) * data.resultsPerPage,
-      data.resultsPerPage,
-      data.surname,
-      data.givenName || undefined,
-      data.place.length ? data.place[0].id : undefined,
-      data.sortBy,
-      yearAfter,
-      yearBefore,
-      data.sortOrder,
-    );
+    result = await getPersonsFromFormData(data);
   } catch (error) {
     console.error(error);
     dispatch({
@@ -156,7 +125,7 @@ const triggerUpdate = async (dispatch, newData) => {
     });
     return;
   }
-  const warnings = listWarnings(data, { yearAfter, yearBefore }, result);
+  const warnings = listWarnings(data, result);
   dispatch({
     type: SUCCESS,
     form: data,

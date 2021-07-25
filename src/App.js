@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Container} from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
 import { useSelector } from 'react-redux';
-import { BlockForm, BlockInformation, BlockResultTabs, Footer, Header, Messages } from './components';
+import { BlockForm, BlockInformation, BlockResultTabs, Footer, Header, Messages, SelectLanguage } from './components';
 import { BlockApi } from './components/BlockApi';
 import { extractAndParsePermalink } from './permalink';
 
@@ -23,6 +23,14 @@ function App() {
       <Helmet>
         <body className={settingsState.data.theme} />
       </Helmet>
+
+      <Container className="position-absolute text-right ml-n3">
+        <SelectLanguage
+          className="mt-2"
+          currentLanguage="fr"
+          setLanguage={() => {}}
+        />
+      </Container>
 
       <Header />
 

@@ -89,6 +89,14 @@ table.result-table > tbody > tr > td {
     color: #755ea1;
 }
 
+.theme-dark .color-male {
+    color: #74d0be;
+}
+
+.theme-dark .color-female {
+    color: #9c83db;
+}
+
 .form-row > div {
     padding: 5px 0;
 }
@@ -158,4 +166,28 @@ table.result-table > tbody > tr > td {
 
 .container-geography svg, .container-time svg {
     overflow: visible;
+}
+
+.theme-dark .plot-tick {
+    fill: white;
+}
+
+.theme-dark pre > code {
+    color: white;
+}
+
+.theme-dark .modal-content, .theme-dark .popover, .theme-dark .dropdown-menu {
+    background-color: #212121;
+}
+
+.theme-dark .dropdown-menu .dropdown-item {
+    color: white;
+}
+
+.theme-dark .dropdown-menu .dropdown-item:hover, .theme-dark .dropdown-menu .dropdown-item:focus {
+    background-color: #404040;
+}
+
+.theme-dark .popover-header {
+    background-color: #151515;
 }

@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'react-bootstrap';
+import { GenderFemale, GenderMale } from 'react-bootstrap-icons';
 import { FormattedDate } from 'react-intl';
 import { EVENT_TYPE_BIRTH, EVENT_TYPE_DEATH } from '../api';
 import { RANGE_ABOUT, RANGE_AFTER, RANGE_BEFORE, RANGE_BETWEEN, RANGE_EXACT } from '../form/DateRangeGroup';
-import { GenderFemale, GenderMale } from '../icons';
 import { normalizeTextToken, selectElementText, tokenizeAndNormalizeText, tokenizeText } from '../utils';
 
 export function ResultListTable({ results, formData, disabled, withHighlights }) {
