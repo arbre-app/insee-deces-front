@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { Col, Overlay, Row, Tooltip } from 'react-bootstrap';
-import { FormattedNumber, useIntl } from 'react-intl';
+import { FormattedMessage, FormattedNumber, useIntl } from 'react-intl';
 import { scale } from 'chroma-js';
 import { createSVGElement } from '../utils';
 
@@ -171,9 +171,9 @@ export function TimeVisualization({ isLoading, data, isBirth }) {
     <Row style={isLoading ? styleLoading : null} className="mt-2">
       <Col xs={12} sm={{ offset: 1, span: 10 }} md={{ offset: 2, span: 8 }}>
         <div className="text-center">
-          <h4>Statistiques annuelles</h4>
+          <h4><FormattedMessage id="statistics.year.title" /></h4>
           <p>
-            Pour la recherche courante
+            <FormattedMessage id="statistics.year.subtitle" />
           </p>
         </div>
         <div ref={ref} className="container-time">
@@ -189,9 +189,9 @@ export function TimeVisualization({ isLoading, data, isBirth }) {
                 const { year, count } = hoveredElementAndData[1];
                 return (
                   <Tooltip id="statistics-time-tooltip" {...props}>
-                    Année {year}
+                    <FormattedMessage id="statistics.year.year" values={{ year: year }} />
                     <br />
-                    <FormattedNumber value={count} /> {isBirth ? 'naissances' : 'décès'}
+                    <FormattedMessage id={isBirth ? 'statistics.year.n_births' : 'statistics.year.n_deaths'} values={{ count: <FormattedNumber value={count} /> }} />
                   </Tooltip>
                 );
               }}

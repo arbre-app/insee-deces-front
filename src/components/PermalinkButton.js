@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useRef, useState } from 'react';
 import { Button, FormControl, InputGroup, OverlayTrigger, Popover, Tooltip } from 'react-bootstrap';
 import { Clipboard, ClipboardCheck, Link45deg, PinFill } from 'react-bootstrap-icons';
+import { FormattedMessage } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { generatePermalink } from '../permalink';
 
@@ -39,7 +40,7 @@ export function PermalinkButton({ disabled, isTabStats, ...props }) {
         <Popover id="popover-permalink">
           <Popover.Title as="h3">
             <Link45deg className="icon mr-1" />
-            Permalien vers cette recherche
+            <FormattedMessage id="result.permalink" />
           </Popover.Title>
           <Popover.Content>
             <InputGroup>
@@ -51,7 +52,7 @@ export function PermalinkButton({ disabled, isTabStats, ...props }) {
                   transition={false}
                   overlay={
                     <Tooltip id="tooltip-permalink-copy">
-                      Copié
+                      <FormattedMessage id="common.copied" />
                     </Tooltip>
                   }
                 >

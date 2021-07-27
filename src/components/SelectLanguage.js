@@ -1,5 +1,6 @@
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { Globe2 } from 'react-bootstrap-icons';
+import { FormattedMessage } from 'react-intl';
 import { AVAILABLE_LANGUAGES } from '../config';
 
 // Partially borrowed from:
@@ -15,7 +16,7 @@ export function SelectLanguage({ currentLanguage, setLanguage, ...other }) {
       {...other}
     >
       <Dropdown.Header>
-        Langue
+        <FormattedMessage id="common.language" />
       </Dropdown.Header>
       {AVAILABLE_LANGUAGES.map(({ locale, name, iconComponent: IconComponent }) => (
         <Dropdown.Item

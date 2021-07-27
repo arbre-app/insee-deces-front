@@ -3,6 +3,7 @@
   "description": "Interface fichier des décès de l'Insee",
   "version": "0.1.0",
   "license": "MIT",
+  "author": "Florian Cassayre",
   "repository": {
     "type": "git",
     "url": "https://github.com/arbre-app/insee-deces-front.git"

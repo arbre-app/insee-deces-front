@@ -3,10 +3,12 @@ import { Button} from 'react-bootstrap';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 import React, { useRef, useState } from 'react';
 import { Field } from 'react-final-form';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { getPlaces } from '../api';
 import { tokenizeAndNormalizeText } from '../utils';
 
 export function SearchPlaceInput({ disabled }) {
+  const intl = useIntl();
   const [isLoading, setIsLoading] = useState(false);
   const [options, setOptions] = useState([]);
   const [editing, setEditing] = useState(false);
@@ -48,10 +50,10 @@ export function SearchPlaceInput({ disabled }) {
               minLength={1}
               onSearch={handleSearch}
               options={options} /*.filter(({ fullname }) => tokenizeAndNormalizeText(fullname).join('').startsWith(tokenizeAndNormalizeText(query).join('')))}*/
-              placeholder="Lieu (commune, département, région ou pays)"
-              emptyLabel="Aucun lieu trouvé."
-              promptText="Entrez un lieu..."
-              searchText="Recherche en cours..."
+              placeholder={intl.formatMessage({ id: 'form.place' })}
+              emptyLabel={intl.formatMessage({ id: 'form.no_place_found' })}
+              promptText={intl.formatMessage({ id: 'form.enter_place' })}
+              searchText={intl.formatMessage({ id: 'form.place_loading' })}
               autoFocus
               highlightOnlyResult
               onBlur={() => {
@@ -81,7 +83,7 @@ export function SearchPlaceInput({ disabled }) {
             />
           ) : (
             <Button variant="light" className="text-left width-max text-nowrap overflow-hidden" onClick={() => setEditing(true)} disabled={disabled}>
-              {value.length ? value[0].fullname : <span className="text-muted">Lieu (commune, département, région ou pays)</span>}
+              {value.length ? value[0].fullname : <span className="text-muted"><FormattedMessage id="form.place" /></span>}
             </Button>
           )
         }

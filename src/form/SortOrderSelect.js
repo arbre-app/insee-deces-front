@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { Form, InputGroup } from 'react-bootstrap';
 import { ArrowDownUp } from 'react-bootstrap-icons';
 import { Field } from 'react-final-form';
+import { FormattedMessage } from 'react-intl';
 import { ORDER_TYPE_ASCENDING, ORDER_TYPE_DESCENDING } from '../api';
 
 export function SortOrderSelect({ disabled }) {
@@ -11,7 +12,7 @@ export function SortOrderSelect({ disabled }) {
       render={({ input }) => (
         <>
           <Form.Label htmlFor={input.name} srOnly>
-            Tri
+            <FormattedMessage id="form.sort" />
           </Form.Label>
           <InputGroup>
             <InputGroup.Prepend>
@@ -25,8 +26,8 @@ export function SortOrderSelect({ disabled }) {
               disabled={disabled}
               {...input}
             >
-              <option value={ORDER_TYPE_ASCENDING}>Croissant</option>
-              <option value={ORDER_TYPE_DESCENDING}>Décroissant</option>
+              <option value={ORDER_TYPE_ASCENDING}><FormattedMessage id="common.sort.ascending" /></option>
+              <option value={ORDER_TYPE_DESCENDING}><FormattedMessage id="common.sort.descending" /></option>
             </Form.Control>
           </InputGroup>
         </>

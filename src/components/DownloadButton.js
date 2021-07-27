@@ -8,10 +8,9 @@ import {
   FileEarmarkArrowDownFill,
   FileEarmarkCode,
   FileEarmarkSpreadsheet,
-  StopCircle,
 } from 'react-bootstrap-icons';
 import { Field, Form as FinalForm } from 'react-final-form';
-import { FormattedNumber } from 'react-intl';
+import { FormattedMessage, FormattedNumber, useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { RESULTS_PER_PAGE } from '../config';
 import { getPersonsFromFormData } from '../form';
@@ -60,6 +59,7 @@ SelectionInput.propTypes = {
 };
 
 export function DownloadButton({ disabled, ...props }) {
+  const intl = useIntl();
   const formState = useSelector(state => state.form);
   const paginationSize = Math.max(...RESULTS_PER_PAGE);
   const canExportAll = formState.data.count <= MAX_EXPORT_COUNT;
@@ -92,23 +92,17 @@ export function DownloadButton({ disabled, ...props }) {
       extension: EXTENSION_JSON,
     },
   };
-  const renderFileFormat = ({ name, icon: Icon }) => (
-    <>
-      <Icon className="icon mr-2" />
-      {name}
-    </>
-  );
   const availableCsvFieldSeparators = {
     comma: {
-      name: 'Virgule',
+      name: intl.formatMessage({ id: 'export.select_value_separator.value.comma' }),
       symbol: ',',
     },
     semicolon: {
-      name: 'Point-virgule',
+      name: intl.formatMessage({ id: 'export.select_value_separator.value.semicolon' }),
       symbol: ';',
     },
     tab: {
-      name: 'Tabulation',
+      name: intl.formatMessage({ id: 'export.select_value_separator.value.tab' }),
       symbol: '\t',
     },
   };
@@ -147,7 +141,9 @@ export function DownloadButton({ disabled, ...props }) {
       array.forEach(obj => lines.push(
         fieldNamesOrder.map(key => {
           const value = key !== 'gender' ? obj[key] : transformGender(obj[key]);
-          if (value.includes(fieldSeparator)) {
+          if (value == null) {
+            return '';
+          } else if (value.includes(fieldSeparator)) {
             const doubleQuotes = '"';
             return doubleQuotes + value.replaceAll(doubleQuotes, doubleQuotes + doubleQuotes) + doubleQuotes;
           } else {
@@ -180,39 +176,32 @@ export function DownloadButton({ disabled, ...props }) {
     element.click();
     document.body.removeChild(element);
   };
-  const renderCsvFieldSeparator = ({ name }) => name;
-  const renderCsvLineSeparator = ({ name }) => name;
-  const renderCountPreview = count => ( // TODO pluralize
-    <>
-      (<strong><FormattedNumber value={count} /></strong> fiches)
-    </>
-  );
   const renderForm = ({ handleSubmit, values, initialValues, form: { mutators: { setValue } } }) => {
     return (
       <Form onSubmit={handleSubmit}>
         <Modal.Header closeButton={!isExporting}>
-          <Modal.Title>Exporter les résultats</Modal.Title>
+          <Modal.Title><FormattedMessage id="export.title" /></Modal.Title>
         </Modal.Header>
         {isDone ? (!isError ? (
           <Modal.Body className="text-center">
             <h1 className="text-success">
               <CheckLg className="icon" />
             </h1>
-            Données téléchargées avec succès.
+            <FormattedMessage id="export.success" />
           </Modal.Body>
         ) : (
           <Modal.Body className="text-center">
             <h1 className="text-danger">
               <ExclamationTriangle className="icon" />
             </h1>
-            Une erreur est survenue.
+            <FormattedMessage id="export.error" />
           </Modal.Body>
         )) : isExporting ? (
           <Modal.Body className="text-center">
             <div className="mb-2">
               <Spinner animation="border" />
             </div>
-            Téléchargement des données en cours...
+            <FormattedMessage id="export.loading" />
             <ProgressBar min={0} max={1} now={progress} className="mt-2" />
           </Modal.Body>
         ) : (
@@ -224,7 +213,7 @@ export function DownloadButton({ disabled, ...props }) {
                 value={EXPORT_CURRENT}
                 render={({ input }) => (
                   <Form.Check id="export-radio-current" label={(
-                    <>La page courante {renderCountPreview(formState.data.results.length)}</>
+                    <FormattedMessage id="export.radio.current_page" values={{ entries: <strong><FormattedNumber value={formState.data.results.length} /></strong>, n: formState.data.results.length }} />
                   )} {...input} />
                 )}
               />
@@ -235,12 +224,12 @@ export function DownloadButton({ disabled, ...props }) {
                 render={({ input }) => ( // TODO pluralize
                   <Form.Check id="export-radio-first-n" label={(
                     <div>
-                      Les premières fiches :{' '}
+                      <FormattedMessage id="export.radio.first" />
                       <Field
                         name="exportFirst"
                         render={({ input: childInput }) => (
                           <FormControl type="number" disabled={!input.checked} min={1} max={MAX_EXPORT_COUNT}
-                                       placeholder="Quantité" {...childInput} />
+                                       placeholder={<FormattedMessage id="export.amount" />} {...childInput} />
                         )} />
                     </div>
                   )} {...input} />
@@ -253,9 +242,9 @@ export function DownloadButton({ disabled, ...props }) {
                 render={({ input }) => (
                   <Form.Check id="export-radio-all" disabled={!canExportAll} label={(
                     <>
-                      Tous les résultats {renderCountPreview(formState.data.count)}
+                      <FormattedMessage id="export.radio.current_page" values={{ entries: <strong><FormattedNumber value={formState.data.count} /></strong>, n: formState.data.count }} />
                       {!canExportAll && (
-                        <span className="text-warning"><ExclamationTriangleFill className="icon ml-3 mr-2" />> <FormattedNumber value={MAX_EXPORT_COUNT} /></span>
+                        <span className="text-warning"><ExclamationTriangleFill className="icon ml-3 mr-2" />&#62; <FormattedNumber value={MAX_EXPORT_COUNT} /></span>
                       )}
                     </>
                   )} {...input} />
@@ -271,11 +260,7 @@ export function DownloadButton({ disabled, ...props }) {
                       name={name}
                       value={value}
                       values={availableFileFormats}
-                      label={(
-                        <>
-                          Format des données :
-                        </>
-                      )}
+                      label={<FormattedMessage id="export.select_format.label" />}
                       renderValue={({ name, icon: Icon }) => (
                         <>
                           <Icon className="icon mr-2" />
@@ -293,11 +278,7 @@ export function DownloadButton({ disabled, ...props }) {
                               name={childName}
                               value={childValue}
                               values={availableCsvFieldSeparators}
-                              label={(
-                                <>
-                                  Séparateur de valeurs :
-                                </>
-                              )}
+                              label={<FormattedMessage id="export.select_value_separator.label" />}
                               renderValue={({ name }) => (
                                 <>
                                   {name}
@@ -314,11 +295,7 @@ export function DownloadButton({ disabled, ...props }) {
                               name={childName}
                               value={childValue}
                               values={availableCsvLineSeparators}
-                              label={(
-                                <>
-                                  Séparateur de lignes :
-                                </>
-                              )}
+                              label={<FormattedMessage id="export.select_line_separator.label" />}
                               renderValue={({ name }) => (
                                 <>
                                   {name}
@@ -350,25 +327,26 @@ export function DownloadButton({ disabled, ...props }) {
           {/*{isExporting && (
             <Button variant="danger">
               <StopCircle className="icon mr-2" />
-              Annuler
+              <FormattedMessage id="export.button_cancel" />
             </Button>
           )}*/}
           {!isExporting && (
             <Button variant="dark" onClick={handleHide}>
               <ArrowsCollapse className="icon mr-2" />
-              Fermer
+              <FormattedMessage id="export.button_close" />
             </Button>
           )}
           <Button type="submit" variant="primary" disabled={isExporting || isDone}>
             <FileEarmarkArrowDownFill className="icon mr-2" />
-            Télécharger
+            <FormattedMessage id="export.button_download" />
           </Button>
         </Modal.Footer>
       </Form>
     );
   };
   const submitHandler = data => {
-    const filename = `Recherche.${availableFileFormats[data.exportFileFormat].extension}`;
+    const prefix = intl.formatMessage({ id: 'export.filename' });
+    const filename = `${prefix}.${availableFileFormats[data.exportFileFormat].extension}`;
     if (data.exportSize === EXPORT_CURRENT) {
       const resultString = dataToString(formState.data.results, data.exportFileFormat, data);
       downloadStringAsFile(resultString, filename);

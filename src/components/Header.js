@@ -1,4 +1,5 @@
 import { Book } from 'react-bootstrap-icons';
+import { FormattedMessage } from 'react-intl';
 
 export function Header() {
   return (
@@ -6,7 +7,7 @@ export function Header() {
       <h1>
         <Book className="icon" />
       </h1>
-      <h4>Fichier des décès de l'Insee</h4>
+      <h4><FormattedMessage id="header.title" /></h4>
     </div>
   );
 }

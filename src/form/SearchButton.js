@@ -1,18 +1,19 @@
 import PropTypes from 'prop-types';
 import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Search } from 'react-bootstrap-icons';
+import { FormattedMessage } from 'react-intl';
 
 export function SearchButton({ disabled, isLoading }) {
   const renderButton = (
     <Button type="submit" disabled={disabled} className="width-max">
       <Search className="icon" />
       <span className="ml-2 d-inline d-md-none d-lg-inline">
-          Rechercher
+          <FormattedMessage id="form.search" />
         </span>
     </Button>
   );
   const renderTooltip = (
-    <Tooltip id="submit-warning">Vous devez entrer au moins un nom pour lancer une recherche</Tooltip>
+    <Tooltip id="submit-warning"><FormattedMessage id="form.search_disabled_tooltip" /></Tooltip>
   );
   return (
     <>

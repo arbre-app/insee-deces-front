@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { stringifyUrl } from 'query-string';
-import { FormattedNumber } from 'react-intl';
+import { FormattedMessage, FormattedNumber, useIntl } from 'react-intl';
 import {
   DEFAULT_EVENT_TYPE,
   DEFAULT_ORDER_TYPE,
@@ -14,20 +14,15 @@ import { ApiMethodDocumentation } from './ApiMethodDocumentation';
 import { BackButton } from './BackButton';
 
 export function BlockApi({ onBackClick }) {
-  // All of this will be i18n'd with useIntl().formatMessage
-  const typeString = 'Chaîne de caractères';
-  const typeIntegerPositive = 'Entier positif';
+  const typeString = <FormattedMessage id="api.parameter_value.string" />;
+  const typeIntegerPositive = <FormattedMessage id="api.parameter_value.positive_integer" />;
   const typeIntegerBetween = (min, max) => (
-    <>
-      Entier de <code>{min}</code> à <code>{max}</code>
-    </>
+    <FormattedMessage id="api.parameter_value.integer_between" values={{ min: <code>{min}</code>, max: <code>{max}</code> }} />
   );
   const typeOr = (left, right) => (
-    <>
-      <code>{left}</code> ou <code>{right}</code>
-    </>
+    <FormattedMessage id="api.parameter_value.either" values={{ left: <code>{left}</code>, right: <code>{right}</code> }} />
   );
-  const typeYear = 'Année';
+  const typeYear = <FormattedMessage id="api.parameter_value.year" />;
   const typeBirthOrDeath = typeOr(EVENT_TYPE_BIRTH, EVENT_TYPE_DEATH);
   const typeAscendingOrDescending = typeOr(ORDER_TYPE_ASCENDING, ORDER_TYPE_DESCENDING);
 
@@ -35,31 +30,34 @@ export function BlockApi({ onBackClick }) {
     <div className="block">
       <BackButton onClick={onBackClick} />
       <div className="my-2">
-        <h3>Interface de programmation (API)</h3>
+        <h3><FormattedMessage id="api.title" /></h3>
         <p>
-          Le service peut également être utilisé au travers de son API, qui est décrite ici.
+          <FormattedMessage id="api.description" />
         </p>
-        <h4>Détails techniques</h4>
+        <h4><FormattedMessage id="api.technical_details.title" /></h4>
         <p>
-          Le point d'entrée de l'API (<em>endpoint</em>) est le suivant : <kbd>{API_ENDPOINT}</kbd>
-        </p>
-        <p>
-          Les résultats sont retournés au format <a href="https://fr.wikipedia.org/wiki/JavaScript_Object_Notation" target="_blank" rel="noreferrer">JSON</a>.
+          <FormattedMessage id="api.technical_details.description.entrypoint" values={{ i: entrypointEnglish => <em>{entrypointEnglish}</em>, entrypoint: <kbd>{API_ENDPOINT}</kbd> }} />
         </p>
         <p>
-          Il n'y a pas d'authentification.
+          <FormattedMessage id="api.technical_details.url.wikipedia_json">
+            {url => (
+              <FormattedMessage id="api.technical_details.description.json" values={{ a: json => <a href={url} target="_blank" rel="noreferrer">{json}</a> }} />
+            )}
+          </FormattedMessage>
         </p>
-        <h4>Quota</h4>
         <p>
-          Il vous est cordialement demandé de rester (vous, ou votre application) en dessous des <strong><FormattedNumber value={3600} /></strong> requêtes par heure.
-          Vous pouvez accessoirement utiliser le champ <code>User-Agent</code> pour spécifier un point de contact en cas de problème.
+          <FormattedMessage id="api.technical_details.description.authentication" />
         </p>
-        <h4>Documentation de l'API</h4>
-        <h5>Recherche de fiches</h5>
+        <h4><FormattedMessage id="api.quota.title" /></h4>
+        <p>
+          <FormattedMessage id="api.quota.description" values={{ limit: <strong><FormattedNumber value={3600} /></strong>, useragent: <code>User-Agent</code> }} />
+        </p>
+        <h4><FormattedMessage id="api.documentation.title" /></h4>
+        <h5><FormattedMessage id="api.documentation.person_search.title" /></h5>
         <ApiMethodDocumentation
           method="/persons"
           type="GET"
-          description="Permet de lancer une recherche parmi les fiches individuelles."
+          description={<FormattedMessage id="api.documentation.person_search.description" />}
           exampleUrl={stringifyUrl({
             url: `${API_ENDPOINT}/persons`,
             query: {
@@ -87,60 +85,60 @@ export function BlockApi({ onBackClick }) {
         >
           <ApiMethodDocumentation.Parameter
             parameter="surname"
-            description="Nom(s) de famille"
+            description={<FormattedMessage id="api.parameter_type.surname" />}
             type={typeString}
             isRequired
           />
           <ApiMethodDocumentation.Parameter
             parameter="name"
-            description="Prénom(s)"
+            description={<FormattedMessage id="api.parameter_type.given_name" />}
             type={typeString}
           />
           <ApiMethodDocumentation.Parameter
             parameter="place"
-            description="Identifiant du lieu (voir ci-dessous)"
+            description={<FormattedMessage id="api.parameter_type.place_id" />}
             type={typeIntegerPositive}
           />
           <ApiMethodDocumentation.Parameter
             parameter="event"
-            description="Type d'événement"
+            description={<FormattedMessage id="api.parameter_type.event_type" />}
             type={typeBirthOrDeath}
             defaultValue={DEFAULT_EVENT_TYPE}
           />
           <ApiMethodDocumentation.Parameter
             parameter="after"
-            description="Borne inférieure sur l'année"
+            description={<FormattedMessage id="api.parameter_type.year_after" />}
             type={typeYear}
           />
           <ApiMethodDocumentation.Parameter
             parameter="before"
-            description="Borne supérieure sur l'année"
+            description={<FormattedMessage id="api.parameter_type.year_before" />}
             type={typeYear}
           />
           <ApiMethodDocumentation.Parameter
             parameter="order"
-            description="Ordre de tri"
+            description={<FormattedMessage id="api.parameter_type.sort_order" />}
             type={typeAscendingOrDescending}
             defaultValue={DEFAULT_ORDER_TYPE}
           />
           <ApiMethodDocumentation.Parameter
             parameter="offset"
-            description="Décalage (fenêtre des résultats)"
+            description={<FormattedMessage id="api.parameter_type.window_offset" />}
             type={typeIntegerPositive}
             defaultValue={0}
           />
           <ApiMethodDocumentation.Parameter
             parameter="limit"
-            description="Limite (fenêtre des résultats)"
+            description={<FormattedMessage id="api.parameter_type.window_limit" />}
             type={typeIntegerBetween(0, 100)}
             defaultValue={10}
           />
         </ApiMethodDocumentation>
-        <h5>Recherche de lieux</h5>
+        <h5><FormattedMessage id="api.documentation.place_search.title" /></h5>
         <ApiMethodDocumentation
           method="/places"
           type="GET"
-          description="Permet d'obtenir l'identifiant d'un lieu, servant à d'autres requêtes."
+          description={<FormattedMessage id="api.documentation.place_search.description" />}
           exampleUrl={stringifyUrl({
             url: `${API_ENDPOINT}/places`,
             query: {
@@ -170,22 +168,22 @@ export function BlockApi({ onBackClick }) {
         >
           <ApiMethodDocumentation.Parameter
             parameter="prefix"
-            description="Recherche"
+            description={<FormattedMessage id="api.parameter_type.query" />}
             type={typeString}
             isRequired
           />
           <ApiMethodDocumentation.Parameter
             parameter="limit"
-            description="Limite (fenêtre des résultats)"
+            description={<FormattedMessage id="api.parameter_type.window_limit" />}
             type={typeIntegerBetween(0, 25)}
             defaultValue={10}
           />
         </ApiMethodDocumentation>
-        <h5>Statistiques géographiques</h5>
+        <h5><FormattedMessage id="api.documentation.statistics_geography.title" /></h5>
         <ApiMethodDocumentation
           method="/stats/geography"
           type="GET"
-          description="Permet de calculer des statistiques géographiques pour un nom."
+          description={<FormattedMessage id="api.documentation.statistics_geography.description" />}
           exampleUrl={stringifyUrl({
             url: `${API_ENDPOINT}/stats/geography`,
             query: {
@@ -215,21 +213,21 @@ export function BlockApi({ onBackClick }) {
         >
           <ApiMethodDocumentation.Parameter
             parameter="surname"
-            description="Nom(s) de famille"
+            description={<FormattedMessage id="api.parameter_type.surname" />}
             type={typeString}
             isRequired
           />
           <ApiMethodDocumentation.Parameter
             parameter="name"
-            description="Prénom(s)"
+            description={<FormattedMessage id="api.parameter_type.given_name" />}
             type={typeString}
           />
         </ApiMethodDocumentation>
-        <h5>Statistiques annuelles</h5>
+        <h5><FormattedMessage id="api.documentation.statistics_year.title" /></h5>
         <ApiMethodDocumentation
           method="/stats/time"
           type="GET"
-          description="Permet de calculer des statistiques annuelles pour une recherche."
+          description={<FormattedMessage id="api.documentation.statistics_year.description" />}
           exampleUrl={stringifyUrl({
             url: `${API_ENDPOINT}/stats/time`,
             query: {
@@ -256,23 +254,23 @@ export function BlockApi({ onBackClick }) {
         >
           <ApiMethodDocumentation.Parameter
             parameter="surname"
-            description="Nom(s) de famille"
+            description={<FormattedMessage id="api.parameter_type.surname" />}
             type={typeString}
             isRequired
           />
           <ApiMethodDocumentation.Parameter
             parameter="name"
-            description="Prénom(s)"
+            description={<FormattedMessage id="api.parameter_type.given_name" />}
             type={typeString}
           />
           <ApiMethodDocumentation.Parameter
             parameter="place"
-            description="Identifiant du lieu (voir ci-dessus)"
+            description={<FormattedMessage id="api.parameter_type.place_id" />}
             type={typeIntegerPositive}
           />
           <ApiMethodDocumentation.Parameter
             parameter="event"
-            description="Type d'événement"
+            description={<FormattedMessage id="api.parameter_type.event_type" />}
             type={typeBirthOrDeath}
             defaultValue={EVENT_TYPE_BIRTH}
           />

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { Pagination } from 'react-bootstrap';
 import { ArrowLeft } from 'react-bootstrap-icons';
+import { FormattedMessage } from 'react-intl';
 
 export function BackButton({ onClick, ...props }) {
   const clickHandler = e => {
@@ -16,7 +17,7 @@ export function BackButton({ onClick, ...props }) {
     <Pagination className="my-0" {...props}>
       <Pagination.First onClick={clickHandler}>
         <ArrowLeft className="icon mr-2" />
-        Revenir au formulaire de recherche
+        <FormattedMessage id="button.back_to_search" />
       </Pagination.First>
     </Pagination>
   );

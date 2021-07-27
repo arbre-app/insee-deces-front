@@ -1,15 +1,16 @@
 import PropTypes from 'prop-types';
 import { ConeStriped} from 'react-bootstrap-icons';
+import { FormattedMessage } from 'react-intl';
 import { Message } from './Message';
 
 export function ServiceUnavailableMessage({ serverMessage }) {
   return (
     <Message variant="warning" icon={ConeStriped}>
-      Le service est momentanément indisponible.
+      <FormattedMessage id="message.service_unavailable" />
       {!!serverMessage && (
         <>
           <br />
-          <strong>Motif</strong> : {serverMessage}.
+          <FormattedMessage id="message.service_unavailable_reason" values={{ b: reason => <strong>{reason}</strong>, reason: {serverMessage} }} />
         </>
       )}
     </Message>

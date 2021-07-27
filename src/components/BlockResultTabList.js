@@ -1,5 +1,5 @@
 import { Col, Row } from 'react-bootstrap';
-import { FormattedNumber } from 'react-intl';
+import { FormattedMessage, FormattedNumber } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { RESULTS_PER_PAGE } from '../config';
 import { ResultsPerPageSelect } from '../form';
@@ -25,12 +25,16 @@ export function BlockResultTabList() {
   };
   const renderCounts = className => (
     <span className={(isLoading ? 'group-disabled' : '') + ' ' + className}>
-      <strong><FormattedNumber value={data.count} /> résultats</strong>{' '}
-      &middot;
-      Page <FormattedNumber value={formData.currentPage} /> sur <FormattedNumber value={Math.max(totalPages, 1)} />{' '}
+      <strong><FormattedMessage id="result.n_results" values={{ results: <FormattedNumber value={data.count} />, n: data.count }} /></strong>{' '}
+      &middot;{' '}
+      <FormattedMessage id="result.page_of" values={{
+        current: <FormattedNumber value={formData.currentPage} />,
+        total: <FormattedNumber value={Math.max(totalPages, 1)} />
+      }} />
+      {' '}
       <span className="d-none d-md-inline">
-        &middot;
-        Résultats par page :{' '}
+        &middot;{' '}
+        <FormattedMessage id="result.results_per_page" />{' '}
       </span>
     </span>
   );
@@ -60,9 +64,9 @@ export function BlockResultTabList() {
         </>
       ) : (
         <div className="text-center mt-2">
-          <h5>Aucun résultat</h5>
+          <h5><FormattedMessage id="result.no_result.title" /></h5>
           <p className="text-muted">
-            Essayez d'élargir vos critères de recherche.
+            <FormattedMessage id="result.no_result.description" />
           </p>
         </div>
       )}

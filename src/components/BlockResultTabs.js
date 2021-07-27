@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { Tab, Table, Tabs } from 'react-bootstrap';
+import { FormattedMessage } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { BlockResultTabList } from './BlockResultTabList';
 import { BlockResultTabStatistics } from './BlockResultTabStatistics';
@@ -11,10 +12,10 @@ export function BlockResultTabs({ isTabStats, setTabStats }) {
   const form = useSelector(state => state.form);
   return !!form.data && (
     <Tabs activeKey={isTabStats ? TAB_STATISTICS : TAB_RESULTS} onSelect={k => setTabStats(k === TAB_STATISTICS)} id="search-results" className="tabs" transition={false}>
-      <Tab eventKey="results-tab" title="Résultats">
+      <Tab eventKey="results-tab" title={<FormattedMessage id="result.tab.results" />}>
         <BlockResultTabList />
       </Tab>
-      <Tab eventKey="statistics-tab" title="Statistiques">
+      <Tab eventKey="statistics-tab" title={<FormattedMessage id="result.tab.statistics" />}>
         <BlockResultTabStatistics />
       </Tab>
     </Tabs>

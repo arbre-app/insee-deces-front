@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { Form, FormControl, InputGroup } from 'react-bootstrap';
 import { Field, useForm } from 'react-final-form';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 export const RANGE_EXACT = "exact";
 export const RANGE_BETWEEN = "between";
@@ -13,6 +14,7 @@ export const DEFAULT_YEAR_PLUS_MINUS = 5;
 
 export function DateRangeGroup({ disabled }) {
   // TODO missing label
+  const intl = useIntl();
   const form = useForm();
   const type = form.getState().values.rangeType;
 
@@ -27,11 +29,11 @@ export function DateRangeGroup({ disabled }) {
             disabled={disabled}
             {...input}
           >
-            <option value={RANGE_EXACT}>En</option>
-            <option value={RANGE_BETWEEN}>Entre</option>
-            <option value={RANGE_AFTER}>Après</option>
-            <option value={RANGE_BEFORE}>Avant</option>
-            <option value={RANGE_ABOUT}>Vers</option>
+            <option value={RANGE_EXACT}>{intl.formatMessage({ id: 'form.period.exact' })}</option>
+            <option value={RANGE_BETWEEN}>{intl.formatMessage({ id: 'form.period.between' })}</option>
+            <option value={RANGE_AFTER}>{intl.formatMessage({ id: 'form.period.after' })}</option>
+            <option value={RANGE_BEFORE}>{intl.formatMessage({ id: 'form.period.before' })}</option>
+            <option value={RANGE_ABOUT}>{intl.formatMessage({ id: 'form.period.about' })}</option>
           </Form.Control>
         )}
       />
@@ -39,7 +41,7 @@ export function DateRangeGroup({ disabled }) {
         <Field
           name="year"
           render={({ input }) => (
-            <FormControl type="number" placeholder="Année" disabled={disabled} {...input} />
+            <FormControl type="number" placeholder={intl.formatMessage({ id: 'form.year' })} disabled={disabled} {...input} />
           )}
         />
       )}
@@ -48,13 +50,13 @@ export function DateRangeGroup({ disabled }) {
           <Field
             name="yearAfter"
             render={({ input }) => (
-              <FormControl type="number" placeholder="Année" disabled={disabled} {...input} />
+              <FormControl type="number" placeholder={intl.formatMessage({ id: 'form.year' })} disabled={disabled} {...input} />
             )}
           />
           <Field
             name="yearBefore"
             render={({ input }) => (
-              <FormControl type="number" placeholder="Année" disabled={disabled} {...input} />
+              <FormControl type="number" placeholder={intl.formatMessage({ id: 'form.year' })} disabled={disabled} {...input} />
             )}
           />
         </>
@@ -69,7 +71,7 @@ export function DateRangeGroup({ disabled }) {
           <Field
             name="yearPlusMinus"
             render={({ input }) => (
-              <FormControl type="number" placeholder="Année(s)" min={0} disabled={disabled} {...input} />
+              <FormControl type="number" placeholder={intl.formatMessage({ id: 'form.years_amount' })} min={0} disabled={disabled} {...input} />
             )} />
         </>
       )}

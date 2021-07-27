@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { CheckCircle, CheckSquare, Circle, GearFill, Square } from 'react-bootstrap-icons';
+import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { setMatchesHighlighting, setTheme } from '../state/settings/action';
 
@@ -33,19 +34,19 @@ export function SettingsButton({ ...props }) {
   };
   return (
     <DropdownButton variant="secondary" id="dropdown-advanced-configuration" title={<GearFill className="icon" />} as="span" show={isShown} onToggle={(isOpen, event, metadata) => setIsShown(isOpen ? true : metadata.source === 'select')} {...props}>
-      <Dropdown.Header>Recherche</Dropdown.Header>
+      <Dropdown.Header><FormattedMessage id="settings.search" /></Dropdown.Header>
       <Dropdown.Item onClick={handleSetMatchesHighlighting}>
         <CheckboxIcon isEnabled={matchesHighlighting} />
-        Surbrillance
+        <FormattedMessage id="settings.highlight" />
       </Dropdown.Item>
-      <Dropdown.Header>Thème</Dropdown.Header>
+      <Dropdown.Header><FormattedMessage id="settings.theme" /></Dropdown.Header>
       <Dropdown.Item onClick={createThemeChangeHandler(THEME_LIGHT)}>
         <RadioIcon isEnabled={theme === THEME_LIGHT} />
-        Thème clair
+        <FormattedMessage id="settings.theme_light" />
       </Dropdown.Item>
       <Dropdown.Item onClick={createThemeChangeHandler(THEME_DARK)}>
         <RadioIcon isEnabled={theme === THEME_DARK} />
-        Thème sombre
+        <FormattedMessage id="settings.theme_dark" />
       </Dropdown.Item>
     </DropdownButton>
   );

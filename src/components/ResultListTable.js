@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'react-bootstrap';
 import { GenderFemale, GenderMale } from 'react-bootstrap-icons';
-import { FormattedDate } from 'react-intl';
+import { FormattedDate, FormattedMessage, useIntl } from 'react-intl';
 import { EVENT_TYPE_BIRTH, EVENT_TYPE_DEATH } from '../api';
 import { RANGE_ABOUT, RANGE_AFTER, RANGE_BEFORE, RANGE_BETWEEN, RANGE_EXACT } from '../form/DateRangeGroup';
 import { normalizeTextToken, selectElementText, tokenizeAndNormalizeText, tokenizeText } from '../utils';
 
 export function ResultListTable({ results, formData, disabled, withHighlights }) {
+  const intl = useIntl();
   const renderRow = (entry, index) => {
     const GenderCmp = entry.gender ? GenderMale : GenderFemale;
     const genderColor = entry.gender ? 'color-male' : 'color-female';
@@ -67,16 +68,28 @@ export function ResultListTable({ results, formData, disabled, withHighlights })
     return (
       <tbody key={index}>
         <tr>
-          <td rowSpan={2} className="text-center"><GenderCmp className={`icon icon-gender ${genderColor}`} /></td>
+          <td rowSpan={2} className="text-center">
+            <span title={intl.formatMessage({ id: entry.gender ? 'result.gender.male' : 'result.gender.female' })}>
+              <GenderCmp className={`icon icon-gender ${genderColor}`} />
+            </span>
+          </td>
           <TextTd rowSpan={2}><HighlightFuzzy text={entry.nom} needles={surnameNeedles} /></TextTd>
           <TextTd rowSpan={2}><HighlightFuzzy text={entry.prenom} needles={givenNameNeedles} /></TextTd>
-          <td>Naissance</td>
-          <TextTd><HighlightConditional isHighlighted={formData.sortBy === EVENT_TYPE_BIRTH && hasYearFilter}><FormattedDate value={entry.birthDate} /></HighlightConditional></TextTd>
+          <td><FormattedMessage id="common.event.birth" /></td>
+          <TextTd><HighlightConditional isHighlighted={formData.sortBy === EVENT_TYPE_BIRTH && hasYearFilter}>
+            {entry.birthDate && (
+              <time dateTime={entry.birthDate}><FormattedDate value={entry.birthDate} /></time>
+            )}
+          </HighlightConditional></TextTd>
           <TextTd><HighlightSuffix text={entry.birthPlace} suffix={placeText} /></TextTd>
         </tr>
         <tr>
-          <td>Décès</td>
-          <TextTd><HighlightConditional isHighlighted={formData.sortBy === EVENT_TYPE_DEATH && hasYearFilter}><FormattedDate value={entry.deathDate} /></HighlightConditional></TextTd>
+          <td><FormattedMessage id="common.event.death" /></td>
+          <TextTd><HighlightConditional isHighlighted={formData.sortBy === EVENT_TYPE_DEATH && hasYearFilter}>
+            {entry.deathDate && (
+              <time dateTime={entry.deathDate}><FormattedDate value={entry.deathDate} /></time>
+            )}
+          </HighlightConditional></TextTd>
           <TextTd><HighlightSuffix text={entry.deathPlace} suffix={placeText} /></TextTd>
         </tr>
       </tbody>
@@ -87,12 +100,12 @@ export function ResultListTable({ results, formData, disabled, withHighlights })
     <Table responsive className={`result-table ${disabled ? 'group-disabled' : ''}`}>
       <thead>
       <tr>
-        <th>Sexe</th>
-        <th>Noms</th>
-        <th>Prénoms</th>
-        <th>Événement</th>
-        <th>Date</th>
-        <th>Lieu</th>
+        <th><FormattedMessage id="result.header.gender" /></th>
+        <th><FormattedMessage id="result.header.surnames" /></th>
+        <th><FormattedMessage id="result.header.given_names" /></th>
+        <th><FormattedMessage id="result.header.event" /></th>
+        <th><FormattedMessage id="result.header.date" /></th>
+        <th><FormattedMessage id="result.header.place" /></th>
       </tr>
       </thead>
       {results.map(renderRow)}

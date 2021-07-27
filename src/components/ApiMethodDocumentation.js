@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { Badge, OverlayTrigger, Table, Tooltip } from 'react-bootstrap';
 import { Asterisk } from 'react-bootstrap-icons';
+import { FormattedMessage } from 'react-intl';
 
 function ApiMethodDocumentationParameter({ parameter, description, type, defaultValue, isRequired }) {
   return (
@@ -13,7 +14,7 @@ function ApiMethodDocumentationParameter({ parameter, description, type, default
               placement="right"
               overlay={
                 <Tooltip id="tooltip-api-parameter-required">
-                  Requis
+                  <FormattedMessage id="api.required_parameter_tooltip" />
                 </Tooltip>
               }
             >
@@ -27,7 +28,7 @@ function ApiMethodDocumentationParameter({ parameter, description, type, default
       <td>
         {isRequired ? (
           <em>
-            (paramètre requis)
+            <FormattedMessage id="api.required_parameter_value" />
           </em>
         ) : (
           <code>{defaultValue}</code>
@@ -64,17 +65,17 @@ export function ApiMethodDocumentation({ method, type, description, children, ex
       <Table responsive>
         <thead>
         <tr>
-          <th>Paramètre</th>
-          <th>Description</th>
-          <th>Type de valeur</th>
-          <th>Valeur par défaut</th>
+          <th><FormattedMessage id="api.table.header.parameter" /></th>
+          <th><FormattedMessage id="api.table.header.description" /></th>
+          <th><FormattedMessage id="api.table.header.value_type" /></th>
+          <th><FormattedMessage id="api.table.header.default_value" /></th>
         </tr>
         </thead>
         <tbody>
         {children}
         </tbody>
       </Table>
-      <strong>Exemple :</strong>
+      <strong><FormattedMessage id="api.example_usage" /></strong>
       <pre className="mt-2">
         <code>
           {type} <a href={exampleUrl} target="_blank" rel="noreferrer">{exampleUrl}</a>{'\n\n'}

@@ -25,22 +25,22 @@ const listWarnings = (form, result) => {
   const warnings = [];
   if (yearAfter !== null && yearBefore !== null) {
     if (yearAfter > yearBefore) {
-      warnings.push('La période est invalide, l\'année de début devrait être inférieure ou égale à l\'année de fin');
+      warnings.push('invalid_period');
     }
   }
   if (yearAfter !== null && yearAfter > maxYear) {
-    warnings.push('L\'année est trop avancée');
+    warnings.push('period_late');
   }
   if (form.sortBy === EVENT_TYPE_DEATH && yearBefore < MIN_YEAR_DEATH) {
-    warnings.push('L\'année est trop reculée, seuls les décès après 1970 sont consultables');
+    warnings.push('period_early_death');
   }
   if (form.sortBy === EVENT_TYPE_BIRTH && yearBefore < MIN_YEAR_BIRTH) {
-    warnings.push('L\'année est trop reculée');
+    warnings.push('period_early');
   }
   const rSpecialCharacters = /\s|[-,;:._()/+"']/;
   const strings = [form.surname, form.givenName];
   if (strings.some(s => s && Array.from(s).some(c => c.toLowerCase() === c.toUpperCase() && !rSpecialCharacters.test(c)))) {
-    warnings.push('La recherche contient des caractères spéciaux qui ont été ignorés');
+    warnings.push('special_symbols');
   }
   return warnings;
 };
@@ -163,7 +163,6 @@ export const clearForm = () => async dispatch => {
 };
 
 export const prefillForm = partialFormData => async (dispatch, getState) => {
-  // TODO partial place.fullname
   await triggerUpdate(dispatch, partialFormData);
 };
 

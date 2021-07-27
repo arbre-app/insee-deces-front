@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { Col, Overlay, Row, Tooltip } from 'react-bootstrap';
-import { FormattedNumber, useIntl } from 'react-intl';
+import { FormattedMessage, FormattedNumber, useIntl } from 'react-intl';
 import { ReactComponent as SvgMapFrance } from '../assets/map_france.svg';
 import { scale } from 'chroma-js';
 import { createSVGElement, NS } from '../utils';
@@ -113,9 +113,9 @@ export function GeographyVisualization({ isLoading, data, queryString }) {
     <Row style={isLoading ? styleLoading : null}>
       <Col sm={{ offset: 1, span: 10 }} md={{ offset: 2, span: 8 }} lg={{ offset: 3, span: 6 }}>
         <div className="text-center">
-          <h4>Répartition géographique</h4>
+          <h4><FormattedMessage id="statistics.geography.title" /></h4>
           <p>
-            Pour les noms "<em>{queryString}</em>", toutes périodes confondues
+            <FormattedMessage id="statistics.geography.subtitle" values={{ query: <em>{queryString}</em> }} />
           </p>
         </div>
         <div ref={ref} className="container-geography">
@@ -134,7 +134,7 @@ export function GeographyVisualization({ isLoading, data, queryString }) {
                   <Tooltip id="statistics-geography-tooltip" {...props}>
                     {name} ({number})
                     <br />
-                    <FormattedNumber value={count} /> événements
+                    <FormattedMessage id="statistics.geography.n_events" values={{ count: <FormattedNumber value={count} /> }} />
                   </Tooltip>
                 );
               }}

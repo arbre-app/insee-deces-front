@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
+import { FormattedMessage } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 import { DEFAULT_EVENT_TYPE, DEFAULT_ORDER_TYPE } from '../api';
 import { DEFAULT_RESULTS_PER_PAGE } from '../config';
@@ -59,7 +60,7 @@ export function BlockForm({ initialPartialData }) {
         <FormSpy onChange={state => setLiveFormDataDispatch(state.values)} subscription={{ values: true }} />
         <Row>
           <Col>
-            Recherchez instantanément dans la base des décès enregistrés par l'Insee depuis <strong>1970</strong> :
+            <FormattedMessage id="form.description" values={{ year: <strong>1970</strong> }} />
           </Col>
         </Row>
         <Row className="form-row">
