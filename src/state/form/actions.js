@@ -14,6 +14,7 @@ export const RESULT_STATS_TIME = 'form/RESULT_STATS_TIME';
 export const ERROR = 'form/ERROR';
 export const CLEAR_SEARCH = 'form/CLEAR_SEARCH';
 export const LIVE = 'form/LIVE';
+export const CLEAR_WARNING = 'form/CLEAR_WARNING';
 
 const listWarnings = (form, result) => {
   const MIN_YEAR_BIRTH = 1850;
@@ -170,5 +171,11 @@ export const setLiveFormData = values => async dispatch => {
   dispatch({
     type: LIVE,
     liveForm: values,
+  });
+};
+
+export const clearWarning = () => async dispatch => {
+  dispatch({
+    type: CLEAR_WARNING,
   });
 };

@@ -1,4 +1,5 @@
 {
+  "meta.title_search": "Recherche \"{query}\"",
   "common.copied": "Copié",
   "common.language": "Langue",
   "common.event.birth": "Naissance",
@@ -76,11 +77,11 @@
   "export.button_download": "Télécharger",
   "statistics.geography.title": "Répartition géographique",
   "statistics.geography.subtitle": "Pour les noms \"{query}\", toutes périodes confondues",
-  "statistics.geography.n_events": "{count} {count, plural, =0 {événement} one {événement} other {événements}}",
+  "statistics.geography.n_events": "{count} {n, plural, =0 {événement} one {événement} other {événements}}",
   "statistics.year.title": "Statistiques annuelles",
   "statistics.year.subtitle": "Pour la recherche courante",
   "statistics.year.year": "Année {year}",
-  "statistics.year.n_births": "{count} {count, plural, =0 {naissance} one {naissance} other {naissances}}",
+  "statistics.year.n_births": "{count} {n, plural, =0 {naissance} one {naissance} other {naissances}}",
   "statistics.year.n_deaths": "{count} décès",
   "api.required_parameter_tooltip": "Requis",
   "api.required_parameter_value": "(paramètre requis)",
@@ -137,7 +138,7 @@
   "info.confidentiality.content": "Ce service ne contient aucun traceur et n'utilise pas de cookies. Des journaux d'accès sont conservés temporairement afin d'assurer le bon fonctionnement du service. Les fiches individuelles ne sont pas indexées par les moteurs de recherche.",
   "info.faq.title": "Foire aux questions",
   "info.faq.cannot_find.question": "Je ne trouve pas ce que je recherche, pourquoi ?",
-  "info.faq.cannot_find.answer": "TODO",
+  "info.faq.cannot_find.answer": "Plusieurs explications sont possibles. Vérifiez dans un premier lieu que la personne soit bien décédée entre 1970 et un mois avant la date de dernière mise à jour des données ({date}). Assurez-vous également qu'au moins un des deux événements d'état civil (naissance ou décès) se soit produit en France. Il arrive parfois que les noms soient mal orthographiés ou que les dates et lieux contiennent une erreur de saisie ; dans ce cas la fiche est bien présente mais plus difficile à trouver. Il est aussi possible que la fiche soit simplement absente. Quoi qu'il arrive, il ne faut pas tirer de conclusion d'une absence de résultat.",
   "info.faq.found_error.question": "Une fiche contient une erreur, que faire ?",
   "info.faq.found_error.answer": "Malheureusement l'Insee ne propose pas de système de rectification pour le moment. Il n'y a donc rien à faire.",
   "info.faq.removal.question": "Puis-je demander la suppression de la fiche d'un proche ?",
@@ -146,5 +147,7 @@
   "footer.current_data": "La base contient {count} fiches ({date})",
   "footer.informations": "Informations",
   "footer.credit": "Réalisé et hébergé par {author} à partir des <a>données de l'Insee</a>, sans en être affilié.",
+  "footer.contact": "Contact",
+  "footer.contact_remark": "<b>Remarque</b> : merci de ne pas utiliser cette adresse pour signaler les éventuelles erreurs dans les données indexées (<a>voir FAQ</a>).",
   "footer.api": "API"
 }

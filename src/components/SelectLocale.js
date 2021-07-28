@@ -6,7 +6,7 @@ import { AVAILABLE_LANGUAGES } from '../config';
 // Partially borrowed from:
 // https://github.com/arbre-app/browse-gedcom/blob/master/src/components/ChooseLanguage/ChooseLanguage.js
 
-export function SelectLanguage({ currentLanguage, setLanguage, ...other }) {
+export function SelectLocale({ currentLocale, setLocale, ...other }) {
   return (
     <DropdownButton
       title={(
@@ -22,8 +22,8 @@ export function SelectLanguage({ currentLanguage, setLanguage, ...other }) {
         <Dropdown.Item
           href="#"
           key={locale}
-          onClick={() => setLanguage(locale)}
-          active={locale === currentLanguage}
+          onClick={() => setLocale(locale)}
+          active={locale === currentLocale}
         >
           <IconComponent className="icon mr-2" />
           {name}

@@ -59,9 +59,9 @@ export function ApiMethodDocumentation({ method, type, description, children, ex
         {' '}
         <kbd>{method}</kbd>
       </div>
-      <div className="mb-2">
+      <p className="text-justify mb-2">
         {description}
-      </div>
+      </p>
       <Table responsive>
         <thead>
         <tr>

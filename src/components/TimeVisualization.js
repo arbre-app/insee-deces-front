@@ -69,8 +69,7 @@ export function TimeVisualization({ isLoading, data, isBirth }) {
               width: widthBar,
               height: h,
               fill: color,
-              stroke: color,
-              'stroke-width': 1,
+              'class': 'cursor-pointer',
             });
             gBars.append(rect);
 
@@ -191,7 +190,7 @@ export function TimeVisualization({ isLoading, data, isBirth }) {
                   <Tooltip id="statistics-time-tooltip" {...props}>
                     <FormattedMessage id="statistics.year.year" values={{ year: year }} />
                     <br />
-                    <FormattedMessage id={isBirth ? 'statistics.year.n_births' : 'statistics.year.n_deaths'} values={{ count: <FormattedNumber value={count} /> }} />
+                    <FormattedMessage id={isBirth ? 'statistics.year.n_births' : 'statistics.year.n_deaths'} values={{ count: <FormattedNumber value={count} />, n: count }} />
                   </Tooltip>
                 );
               }}

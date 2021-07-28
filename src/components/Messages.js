@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
+import { clearWarning } from '../state/form/actions';
 import { hideNewsMessage } from '../state/settings/action';
 import { NetworkErrorMessage, NewsMessage, UserWarningMessage } from './messages';
 
@@ -9,6 +10,7 @@ export function Messages() {
   const settingsState = useSelector(state => state.settings);
   const dispatch = useDispatch();
   const hideNewsMessageDispatch = () => dispatch(hideNewsMessage());
+  const clearWarningDispatch = () => dispatch(clearWarning());
   return (
     <>
       {settingsState.data.messageNewsVisible && (
@@ -18,7 +20,7 @@ export function Messages() {
         <NetworkErrorMessage />
       )}
       {warnings !== null && warnings.length > 0 && (
-        <UserWarningMessage warnings={warnings} />
+        <UserWarningMessage warnings={warnings} onClose={clearWarningDispatch} />
       )}
     </>
   );

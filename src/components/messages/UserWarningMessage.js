@@ -3,9 +3,9 @@ import { ExclamationCircleFill} from 'react-bootstrap-icons';
 import { FormattedMessage } from 'react-intl';
 import { Message } from './Message';
 
-export function UserWarningMessage({ warnings }) {
+export function UserWarningMessage({ warnings, onClose }) {
   return (
-    <Message variant="warning" icon={ExclamationCircleFill}>
+    <Message variant="warning" icon={ExclamationCircleFill} onClose={onClose}>
       <FormattedMessage id="result.warning.title" />
       <ul className="mb-0">
         {warnings.map((warning, i) => (

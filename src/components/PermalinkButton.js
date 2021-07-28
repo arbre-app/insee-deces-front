@@ -5,37 +5,16 @@ import { Clipboard, ClipboardCheck, Link45deg, PinFill } from 'react-bootstrap-i
 import { FormattedMessage } from 'react-intl';
 import { useSelector } from 'react-redux';
 import { generatePermalink } from '../permalink';
+import { InlineCopy } from './InlineCopy';
 
 export function PermalinkButton({ disabled, isTabStats, ...props }) {
   const formState = useSelector(state => state.form);
   const url = generatePermalink(formState.form, isTabStats);
-  const [isCopied, setCopied] = useState(false);
-  const [isCopiedTooltip, setCopiedTooltip] = useState(false);
-  const selectInput = () => {
-    const input = document.getElementById('input-permalink');
-    input.select();
-  };
-  const buttonClickHandler = () => {
-    selectInput();
-    document.execCommand('copy');
-    setCopied(true);
-    setCopiedTooltip(true);
-  };
-  const buttonLeaveHandler = () => setCopiedTooltip(false);
-  const inputClickHandler = () => selectInput();
-  const popoverToggleHandler = isToggled => {
-    if (!isToggled) {
-      setCopied(false);
-      setCopiedTooltip(false);
-    }
-  };
-  const ClipboardIcon = isCopied ? ClipboardCheck : Clipboard;
   return (
     <OverlayTrigger
       trigger="click"
       placement="top"
       rootClose
-      onToggle={popoverToggleHandler}
       overlay={
         <Popover id="popover-permalink">
           <Popover.Title as="h3">
@@ -43,25 +22,7 @@ export function PermalinkButton({ disabled, isTabStats, ...props }) {
             <FormattedMessage id="result.permalink" />
           </Popover.Title>
           <Popover.Content>
-            <InputGroup>
-              <FormControl id="input-permalink" value={url} readOnly onClick={inputClickHandler} />
-              <InputGroup.Append>
-                <OverlayTrigger
-                  placement="top"
-                  show={isCopiedTooltip}
-                  transition={false}
-                  overlay={
-                    <Tooltip id="tooltip-permalink-copy">
-                      <FormattedMessage id="common.copied" />
-                    </Tooltip>
-                  }
-                >
-                  <Button variant="outline-secondary" onClick={buttonClickHandler} onMouseLeave={buttonLeaveHandler}>
-                    <ClipboardIcon className="icon" />
-                  </Button>
-                </OverlayTrigger>
-              </InputGroup.Append>
-            </InputGroup>
+            <InlineCopy id="input-permalink" text={url} />
           </Popover.Content>
         </Popover>
       }

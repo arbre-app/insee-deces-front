@@ -1,12 +1,39 @@
 import PropTypes from 'prop-types';
-import { Col, Row } from 'react-bootstrap';
-import { Github, InfoCircleFill, Tools } from 'react-bootstrap-icons';
+import { useState } from 'react';
+import { Col, Modal, Row } from 'react-bootstrap';
+import { EnvelopeFill, Github, InfoCircleFill, Tools } from 'react-bootstrap-icons';
 import { FormattedDate, FormattedMessage, FormattedNumber } from 'react-intl';
-import { DB_LAST_UPDATE, DB_TOTAL_RECORDS } from '../config';
+import { CONTACT_EMAIL, DB_LAST_UPDATE, DB_TOTAL_RECORDS } from '../config';
+import { InlineCopy } from './InlineCopy';
 import { InternalLink } from './InternalLink';
 import { author, repository } from '../../package.json';
 
 export function Footer({ onInformationClick, onApiClick }) {
+  const [show, setShow] = useState(false);
+
+  const handleModalInformationClick = () => {
+    setShow(false);
+    onInformationClick();
+  };
+
+  const renderModal = () => (
+    <Modal show={show} onHide={() => setShow(false)} restoreFocus={false}>
+      <Modal.Header closeButton>
+        <Modal.Title><FormattedMessage id="footer.contact" /></Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <p>
+          <FormattedMessage id="footer.contact_remark" values={{ b: remark => <strong>{remark}</strong>, a: text => <InternalLink onClick={handleModalInformationClick}>{text}</InternalLink> }} />
+        </p>
+        <Row>
+          <Col xs={12} sm={{ offset: 3, span: 6 }}>
+            <InlineCopy id="input-contact" text={CONTACT_EMAIL} center />
+          </Col>
+        </Row>
+      </Modal.Body>
+    </Modal>
+  );
+
   return (
     <>
       <Row className="text-center mt-3">
@@ -36,6 +63,14 @@ export function Footer({ onInformationClick, onApiClick }) {
           </em>
         </Col>
         <Col xs={12}>
+          <InternalLink onClick={() => setShow(true)} noScroll>
+            <EnvelopeFill className="icon mr-2" />
+            <strong>
+              <FormattedMessage id="footer.contact" />
+            </strong>
+          </InternalLink>
+        </Col>
+        <Col xs={12}>
           <InternalLink onClick={onApiClick}>
             <Tools className="icon mr-2"/>
             <strong>
@@ -49,6 +84,7 @@ export function Footer({ onInformationClick, onApiClick }) {
           </a>
         </Col>
       </Row>
+      {renderModal()}
     </>
   );
 }

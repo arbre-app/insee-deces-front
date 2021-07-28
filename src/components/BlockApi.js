@@ -31,25 +31,25 @@ export function BlockApi({ onBackClick }) {
       <BackButton onClick={onBackClick} />
       <div className="my-2">
         <h3><FormattedMessage id="api.title" /></h3>
-        <p>
+        <p className="text-justify">
           <FormattedMessage id="api.description" />
         </p>
         <h4><FormattedMessage id="api.technical_details.title" /></h4>
-        <p>
+        <p className="text-justify">
           <FormattedMessage id="api.technical_details.description.entrypoint" values={{ i: entrypointEnglish => <em>{entrypointEnglish}</em>, entrypoint: <kbd>{API_ENDPOINT}</kbd> }} />
         </p>
-        <p>
+        <p className="text-justify">
           <FormattedMessage id="api.technical_details.url.wikipedia_json">
             {url => (
               <FormattedMessage id="api.technical_details.description.json" values={{ a: json => <a href={url} target="_blank" rel="noreferrer">{json}</a> }} />
             )}
           </FormattedMessage>
         </p>
-        <p>
+        <p className="text-justify">
           <FormattedMessage id="api.technical_details.description.authentication" />
         </p>
         <h4><FormattedMessage id="api.quota.title" /></h4>
-        <p>
+        <p className="text-justify">
           <FormattedMessage id="api.quota.description" values={{ limit: <strong><FormattedNumber value={3600} /></strong>, useragent: <code>User-Agent</code> }} />
         </p>
         <h4><FormattedMessage id="api.documentation.title" /></h4>

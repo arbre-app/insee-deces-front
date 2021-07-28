@@ -8,7 +8,7 @@ import './index.css';
 import fr from './i18n/fr.json';
 import en from './i18n/en.json';
 
-function App({ locale }) {
+function App({ locale, setLocale }) {
   let messages;
   if(locale === 'fr') {
     messages = fr;
@@ -21,7 +21,7 @@ function App({ locale }) {
   return (
     <Provider store={store}>
       <IntlProvider locale={locale} messages={messages}>
-        <AppContent />
+        <AppContent setLocale={setLocale} />
       </IntlProvider>
     </Provider>
   );
@@ -29,10 +29,12 @@ function App({ locale }) {
 
 App.propTypes = {
   locale: PropTypes.string,
+  setLocale: PropTypes.func,
 };
 
 App.defaultProps = {
   locale: 'fr',
+  setLocale: null,
 };
 
 export default App;

@@ -6,13 +6,14 @@ import { FormattedMessage } from 'react-intl';
 import { useDispatch } from 'react-redux';
 import { clearForm } from '../state/form/actions';
 
-export function ClearButton({ initialValues, disabled }) {
+export function ClearButton({ initialValues, disabled, onClick }) {
   const form = useForm();
   const dispatch = useDispatch();
   const clearFormDispatch = () => dispatch(clearForm());
   const handleClick = () => {
     form.reset(initialValues);
     clearFormDispatch();
+    onClick();
   };
 
   return (
@@ -28,4 +29,5 @@ export function ClearButton({ initialValues, disabled }) {
 ClearButton.propTypes = {
   initialValues: PropTypes.object.isRequired,
   disabled: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
 };

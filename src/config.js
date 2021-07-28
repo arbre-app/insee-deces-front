@@ -5,6 +5,9 @@ export const IS_DEVELOPMENT = !process.env.NODE_ENV || process.env.NODE_ENV === 
 export const FRONTEND_URL = !IS_DEVELOPMENT ? 'https://arbre.app/insee' : 'http://localhost:3000';
 export const API_ENDPOINT = 'https://insee.arbre.app';
 
+const CONTACT_EMAIL_PREFIX = 'contact', CONTACT_EMAIL_DOMAIN = 'arbre.app';
+export const CONTACT_EMAIL = `${CONTACT_EMAIL_PREFIX}@${CONTACT_EMAIL_DOMAIN}`;
+
 export const DB_TOTAL_RECORDS = 25686019;
 export const DB_LAST_UPDATE = '2021-06-28';
 

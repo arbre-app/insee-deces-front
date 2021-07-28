@@ -1,4 +1,13 @@
-import { LOADING, SUCCESS, ERROR, CLEAR_SEARCH, LIVE, RESULT_STATS_GEOGRAPHY, RESULT_STATS_TIME } from './actions';
+import {
+  LOADING,
+  SUCCESS,
+  ERROR,
+  CLEAR_SEARCH,
+  LIVE,
+  RESULT_STATS_GEOGRAPHY,
+  RESULT_STATS_TIME,
+  CLEAR_WARNING,
+} from './actions';
 
 const initialStateStats = {
   loading: false,
@@ -82,6 +91,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         liveForm: action.liveForm,
+      };
+    case CLEAR_WARNING:
+      return {
+        ...state,
+        warnings: null,
       };
     default:
       return state;

@@ -1,9 +1,10 @@
+import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Container } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
 import { useIntl } from 'react-intl';
 import { useSelector } from 'react-redux';
-import { BlockForm, BlockInformation, BlockResultTabs, Footer, Header, Messages, SelectLanguage } from './components';
+import { BlockForm, BlockInformation, BlockResultTabs, Footer, Header, Messages, SelectLocale } from './components';
 import { BlockApi } from './components/BlockApi';
 import { extractAndParsePermalink } from './permalink';
 
@@ -11,9 +12,11 @@ const PAGE_MAIN = 'main';
 const PAGE_INFORMATIONS = 'infos';
 const PAGE_API = 'api';
 
-export function AppContent() {
+export function AppContent({ setLocale }) {
   const permalinkData = extractAndParsePermalink();
 
+  const formState = useSelector(state => state.form);
+  const form = formState.form;
   const settingsState = useSelector(state => state.settings);
   const [visiblePage, setVisiblePage] = useState(PAGE_MAIN);
   const [isTabStats, setTabStats] = useState(permalinkData !== null && permalinkData[1]);
@@ -23,14 +26,17 @@ export function AppContent() {
   return (
     <Container>
       <Helmet>
+        <title>
+          {(form !== null ? intl.formatMessage({ id: 'meta.title_search'}, { query: [form.surname, form.givenName].map(s => s ? s.trim() : s).filter(s => s).join(' ') }) + ' · ' : '') + intl.formatMessage({ id: 'header.title' })}
+        </title>
         <body className={settingsState.data.theme} />
       </Helmet>
 
       <Container className="position-absolute text-right ml-n3">
-        <SelectLanguage
+        <SelectLocale
           className="mt-2"
-          currentLanguage={intl.locale}
-          setLanguage={() => {}}
+          currentLocale={intl.locale}
+          setLocale={locale => setLocale && setLocale(locale)}
         />
       </Container>
 
@@ -40,7 +46,7 @@ export function AppContent() {
         <>
           <Messages />
 
-          <BlockForm initialPartialData={permalinkData !== null ? permalinkData[0] : null} />
+          <BlockForm initialPartialData={permalinkData !== null ? permalinkData[0] : null} onClear={() => setTabStats(false)} />
 
           <BlockResultTabs isTabStats={isTabStats} setTabStats={setTabStats} />
         </>
@@ -54,3 +60,7 @@ export function AppContent() {
     </Container>
   );
 }
+
+AppContent.propTypes = {
+  setLocale: PropTypes.func.isRequired,
+};

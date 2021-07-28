@@ -6,7 +6,8 @@ import {
   Search,
   Shield,
 } from 'react-bootstrap-icons';
-import { FormattedMessage } from 'react-intl';
+import { FormattedDate, FormattedMessage } from 'react-intl';
+import { DB_LAST_UPDATE } from '../config';
 import { BackButton } from './BackButton';
 
 export function BlockInformation({ onBackClick }) {
@@ -19,7 +20,7 @@ export function BlockInformation({ onBackClick }) {
           <ExclamationTriangle className="icon mr-2" />
           <FormattedMessage id="info.important_remarks.title" />
         </h5>
-        <p>
+        <p className="text-justify">
           <FormattedMessage id="info.important_remarks.content" values={{
             a: inseeData => <a href="https://www.insee.fr/fr/information/4190491" target="_blank" rel="noreferrer">{inseeData}</a>,
             b: noGuarantees => <strong>{noGuarantees}</strong>,
@@ -30,7 +31,7 @@ export function BlockInformation({ onBackClick }) {
           <Search className="icon mr-2" />
           <FormattedMessage id="info.search_parameters.title" />
         </h5>
-        <ul>
+        <ul className="text-justify">
           <li>
             <FormattedMessage id="info.search_parameters.list_separator" values={{
               title: <strong><FormattedMessage id="info.search_parameters.names.title" /></strong>,
@@ -54,7 +55,7 @@ export function BlockInformation({ onBackClick }) {
           <Shield className="icon mr-2" />
           <FormattedMessage id="info.confidentiality.title" />
         </h5>
-        <p>
+        <p className="text-justify">
           <FormattedMessage id="info.confidentiality.content" />
         </p>
         <h5>
@@ -62,19 +63,19 @@ export function BlockInformation({ onBackClick }) {
           <FormattedMessage id="info.faq.title" />
         </h5>
         <h6><FormattedMessage id="info.faq.cannot_find.question" /></h6>
-        <p>
+        <p className="text-justify">
           <ArrowRightShort className="icon mr-1" />
-          <FormattedMessage id="info.faq.cannot_find.answer" />
+          <FormattedMessage id="info.faq.cannot_find.answer" values={{ date: <FormattedDate value={DB_LAST_UPDATE} month="long" year="numeric" /> }} />
         </p>
         <h6><FormattedMessage id="info.faq.found_error.question" /></h6>
-        <p>
+        <p className="text-justify">
           <ArrowRightShort className="icon mr-1" />
           <FormattedMessage id="info.faq.found_error.answer" />
         </p>
         <h6>
           <FormattedMessage id="info.faq.removal.question" />
         </h6>
-        <p>
+        <p className="text-justify">
           <ArrowRightShort className="icon mr-1" />
           <FormattedMessage id="info.faq.removal.answer" values={{
             a: legal => <a href="https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000034708124/2019-12-31/" target="_blank" rel="noreferrer">{legal}</a>,

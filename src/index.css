@@ -191,3 +191,7 @@ table.result-table > tbody > tr > td {
 .theme-dark .popover-header {
     background-color: #151515;
 }
+
+.cursor-pointer{
+    cursor: pointer;
+}

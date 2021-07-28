@@ -36,7 +36,8 @@ export function GeographyVisualization({ isLoading, data, queryString }) {
         const count = counts[[...path.classList].find(className => counts[className] !== undefined)] || 0;
         path.setAttribute('fill', colorForCount(count));
         path.setAttribute('stroke', 'black');
-        path.setAttribute('stroke-weight', '1');
+        path.setAttribute('stroke-weight', 1);
+        path.classList.add('cursor-pointer');
         if(eventsRegistered === null) {
           const localEvents = [
             [path, 'mouseenter', handleEnter],
@@ -134,7 +135,7 @@ export function GeographyVisualization({ isLoading, data, queryString }) {
                   <Tooltip id="statistics-geography-tooltip" {...props}>
                     {name} ({number})
                     <br />
-                    <FormattedMessage id="statistics.geography.n_events" values={{ count: <FormattedNumber value={count} /> }} />
+                    <FormattedMessage id="statistics.geography.n_events" values={{ count: <FormattedNumber value={count} />, n: count }} />
                   </Tooltip>
                 );
               }}

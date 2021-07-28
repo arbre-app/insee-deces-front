@@ -20,7 +20,7 @@ import { DEFAULT_RANGE, DEFAULT_YEAR_PLUS_MINUS } from '../form/DateRangeGroup';
 import { prefillForm, setLiveFormData, submitForm } from '../state/form/actions';
 import { deepEqual } from '../utils';
 
-export function BlockForm({ initialPartialData }) {
+export function BlockForm({ initialPartialData, onClear }) {
   const dispatch = useDispatch();
   const submitFormDispatch = formData => dispatch(submitForm(formData));
   const onSubmit = (data, e) => {
@@ -87,7 +87,7 @@ export function BlockForm({ initialPartialData }) {
           </Col>
           {resetable && (
             <Col xs={{ order: 1 }} md={1} lg={2} xl={{ offset: 1, span: 2 }}>
-              <ClearButton initialValues={initialValues} disabled={isLoading} />
+              <ClearButton initialValues={initialValues} disabled={isLoading} onClick={onClear} />
             </Col>
           )}
         </Row>
@@ -108,6 +108,7 @@ export function BlockForm({ initialPartialData }) {
 
 BlockForm.propTypes = {
   initialPartialData: PropTypes.object,
+  onClear: PropTypes.func.isRequired,
 };
 
 BlockForm.defaultProps = {
