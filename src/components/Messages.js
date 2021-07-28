@@ -1,9 +1,10 @@
+import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearWarning } from '../state/form/actions';
 import { hideNewsMessage } from '../state/settings/action';
 import { NetworkErrorMessage, NewsMessage, UserWarningMessage } from './messages';
 
-export function Messages() {
+export function Messages({ legacyUrl }) {
   const formState = useSelector(state => state.form);
   const error = formState.error;
   const warnings = formState.warnings;
@@ -14,7 +15,7 @@ export function Messages() {
   return (
     <>
       {settingsState.data.messageNewsVisible && (
-        <NewsMessage onClose={hideNewsMessageDispatch} />
+        <NewsMessage onClose={hideNewsMessageDispatch} legacyUrl={legacyUrl} />
       )}
       {error !== null && (
         <NetworkErrorMessage />
@@ -25,3 +26,11 @@ export function Messages() {
     </>
   );
 }
+
+Messages.propTypes = {
+  legacyUrl: PropTypes.string,
+};
+
+Messages.defaultProps = {
+  legacyUrl: null,
+};

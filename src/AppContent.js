@@ -12,7 +12,7 @@ const PAGE_MAIN = 'main';
 const PAGE_INFORMATIONS = 'infos';
 const PAGE_API = 'api';
 
-export function AppContent({ setLocale }) {
+export function AppContent({ setLocale, legacyUrl }) {
   const permalinkData = extractAndParsePermalink();
 
   const formState = useSelector(state => state.form);
@@ -44,7 +44,7 @@ export function AppContent({ setLocale }) {
 
       {visiblePage === PAGE_MAIN ? (
         <>
-          <Messages />
+          <Messages legacyUrl={legacyUrl} />
 
           <BlockForm initialPartialData={permalinkData !== null ? permalinkData[0] : null} onClear={() => setTabStats(false)} />
 
@@ -62,5 +62,11 @@ export function AppContent({ setLocale }) {
 }
 
 AppContent.propTypes = {
-  setLocale: PropTypes.func.isRequired,
+  setLocale: PropTypes.func,
+  legacyUrl: PropTypes.string,
+};
+
+AppContent.defaultProps = {
+  setLocale: null,
+  legacyUrl: null,
 };
