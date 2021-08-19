@@ -1,4 +1,4 @@
-import qs from 'qs';
+import qs from 'query-string';
 import { API_ENDPOINT } from '../config';
 
 export const EVENT_TYPE_BIRTH = 'birth';

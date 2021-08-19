@@ -2,14 +2,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { FormattedNumber } from 'react-intl';
-import { useDispatch, useSelector } from 'react-redux';
-import { setResultsPerPage } from '../state/form/actions';
+import { setResultsPerPage, useFormContext } from '../state/form';
 
 export function ResultsPerPageSelect({ values, disabled, ...props }) {
-  const formState = useSelector(state => state.form);
-  const dispatch = useDispatch();
-  const setCurrentPageDispatch = currentPage => dispatch(setResultsPerPage(currentPage));
-  const value = formState.form.resultsPerPage;
+  const { state: { form }, dispatch: dispatchForm } = useFormContext();
+  const setCurrentPageDispatch = currentPage => dispatchForm(setResultsPerPage(currentPage));
+  const value = form.resultsPerPage;
   return (
     <Dropdown className="results-per-page-select" {...props}>
       <Dropdown.Toggle variant="light" id="dropdown-basic" disabled={disabled}>

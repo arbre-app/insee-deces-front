@@ -1,5 +1,4 @@
-import { HIDE_MESSAGE_NEWS, SET_MATCHES_HIGHLIGHTING, SET_THEME } from './action';
-import { THEME_DARK, THEME_LIGHT } from '../../components/SettingsButton';
+import { HIDE_MESSAGE_NEWS, SET_MATCHES_HIGHLIGHTING, SET_THEME, THEME_DARK, THEME_LIGHT } from './actions';
 
 export const defaultState = {
   data: {
@@ -7,10 +6,6 @@ export const defaultState = {
     matchesHighlighting: true,
     messageNewsVisible: true,
   },
-};
-
-const loadBoolean = (value, defaultValue) => {
-  return [false, true].map(String).includes(value) ? value === String(true) : defaultValue;
 };
 
 const LOCAL_STORAGE_KEY = 'settings';
@@ -45,9 +40,10 @@ const saveState = state => {
   localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(state.data));
 };
 
-const initialState = loadState();
+export const initialState = loadState();
 
-export default (state = initialState, action) => {
+
+export const settingsReducer = (state, action) => {
   switch (action.type) {
     case SET_THEME:
     case SET_MATCHES_HIGHLIGHTING:
@@ -57,10 +53,11 @@ export default (state = initialState, action) => {
           ...state.data,
           ...action.data,
         },
+        bla: 'abc',
       };
       saveState(merged); // Persist
       return merged;
     default:
-      return state;
+      throw new Error();
   }
 };

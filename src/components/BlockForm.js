@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
 import { Form as FinalForm, FormSpy } from 'react-final-form';
 import { FormattedMessage } from 'react-intl';
-import { useDispatch, useSelector } from 'react-redux';
 import { DEFAULT_EVENT_TYPE, DEFAULT_ORDER_TYPE } from '../api';
 import { DEFAULT_RESULTS_PER_PAGE } from '../config';
 import {
@@ -17,25 +16,33 @@ import {
   SurnameInput,
 } from '../form';
 import { DEFAULT_RANGE, DEFAULT_YEAR_PLUS_MINUS } from '../form/DateRangeGroup';
-import { prefillForm, setLiveFormData, submitForm } from '../state/form/actions';
+import { prefillForm, setLiveFormData, submitForm, useFormContext } from '../state/form';
 import { deepEqual } from '../utils';
 
 export function BlockForm({ initialPartialData, onClear }) {
-  const dispatch = useDispatch();
-  const submitFormDispatch = formData => dispatch(submitForm(formData));
+  const { state: formState, dispatch: dispatchForm } = useFormContext();
+  const submitFormDispatch = formData => dispatchForm(submitForm(formData));
   const onSubmit = (data, e) => {
     submitFormDispatch(data);
   };
 
-  const prefillFormDispatch = partialFormData => dispatch(prefillForm(partialFormData));
+  const prefillFormDispatch = partialFormData => dispatchForm(prefillForm(partialFormData));
   useEffect(() => {
     if(initialPartialData !== null) {
       prefillFormDispatch(initialPartialData);
     }
   }, []); // Called only once
 
-  const setLiveFormDataDispatch = values => dispatch(setLiveFormData(values));
-  const formState = useSelector(state => state.form);
+  const setLiveFormDataDispatch = values => dispatchForm(setLiveFormData(values));
+
+  const [initialChange, setInitialChange] = useState(false);
+  const handleFormChange = state => {
+    // Prevent a warning
+    if(initialChange) {
+      setInitialChange(true);
+      setLiveFormDataDispatch(state.values);
+    }
+  };
 
   const initialValues = {
     surname: undefined,
@@ -52,12 +59,11 @@ export function BlockForm({ initialPartialData, onClear }) {
     const unsubmittable = !values.surname || !values.surname.trim();
     const modified = !deepEqual(values, initialValues, false);
 
-    const formState = useSelector(state => state.form);
     const isLoading = formState.loading;
-    const resetable = modified || !!formState.data; // TODO
+    const resettable = modified || !!formState.data; // TODO
     return (
       <Form onSubmit={handleSubmit}>
-        <FormSpy onChange={state => setLiveFormDataDispatch(state.values)} subscription={{ values: true }} />
+        <FormSpy onChange={handleFormChange} subscription={{ values: true }} />
         <Row>
           <Col>
             <FormattedMessage id="form.description" values={{ year: <strong>1970</strong> }} />
@@ -85,7 +91,7 @@ export function BlockForm({ initialPartialData, onClear }) {
           <Col md={3} xl={2}>
             <SortOrderSelect disabled={isLoading} />
           </Col>
-          {resetable && (
+          {resettable && (
             <Col xs={{ order: 1 }} md={1} lg={2} xl={{ offset: 1, span: 2 }}>
               <ClearButton initialValues={initialValues} disabled={isLoading} onClick={onClear} />
             </Col>

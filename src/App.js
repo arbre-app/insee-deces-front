@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import { IntlProvider } from 'react-intl';
-import { Provider } from 'react-redux';
 import { AppContent } from './AppContent';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import store from './store';
+import { FormProvider } from './state/form';
+import { SettingsProvider } from './state/settings';
 import './index.css';
 import fr from './i18n/fr.json';
 import en from './i18n/en.json';
@@ -19,11 +19,13 @@ export function App({ locale, setLocale, legacyUrl }) {
   }
 
   return (
-    <Provider store={store}>
-      <IntlProvider locale={locale} messages={messages}>
-        <AppContent setLocale={setLocale} legacyUrl={legacyUrl} />
-      </IntlProvider>
-    </Provider>
+    <IntlProvider locale={locale} messages={messages}>
+      <SettingsProvider>
+        <FormProvider>
+          <AppContent setLocale={setLocale} legacyUrl={legacyUrl} />
+        </FormProvider>
+      </SettingsProvider>
+    </IntlProvider>
   );
 }
 

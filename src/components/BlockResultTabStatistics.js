@@ -1,17 +1,19 @@
 import { Col, Row } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
 import { EVENT_TYPE_BIRTH } from '../api';
+import { useFormContext } from '../state/form';
 import { SettingsButton } from './SettingsButton';
 import { GeographyVisualization } from './GeographyVisualization';
 import { PermalinkButton } from './PermalinkButton';
 import { TimeVisualization } from './TimeVisualization';
 
 export function BlockResultTabStatistics() {
-  const formState = useSelector(state => state.form);
-  const { loading: isGeographyLoading, data: statsGeographyData } = formState.statsGeography;
-  const { loading: isTimeLoading, data: statsTimeData } = formState.statsTime;
+  const { state: {
+    form,
+    statsGeography: { loading: isGeographyLoading, data: statsGeographyData },
+    statsTime: { loading: isTimeLoading, data: statsTimeData },
+  } } = useFormContext();
 
-  const geographyQueryString = formState.form !== null && [formState.form.surname, formState.form.givenName].map(s => (s || '').trim()).filter(s => s).join(' ');
+  const geographyQueryString = form !== null && [form.surname, form.givenName].map(s => (s || '').trim()).filter(s => s).join(' ');
 
   return (
     <div className="block block-tab py-2 px-2">
@@ -36,7 +38,7 @@ export function BlockResultTabStatistics() {
       <TimeVisualization
         isLoading={isTimeLoading}
         data={statsTimeData !== null ? statsTimeData.results : null}
-        isBirth={formState.form.sortBy === EVENT_TYPE_BIRTH}
+        isBirth={form.sortBy === EVENT_TYPE_BIRTH}
       />
     </div>
   );

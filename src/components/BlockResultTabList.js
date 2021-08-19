@@ -1,9 +1,9 @@
 import { Col, Row } from 'react-bootstrap';
 import { FormattedMessage, FormattedNumber } from 'react-intl';
-import { useDispatch, useSelector } from 'react-redux';
 import { RESULTS_PER_PAGE } from '../config';
 import { ResultsPerPageSelect } from '../form';
-import { setCurrentPage} from '../state/form/actions';
+import { setCurrentPage, useFormContext } from '../state/form';
+import { useSettingsContext } from '../state/settings';
 import { SettingsButton } from './SettingsButton';
 import { DownloadButton } from './DownloadButton';
 import { PermalinkButton } from './PermalinkButton';
@@ -11,10 +11,9 @@ import { ResultListTable } from './ResultListTable';
 import { SmallPagination } from '../form/SmallPagination';
 
 export function BlockResultTabList() {
-  const formState = useSelector(state => state.form);
-  const settingsState = useSelector(state => state.settings);
-  const dispatch = useDispatch();
-  const setCurrentPageDispatch = currentPage => dispatch(setCurrentPage(currentPage));
+  const { state: { data, form, loading }, dispatch: dispatchForm } = useFormContext();
+  const { state: { data: { matchesHighlighting } } } = useSettingsContext();
+  const setCurrentPageDispatch = currentPage => dispatchForm(setCurrentPage(currentPage));
   const handlePageChange = newPage => {
     setCurrentPageDispatch(newPage);
     window.scrollTo({ // TODO increase the speed of the animation (too slow!)
@@ -24,11 +23,11 @@ export function BlockResultTabList() {
     });
   };
   const renderCounts = className => (
-    <span className={(isLoading ? 'group-disabled' : '') + ' ' + className}>
+    <span className={(loading ? 'group-disabled' : '') + ' ' + className}>
       <strong><FormattedMessage id="result.n_results" values={{ results: <FormattedNumber value={data.count} />, n: data.count }} /></strong>{' '}
       &middot;{' '}
       <FormattedMessage id="result.page_of" values={{
-        current: <FormattedNumber value={formData.currentPage} />,
+        current: <FormattedNumber value={form.currentPage} />,
         total: <FormattedNumber value={Math.max(totalPages, 1)} />
       }} />
       {' '}
@@ -38,19 +37,17 @@ export function BlockResultTabList() {
       </span>
     </span>
   );
-  const data = formState.data, formData = formState.form;
-  const totalPages = Math.ceil(data.count / formData.resultsPerPage);
-  const isLoading = formState.loading;
+  const totalPages = Math.ceil(data.count / form.resultsPerPage);
   return (
     <div className="block block-tab block-tab-results pb-1 pt-2">
       <Row className="px-2">
         <Col xs={6} sm={3} md={2} className="pr-0">
-          <PermalinkButton disabled={isLoading} className="mr-2" />
-          <DownloadButton disabled={isLoading || data.count === 0} />
+          <PermalinkButton disabled={loading} className="mr-2" />
+          <DownloadButton disabled={loading || data.count === 0} />
         </Col>
         <Col xs={6} sm={9} md={10} className="text-right pl-0">
           {renderCounts('d-none d-sm-inline')}
-          <ResultsPerPageSelect values={RESULTS_PER_PAGE} disabled={isLoading} />
+          <ResultsPerPageSelect values={RESULTS_PER_PAGE} disabled={loading} />
           <SettingsButton className="ml-2" />
         </Col>
       </Row>
@@ -59,8 +56,8 @@ export function BlockResultTabList() {
       </Row>
       {data.count > 0 ? (
         <>
-          <ResultListTable results={data.results} formData={formData} disabled={isLoading} withHighlights={settingsState.data.matchesHighlighting} />
-          <SmallPagination currentPage={formData.currentPage} totalPages={totalPages} onChange={handlePageChange} disabled={isLoading} />
+          <ResultListTable results={data.results} formData={form} disabled={loading} withHighlights={matchesHighlighting} />
+          <SmallPagination currentPage={form.currentPage} totalPages={totalPages} onChange={handlePageChange} disabled={loading} />
         </>
       ) : (
         <div className="text-center mt-2">

@@ -2,24 +2,17 @@ import { useState } from 'react';
 import { Dropdown, DropdownButton } from 'react-bootstrap';
 import { CheckCircle, CheckSquare, Circle, GearFill, Square } from 'react-bootstrap-icons';
 import { FormattedMessage } from 'react-intl';
-import { useDispatch, useSelector } from 'react-redux';
-import { setMatchesHighlighting, setTheme } from '../state/settings/action';
-
-export const THEME_LIGHT = 'theme-light';
-export const THEME_DARK = 'theme-dark';
+import { setMatchesHighlighting, setTheme, THEME_DARK, THEME_LIGHT, useSettingsContext } from '../state/settings';
 
 export function SettingsButton({ ...props }) {
   const [isShown, setIsShown] = useState(false);
-  const settingsState = useSelector(state => state.settings);
-  const dispatch = useDispatch();
-  const theme = settingsState.data.theme;
+  const { state: { data: { theme, matchesHighlighting } }, dispatch } = useSettingsContext();
   const setThemeDispatch = theme => dispatch(setTheme(theme));
   const createThemeChangeHandler = theme => e => {
     setThemeDispatch(theme);
     e.stopPropagation(); // TODO is it needed?
     e.preventDefault();
   };
-  const matchesHighlighting = settingsState.data.matchesHighlighting;
   const setMatchesHighlightingDispatch = isEnabled => dispatch(setMatchesHighlighting(isEnabled));
   const handleSetMatchesHighlighting = e => {
     setMatchesHighlightingDispatch(!matchesHighlighting);

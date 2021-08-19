@@ -1,15 +1,14 @@
 import PropTypes from 'prop-types';
-import { useRef, useState } from 'react';
-import { Button, FormControl, InputGroup, OverlayTrigger, Popover, Tooltip } from 'react-bootstrap';
-import { Clipboard, ClipboardCheck, Link45deg, PinFill } from 'react-bootstrap-icons';
+import { Button, OverlayTrigger, Popover } from 'react-bootstrap';
+import { Link45deg, PinFill } from 'react-bootstrap-icons';
 import { FormattedMessage } from 'react-intl';
-import { useSelector } from 'react-redux';
 import { generatePermalink } from '../permalink';
+import { useFormContext } from '../state/form';
 import { InlineCopy } from './InlineCopy';
 
 export function PermalinkButton({ disabled, isTabStats, ...props }) {
-  const formState = useSelector(state => state.form);
-  const url = generatePermalink(formState.form, isTabStats);
+  const { state: { form } } = useFormContext();
+  const url = generatePermalink(form, isTabStats);
   return (
     <OverlayTrigger
       trigger="click"

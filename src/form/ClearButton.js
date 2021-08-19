@@ -3,13 +3,12 @@ import { Button } from 'react-bootstrap';
 import { ArrowCounterclockwise} from 'react-bootstrap-icons';
 import { useForm } from 'react-final-form';
 import { FormattedMessage } from 'react-intl';
-import { useDispatch } from 'react-redux';
-import { clearForm } from '../state/form/actions';
+import { clearForm, useFormContext } from '../state/form';
 
 export function ClearButton({ initialValues, disabled, onClick }) {
   const form = useForm();
-  const dispatch = useDispatch();
-  const clearFormDispatch = () => dispatch(clearForm());
+  const { dispatch: dispatchForm } = useFormContext();
+  const clearFormDispatch = () => dispatchForm(clearForm());
   const handleClick = () => {
     form.reset(initialValues);
     clearFormDispatch();

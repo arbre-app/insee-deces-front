@@ -2,6 +2,9 @@ export const SET_THEME = 'settings/SET_THEME';
 export const SET_MATCHES_HIGHLIGHTING = 'settings/SET_MATCHES_HIGHLIGHTING';
 export const HIDE_MESSAGE_NEWS = 'settings/HIDE_MESSAGE_NEWS';
 
+export const THEME_LIGHT = 'theme-light';
+export const THEME_DARK = 'theme-dark';
+
 export const setTheme = theme => async dispatch => {
   dispatch({
     type: SET_THEME,

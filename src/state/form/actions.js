@@ -144,14 +144,14 @@ export const submitForm = formData => async (dispatch, getState) => {
 
 export const setCurrentPage = currentPage => async (dispatch, getState) => {
   await triggerUpdate(dispatch, {
-    ...getState().form.form,
+    ...getState().form,
     currentPage: currentPage,
   });
 };
 
 export const setResultsPerPage = resultsPerPage => async (dispatch, getState) => {
   await triggerUpdate(dispatch, {
-    ...getState().form.form,
+    ...getState().form,
     currentPage: 1,
     resultsPerPage: resultsPerPage,
   });

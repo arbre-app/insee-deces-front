@@ -1,20 +1,16 @@
 import PropTypes from 'prop-types';
-import { useDispatch, useSelector } from 'react-redux';
-import { clearWarning } from '../state/form/actions';
-import { hideNewsMessage } from '../state/settings/action';
+import { clearWarning, useFormContext } from '../state/form';
+import { hideNewsMessage, useSettingsContext } from '../state/settings';
 import { NetworkErrorMessage, NewsMessage, UserWarningMessage } from './messages';
 
 export function Messages({ legacyUrl }) {
-  const formState = useSelector(state => state.form);
-  const error = formState.error;
-  const warnings = formState.warnings;
-  const settingsState = useSelector(state => state.settings);
-  const dispatch = useDispatch();
-  const hideNewsMessageDispatch = () => dispatch(hideNewsMessage());
-  const clearWarningDispatch = () => dispatch(clearWarning());
+  const { state: { error, warnings }, dispatch: dispatchForm } = useFormContext();
+  const { state: { data: { messageNewsVisible } }, dispatch: dispatchSettings } = useSettingsContext();
+  const hideNewsMessageDispatch = () => dispatchSettings(hideNewsMessage());
+  const clearWarningDispatch = () => dispatchForm(clearWarning());
   return (
     <>
-      {settingsState.data.messageNewsVisible && (
+      {messageNewsVisible && (
         <NewsMessage onClose={hideNewsMessageDispatch} legacyUrl={legacyUrl} />
       )}
       {error !== null && (

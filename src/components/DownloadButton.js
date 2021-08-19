@@ -11,9 +11,9 @@ import {
 } from 'react-bootstrap-icons';
 import { Field, Form as FinalForm } from 'react-final-form';
 import { FormattedMessage, FormattedNumber, useIntl } from 'react-intl';
-import { useSelector } from 'react-redux';
 import { RESULTS_PER_PAGE } from '../config';
 import { getPersonsFromFormData } from '../form';
+import { useFormContext } from '../state/form';
 
 const EXTENSION_CSV = 'csv';
 const EXTENSION_JSON = 'json';
@@ -60,7 +60,7 @@ SelectionInput.propTypes = {
 
 export function DownloadButton({ disabled, ...props }) {
   const intl = useIntl();
-  const formState = useSelector(state => state.form);
+  const { state: formState } = useFormContext();
   const paginationSize = Math.max(...RESULTS_PER_PAGE);
   const canExportAll = formState.data.count <= MAX_EXPORT_COUNT;
   const [show, setShow] = useState(false);

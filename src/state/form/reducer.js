@@ -26,7 +26,7 @@ export const initialState = {
   error: null,
 };
 
-export default (state = initialState, action) => {
+export const formReducer = (state, action) => {
   switch (action.type) {
     case LOADING:
       return {
