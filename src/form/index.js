@@ -27,8 +27,8 @@ export const extractPeriodFromData = data => {
     const pm = parseInt(data.yearPlusMinus || 5);
     if(data.year) {
       const year = parseInt(data.year);
-      yearAfter = year - pm;
-      yearBefore = year + pm;
+      yearAfter = (year - pm).toString();
+      yearBefore = (year + pm).toString();
     }
   } else {
     throw new Error(data.rangeType);

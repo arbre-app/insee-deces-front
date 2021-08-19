@@ -1,5 +1,6 @@
 import { Col, Row } from 'react-bootstrap';
 import { EVENT_TYPE_BIRTH } from '../api';
+import { extractPeriodFromData } from '../form';
 import { useFormContext } from '../state/form';
 import { SettingsButton } from './SettingsButton';
 import { GeographyVisualization } from './GeographyVisualization';
@@ -14,6 +15,7 @@ export function BlockResultTabStatistics() {
   } } = useFormContext();
 
   const geographyQueryString = form !== null && [form.surname, form.givenName].map(s => (s || '').trim()).filter(s => s).join(' ');
+  const [yearAfter, yearBefore] = extractPeriodFromData(form);
 
   return (
     <div className="block block-tab py-2 px-2">
@@ -39,6 +41,8 @@ export function BlockResultTabStatistics() {
         isLoading={isTimeLoading}
         data={statsTimeData !== null ? statsTimeData.results : null}
         isBirth={form.sortBy === EVENT_TYPE_BIRTH}
+        yearAfter={yearAfter != null && yearAfter.length > 0 ? parseInt(yearAfter) : null}
+        yearBefore={yearBefore != null && yearBefore.length > 0 ? parseInt(yearBefore) : null}
       />
     </div>
   );

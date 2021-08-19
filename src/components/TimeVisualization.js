@@ -2,12 +2,12 @@ import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { Col, Overlay, Row, Tooltip } from 'react-bootstrap';
 import { FormattedMessage, FormattedNumber, useIntl } from 'react-intl';
-import { scale } from 'chroma-js';
+import chroma, { scale } from 'chroma-js';
 import { createSVGElement } from '../utils';
 
 const NS = 'http://www.w3.org/2000/svg';
 
-export function TimeVisualization({ isLoading, data, isBirth }) {
+export function TimeVisualization({ isLoading, data, isBirth, yearAfter, yearBefore }) {
   const intl = useIntl();
   const styleLoading = { opacity: '50%' };
 
@@ -22,6 +22,16 @@ export function TimeVisualization({ isLoading, data, isBirth }) {
   const [widthTicks, heightTicks] = [width / 20, height / 6];
   const widthBar = (width - widthTicks) / maxRange;
   const maxHeightBar = height - heightTicks;
+
+  const hasYearAfter = yearAfter != null, hasYearBefore = yearBefore != null;
+  const yearMin = yearAfter != null ? yearAfter : Number.MIN_SAFE_INTEGER;
+  const yearMax = yearBefore != null ? yearBefore : Number.MAX_SAFE_INTEGER;
+  const isYearColored = year => yearMin <= year && year <= yearMax;
+
+  const toBW = color => {
+    const [h, , l] = chroma(color).hsl();
+    return chroma.hsl(h, 0, l);
+  };
 
   let eventsRegistered = null;
   useEffect(() => {
@@ -68,7 +78,7 @@ export function TimeVisualization({ isLoading, data, isBirth }) {
               y: maxHeightBar - h,
               width: widthBar,
               height: h,
-              fill: color,
+              fill: isYearColored(year) ? color : toBW(color),
               'class': 'cursor-pointer',
             });
             gBars.append(rect);
@@ -158,7 +168,7 @@ export function TimeVisualization({ isLoading, data, isBirth }) {
     }
   }, [ref, data]);
 
-  useEffect(() => () => { // Cleanup
+  useEffect(() => () => { // Cleanupjean
     if(eventsRegistered !== null) {
       eventsRegistered.forEach(([element, type, handler]) => element.removeEventListener(type, handler));
     }
@@ -209,8 +219,12 @@ TimeVisualization.propTypes = {
     count: PropTypes.number.isRequired,
   })),
   isBirth: PropTypes.bool.isRequired,
+  yearAfter: PropTypes.number,
+  yearBefore: PropTypes.number,
 };
 
 TimeVisualization.defaultProps = {
   isLoading: false,
+  yearAfter: null,
+  yearBefore: null,
 };

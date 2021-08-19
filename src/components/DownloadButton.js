@@ -242,7 +242,7 @@ export function DownloadButton({ disabled, ...props }) {
                 render={({ input }) => (
                   <Form.Check id="export-radio-all" disabled={!canExportAll} label={(
                     <>
-                      <FormattedMessage id="export.radio.current_page" values={{ entries: <strong><FormattedNumber value={formState.data.count} /></strong>, n: formState.data.count }} />
+                      <FormattedMessage id="export.radio.all" values={{ entries: <strong><FormattedNumber value={formState.data.count} /></strong>, n: formState.data.count }} />
                       {!canExportAll && (
                         <span className="text-warning"><ExclamationTriangleFill className="icon ml-3 mr-2" />&#62; <FormattedNumber value={MAX_EXPORT_COUNT} /></span>
                       )}
