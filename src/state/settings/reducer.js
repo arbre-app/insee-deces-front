@@ -11,6 +11,9 @@ export const defaultState = {
 const LOCAL_STORAGE_KEY = 'settings';
 
 const loadState = () => {
+  if(typeof window === 'undefined') {
+    return defaultState;
+  }
   const storedRawState = localStorage.getItem(LOCAL_STORAGE_KEY);
   if(storedRawState !== null) {
     try {

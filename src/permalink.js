@@ -21,6 +21,9 @@ const P_TAB = 't', P_SURNAME = 's', P_NAME = 'n', P_PLACE = 'p', P_EVENT = 'e', 
 const V_TAB_RESULTS = 'r', V_TAB_STATS = 's', V_BIRTH = 'b', V_DEATH = 'd', V_ASCEND = 'a', V_DESCEND = 'd';
 
 function extractHashParameters() {
+  if(typeof window === 'undefined') {
+    return {};
+  }
   return parse(window.location.hash);
 }
 

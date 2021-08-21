@@ -1,10 +1,8 @@
 import PropTypes from 'prop-types';
 import { IntlProvider } from 'react-intl';
 import { AppContent } from './AppContent';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { FormProvider } from './state/form';
 import { SettingsProvider } from './state/settings';
-import './index.css';
 import fr from './i18n/fr.json';
 import en from './i18n/en.json';
 

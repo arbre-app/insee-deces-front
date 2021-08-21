@@ -229,7 +229,7 @@ export function DownloadButton({ disabled, ...props }) {
                         name="exportFirst"
                         render={({ input: childInput }) => (
                           <FormControl type="number" disabled={!input.checked} min={1} max={MAX_EXPORT_COUNT}
-                                       placeholder={<FormattedMessage id="export.amount" />} {...childInput} />
+                                       placeholder={intl.formatMessage({ id: 'export.amount' })} {...childInput} />
                         )} />
                     </div>
                   )} {...input} />

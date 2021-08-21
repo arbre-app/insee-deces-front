@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import { clearWarning, useFormContext } from '../state/form';
 import { hideNewsMessage, useSettingsContext } from '../state/settings';
 import { NetworkErrorMessage, NewsMessage, UserWarningMessage } from './messages';
@@ -8,7 +9,11 @@ export function Messages({ legacyUrl }) {
   const { state: { data: { messageNewsVisible } }, dispatch: dispatchSettings } = useSettingsContext();
   const hideNewsMessageDispatch = () => dispatchSettings(hideNewsMessage());
   const clearWarningDispatch = () => dispatchForm(clearWarning());
-  return (
+
+  const [initialized, setInitialized] = useState(false); // In case of server-side rendering
+  useEffect(() => setInitialized(true), []);
+
+  return initialized && (
     <>
       {messageNewsVisible && (
         <NewsMessage onClose={hideNewsMessageDispatch} legacyUrl={legacyUrl} />

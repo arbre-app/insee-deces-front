@@ -16,12 +16,14 @@ export function GeographyVisualization({ isLoading, data, queryString }) {
 
   let counts = {}, max = 0;
   if(!isLoading && data !== null) {
-    counts = Object.fromEntries(data.map(({ name, count }) => [`departement${name.slice(1)}`, count]));
+    counts = Object.fromEntries(data.map(({ name, count }) => [name.split('-')[1], count]));
     max = Math.max(...data.map(({ count }) => count));
   }
 
   const scheme = scale('YlOrRd');
   const colorForCount = count => count > 0 ? scheme(count / max).hex() : 'white';
+
+  const padNumberTwo = v => v.length >= 2 ? v : `0${v}`;
 
   const [scaleWidth, scaleHeight] = [700, 100];
 
@@ -32,8 +34,8 @@ export function GeographyVisualization({ isLoading, data, queryString }) {
       const events = [];
       const handleEnter = e => setHoveredElement(e.target);
       const handleLeave = () => setHoveredElement(null);
-      div.querySelectorAll('.departement').forEach(path => {
-        const count = counts[[...path.classList].find(className => counts[className] !== undefined)] || 0;
+      div.querySelectorAll('[data-numerodepartement]').forEach(path => {
+        const count = counts[padNumberTwo(getAttribute(path, 'data-numerodepartement'))] || 0;
         path.setAttribute('fill', colorForCount(count));
         path.setAttribute('stroke', 'black');
         path.setAttribute('stroke-weight', 1);
@@ -100,8 +102,6 @@ export function GeographyVisualization({ isLoading, data, queryString }) {
       }
   }, []);
 
-  const padNumberTwo = v => v.length >= 2 ? v : `0${v}`;
-
   const getAttribute = (element, attribute) => {
     return element.getAttribute(attribute)
       .replace(/\\x(\w{2})/g, (_, a) => String.fromCharCode(parseInt(a, 16)))
@@ -130,7 +130,7 @@ export function GeographyVisualization({ isLoading, data, queryString }) {
               {(props) => {
                 const name = getAttribute(hoveredElement, 'data-nom');
                 const number = padNumberTwo(getAttribute(hoveredElement, 'data-numerodepartement'));
-                const count = counts[[...hoveredElement.classList].find(className => counts[className] !== undefined)] || 0;
+                const count = counts[number] || 0;
                 return (
                   <Tooltip id="statistics-geography-tooltip" {...props}>
                     {name} ({number})
