@@ -13,7 +13,7 @@
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
-    "@testing-library/user-event": "^13.1.9",
+    "@testing-library/user-event": "^13.2.1",
     "bootstrap": "^4.5.3",
     "chroma-js": "^2.1.2",
     "final-form": "^4.20.2",
@@ -26,7 +26,7 @@
     "react-final-form": "^6.5.3",
     "react-flags-select": "^2.1.2",
     "react-helmet": "^6.1.0",
-    "react-intl": "^5.20.4",
+    "react-intl": "^5.20.10",
     "react-scripts": "4.0.3",
     "redux-thunk": "^2.3.0"
   },
