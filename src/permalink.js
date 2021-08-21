@@ -105,7 +105,7 @@ export function extractAndParsePermalink() {
     return null;
   }
 
-  history.pushState('', document.title, window.location.pathname + window.location.search); // Remove hash from URL
+  history.replaceState('', document.title, window.location.pathname + window.location.search); // Remove hash from URL
 
   function get(k) {
     return parameters[k];
