@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import { Form } from 'react-bootstrap';
 import { Field } from 'react-final-form';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 export function SurnameInput({ disabled }) {
+  const intl = useIntl();
   return (
     <Field
       name="surname"
@@ -15,7 +16,7 @@ export function SurnameInput({ disabled }) {
           </Form.Label>
           <Form.Control
             required
-            placeholder="Nom(s) (requis)"
+            placeholder={intl.formatMessage({ id: 'form.surnames_placeholder' })}
             disabled={disabled}
             {...input}
           />

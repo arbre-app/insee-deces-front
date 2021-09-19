@@ -1,9 +1,10 @@
 import PropTypes from 'prop-types';
 import { Form } from 'react-bootstrap';
-import { Field, useForm } from 'react-final-form';
-import { FormattedMessage } from 'react-intl';
+import { Field } from 'react-final-form';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 export function GivenNameInput({ disabled }) {
+  const intl = useIntl();
   return (
     <Field
       name="givenName"
@@ -13,7 +14,7 @@ export function GivenNameInput({ disabled }) {
             <FormattedMessage id="form.given_names" />
           </Form.Label>
           <Form.Control
-            placeholder="Prénoms(s)"
+            placeholder={intl.formatMessage({ id: 'form.given_names_placeholder' })}
             disabled={disabled}
             {...input}
           />
