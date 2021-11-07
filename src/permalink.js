@@ -92,8 +92,10 @@ export function generatePermalink(data, isStatsTab) {
     parameters.push([P_LIMIT, data.resultsPerPage]);
   }
 
+  const removeTrailingSlash = str => str.endsWith('/') ? str.substring(0, str.length - 1) : str;
+
   return stringifyUrl({
-    url: FRONTEND_URL,
+    url: location.protocol + '//' + location.host + removeTrailingSlash(location.pathname),
     fragmentIdentifier: stringify(Object.fromEntries(parameters), {
       sort: false,
     }),

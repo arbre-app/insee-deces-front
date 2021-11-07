@@ -70,7 +70,7 @@ table.result-table > thead > tr {
 }
 
 .theme-light table.result-table > tbody:nth-child(odd) {
-    background: #f8f8f8;
+    background: #fcfcfc;
 }
 
 .theme-dark table.result-table > tbody:nth-child(odd) {

@@ -13,7 +13,7 @@ const PAGE_MAIN = 'main';
 const PAGE_INFORMATIONS = 'infos';
 const PAGE_API = 'api';
 
-export function AppContent({ setLocale, legacyUrl }) {
+export function AppContent({ legacyUrl, headerCmp: HeaderCmp, helmetCmp: HelmetCmp }) {
   const permalinkData = extractAndParsePermalink();
 
   const { state: { form } } = useFormContext();
@@ -25,20 +25,14 @@ export function AppContent({ setLocale, legacyUrl }) {
 
   return (
     <Container>
-      <Helmet>
+      <HelmetCmp>
         <title>
           {(form !== null ? intl.formatMessage({ id: 'meta.title_search'}, { query: [form.surname, form.givenName].map(s => s ? s.trim() : s).filter(s => s).join(' ') }) + ' · ' : '') + intl.formatMessage({ id: 'header.title' })}
         </title>
         <body className={theme} />
-      </Helmet>
+      </HelmetCmp>
 
-      <Container className="position-absolute text-right ml-n3">
-        <SelectLocale
-          className="mt-2"
-          currentLocale={intl.locale}
-          setLocale={locale => setLocale && setLocale(locale)}
-        />
-      </Container>
+      <HeaderCmp />
 
       <Header />
 
@@ -62,11 +56,11 @@ export function AppContent({ setLocale, legacyUrl }) {
 }
 
 AppContent.propTypes = {
-  setLocale: PropTypes.func,
   legacyUrl: PropTypes.string,
+  headerCmp: PropTypes.any.isRequired,
+  helmetCmp: PropTypes.any.isRequired,
 };
 
 AppContent.defaultProps = {
-  setLocale: null,
   legacyUrl: null,
 };

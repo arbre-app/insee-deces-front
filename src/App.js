@@ -6,7 +6,7 @@ import { SettingsProvider } from './state/settings';
 import fr from './i18n/fr.json';
 import en from './i18n/en.json';
 
-export function App({ locale, setLocale, legacyUrl }) {
+export function App({ locale, legacyUrl, headerCmp, helmetCmp }) {
   let messages;
   if(locale === 'fr') {
     messages = fr;
@@ -20,7 +20,7 @@ export function App({ locale, setLocale, legacyUrl }) {
     <IntlProvider locale={locale} messages={messages}>
       <SettingsProvider>
         <FormProvider>
-          <AppContent setLocale={setLocale} legacyUrl={legacyUrl} />
+          <AppContent legacyUrl={legacyUrl} headerCmp={headerCmp} helmetCmp={helmetCmp} />
         </FormProvider>
       </SettingsProvider>
     </IntlProvider>
@@ -29,12 +29,12 @@ export function App({ locale, setLocale, legacyUrl }) {
 
 App.propTypes = {
   locale: PropTypes.string,
-  setLocale: PropTypes.func,
   legacyUrl: PropTypes.string,
+  headerCmp: PropTypes.any.isRequired,
+  helmetCmp: PropTypes.any.isRequired,
 };
 
 App.defaultProps = {
   locale: 'fr',
-  setLocale: null,
   legacyUrl: null,
 };

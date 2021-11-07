@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { Col, Overlay, Row, Tooltip } from 'react-bootstrap';
 import { FormattedMessage, FormattedNumber, useIntl } from 'react-intl';
-import { ReactComponent as SvgMapFrance } from '../assets/map_france.svg';
 import { scale } from 'chroma-js';
 import { createSVGElement, NS } from '../utils';
+import { SvgMapFrance } from './assets/SvgMapFrance';
 
 export function GeographyVisualization({ isLoading, data, queryString }) {
   const intl = useIntl();
