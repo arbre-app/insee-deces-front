@@ -15,6 +15,5 @@ export { InternalLink } from './InternalLink';
 export { Messages } from './Messages';
 export { PermalinkButton } from './PermalinkButton';
 export { ResultListTable } from './ResultListTable';
-export { SelectLocale } from './SelectLocale';
 export { SmallPagination } from '../form/SmallPagination';
 export { TimeVisualization } from './TimeVisualization';

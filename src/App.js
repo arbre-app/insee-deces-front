@@ -20,7 +20,7 @@ export function App({ locale, legacyUrl, headerCmp, helmetCmp }) {
     <IntlProvider locale={locale} messages={messages}>
       <SettingsProvider>
         <FormProvider>
-          <AppContent legacyUrl={legacyUrl} headerCmp={headerCmp} helmetCmp={helmetCmp} />
+          <AppContent locale={locale} legacyUrl={legacyUrl} headerCmp={headerCmp} helmetCmp={helmetCmp} />
         </FormProvider>
       </SettingsProvider>
     </IntlProvider>

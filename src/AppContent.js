@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Container } from 'react-bootstrap';
-import { Helmet } from 'react-helmet';
 import { useIntl } from 'react-intl';
-import { BlockForm, BlockInformation, BlockResultTabs, Footer, Header, Messages, SelectLocale } from './components';
+import { BlockForm, BlockInformation, BlockResultTabs, Footer, Header, Messages } from './components';
 import { BlockApi } from './components/BlockApi';
 import { extractAndParsePermalink } from './permalink';
 import { useFormContext } from './state/form';
@@ -13,7 +12,7 @@ const PAGE_MAIN = 'main';
 const PAGE_INFORMATIONS = 'infos';
 const PAGE_API = 'api';
 
-export function AppContent({ legacyUrl, headerCmp: HeaderCmp, helmetCmp: HelmetCmp }) {
+export function AppContent({ locale, legacyUrl, headerCmp: HeaderCmp, helmetCmp: HelmetCmp }) {
   const permalinkData = extractAndParsePermalink();
 
   const { state: { form } } = useFormContext();
@@ -57,6 +56,7 @@ export function AppContent({ legacyUrl, headerCmp: HeaderCmp, helmetCmp: HelmetC
 
 AppContent.propTypes = {
   legacyUrl: PropTypes.string,
+  locale: PropTypes.string.isRequired,
   headerCmp: PropTypes.any.isRequired,
   helmetCmp: PropTypes.any.isRequired,
 };

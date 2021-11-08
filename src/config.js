@@ -1,5 +1,3 @@
-import { Fr, Gb } from 'react-flags-select';
-
 export const IS_DEVELOPMENT = !process.env.NODE_ENV || process.env.NODE_ENV === 'development';
 
 export const API_ENDPOINT = 'https://insee.arbre.app';
@@ -12,8 +10,3 @@ export const DB_LAST_UPDATE = '2021-06-28';
 
 export const RESULTS_PER_PAGE = [25, 50, 100];
 export const DEFAULT_RESULTS_PER_PAGE = RESULTS_PER_PAGE[0];
-
-export const AVAILABLE_LANGUAGES = [
-  { locale: 'fr', name: 'Français', iconComponent: Fr },
-  { locale: 'en', name: 'English', iconComponent: Gb },
-];

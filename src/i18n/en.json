@@ -149,10 +149,11 @@
   "info.faq.data_update.question": "When is the data updated?",
   "info.faq.data_update.answer": "Insee publishes new data every month, we then fetch this data to update this website. Since we process the data by batches, there can be a delay of a few months between every update. The date the data was last updated is displayed at the bottom of the page.",
   "button.back_to_search": "Back to the search form",
-  "footer.current_data": "The database contain {count} entries ({date})",
+  "footer.current_data": "The database contains {count} entries ({date})",
   "footer.informations": "Information",
   "footer.credit": "Designed and hosted by {author} using the <a>data provided by Insee</a>, without being affiliated.",
   "footer.contact": "Contact",
   "footer.contact_remark": "<b>Remark</b>: please do not use this address to report errors in the data (<a>see FAQ</a>).",
-  "footer.api": "API"
+  "footer.api": "API",
+  "footer.github": "GitHub"
 }

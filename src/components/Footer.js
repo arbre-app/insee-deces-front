@@ -2,13 +2,14 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { Col, Modal, Row } from 'react-bootstrap';
 import { EnvelopeFill, Github, InfoCircleFill, Tools } from 'react-bootstrap-icons';
-import { FormattedDate, FormattedMessage, FormattedNumber } from 'react-intl';
+import { FormattedDate, FormattedMessage, FormattedNumber, useIntl } from 'react-intl';
 import { CONTACT_EMAIL, DB_LAST_UPDATE, DB_TOTAL_RECORDS } from '../config';
 import { InlineCopy } from './InlineCopy';
 import { InternalLink } from './InternalLink';
 import { author, repository } from '../../package.json';
 
 export function Footer({ onInformationClick, onApiClick }) {
+  const intl = useIntl();
   const [show, setShow] = useState(false);
 
   const handleModalInformationClick = () => {
@@ -57,7 +58,7 @@ export function Footer({ onInformationClick, onApiClick }) {
         <Col xs={12}>
           <em>
             <FormattedMessage id="footer.credit" values={{
-              author: <a href="https://florian.cassayre.me" target="_blank">{author}</a>,
+              author: <a href="https://florian.cassayre.me" target="_blank" rel="noopener">{author}</a>,
               a: inseeData => <a href="https://www.insee.fr/fr/information/4190491" target="_blank" rel="noreferrer">{inseeData}</a>
             }} />
           </em>
@@ -79,7 +80,7 @@ export function Footer({ onInformationClick, onApiClick }) {
           </InternalLink>
         </Col>
         <Col xs={12} className="mt-2">
-          <a href={repository.url.replace('.git', '')} target="_blank" rel="noreferrer" className="link-dark">
+          <a href={repository.url.replace('.git', '')} target="_blank" rel="noreferrer" className="link-dark" aria-label={intl.formatMessage({ id: 'footer.github' })}>
             <Github className="icon h2" />
           </a>
         </Col>

@@ -154,5 +154,6 @@
   "footer.credit": "Réalisé et hébergé par {author} à partir des <a>données de l'Insee</a>, sans en être affilié.",
   "footer.contact": "Contact",
   "footer.contact_remark": "<b>Remarque</b> : merci de ne pas utiliser cette adresse pour signaler les éventuelles erreurs dans les données indexées (<a>voir FAQ</a>).",
-  "footer.api": "API"
+  "footer.api": "API",
+  "footer.github": "GitHub"
 }
