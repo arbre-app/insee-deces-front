@@ -12,7 +12,7 @@ export { GeographyVisualization } from './GeographyVisualization';
 export { Header } from './Header';
 export { InlineCopy } from './InlineCopy';
 export { InternalLink } from './InternalLink';
-export { Messages } from './Messages';
+export { DisplayMessages } from './DisplayMessages';
 export { PermalinkButton } from './PermalinkButton';
 export { ResultListTable } from './ResultListTable';
 export { SmallPagination } from '../form/SmallPagination';

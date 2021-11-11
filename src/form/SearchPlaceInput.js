@@ -13,7 +13,7 @@ function SearchPlaceField({ value, onChange, disabled }) {
       setQuery(fullname);
       searchAutocompleteDispatch(fullname);
     }
-  }, []);
+  }, [value]);
   const { state: { loading, data, error }, dispatch: dispatchPlace } = usePlaceContext();
   const searchAutocompleteDispatch = query => dispatchPlace(searchAutocomplete(query));
 

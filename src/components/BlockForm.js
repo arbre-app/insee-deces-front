@@ -19,7 +19,7 @@ import { DEFAULT_RANGE, DEFAULT_YEAR_PLUS_MINUS } from '../form/DateRangeGroup';
 import { prefillForm, setLiveFormData, submitForm, useFormContext } from '../state/form';
 import { deepEqual } from '../utils';
 
-export function BlockForm({ initialPartialData, onClear }) {
+export function BlockForm({ initialPartialData, setInitialPartialData, onClear }) {
   const { state: formState, dispatch: dispatchForm } = useFormContext();
   const submitFormDispatch = formData => dispatchForm(submitForm(formData));
   const onSubmit = (data, e) => {
@@ -30,12 +30,16 @@ export function BlockForm({ initialPartialData, onClear }) {
   useEffect(() => {
     if(initialPartialData !== null) {
       prefillFormDispatch(initialPartialData);
+      setInitialPartialData(null);
     }
-  }, []); // Called only once
+  }, [initialPartialData]);
 
   const setLiveFormDataDispatch = values => dispatchForm(setLiveFormData(values));
 
   const [initialChange, setInitialChange] = useState(false);
+  useEffect(() => {
+    setInitialChange(true);
+  }, []);
   const handleFormChange = state => {
     // Prevent a warning
     if(initialChange) {
@@ -114,6 +118,7 @@ export function BlockForm({ initialPartialData, onClear }) {
 
 BlockForm.propTypes = {
   initialPartialData: PropTypes.object,
+  setInitialPartialData: PropTypes.func.isRequired,
   onClear: PropTypes.func.isRequired,
 };
 

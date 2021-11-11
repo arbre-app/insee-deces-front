@@ -4,7 +4,7 @@ import { clearWarning, useFormContext } from '../state/form';
 import { hideNewsMessage, useSettingsContext } from '../state/settings';
 import { NetworkErrorMessage, NewsMessage, UserWarningMessage } from './messages';
 
-export function Messages({ legacyUrl }) {
+export function DisplayMessages({ legacyUrl }) {
   const { state: { error, warnings }, dispatch: dispatchForm } = useFormContext();
   const { state: { data: { messageNewsVisible } }, dispatch: dispatchSettings } = useSettingsContext();
   const hideNewsMessageDispatch = () => dispatchSettings(hideNewsMessage());
@@ -28,10 +28,10 @@ export function Messages({ legacyUrl }) {
   );
 }
 
-Messages.propTypes = {
+DisplayMessages.propTypes = {
   legacyUrl: PropTypes.string,
 };
 
-Messages.defaultProps = {
+DisplayMessages.defaultProps = {
   legacyUrl: null,
 };

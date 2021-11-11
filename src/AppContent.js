@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
 import { useIntl } from 'react-intl';
-import { BlockForm, BlockInformation, BlockResultTabs, Footer, Header, Messages } from './components';
+import { BlockForm, BlockInformation, BlockResultTabs, Footer, Header, DisplayMessages } from './components';
 import { BlockApi } from './components/BlockApi';
 import { extractAndParsePermalink } from './permalink';
 import { useFormContext } from './state/form';
@@ -13,12 +13,20 @@ const PAGE_INFORMATIONS = 'infos';
 const PAGE_API = 'api';
 
 export function AppContent({ locale, legacyUrl, headerCmp: HeaderCmp, helmetCmp: HelmetCmp }) {
-  const permalinkData = extractAndParsePermalink();
+  const [permalinkData, setPermalinkData] = useState(null);
+  useEffect(() => {
+    setPermalinkData(extractAndParsePermalink());
+  }, [setPermalinkData]);
 
-  const { state: { form } } = useFormContext();
+  const { state: { submittedForm: form } } = useFormContext();
   const { state: { data: { theme } } } = useSettingsContext();
   const [visiblePage, setVisiblePage] = useState(PAGE_MAIN);
-  const [isTabStats, setTabStats] = useState(permalinkData !== null && permalinkData[1]);
+  const [isTabStats, setTabStats] = useState(false);
+  useEffect(() => {
+    if(permalinkData !== null && permalinkData[1]) {
+      setTabStats(true);
+    }
+  }, [permalinkData]);
 
   const intl = useIntl();
 
@@ -37,9 +45,9 @@ export function AppContent({ locale, legacyUrl, headerCmp: HeaderCmp, helmetCmp:
 
       {visiblePage === PAGE_MAIN ? (
         <>
-          <Messages legacyUrl={legacyUrl} />
+          <DisplayMessages legacyUrl={legacyUrl} />
 
-          <BlockForm initialPartialData={permalinkData !== null ? permalinkData[0] : null} onClear={() => setTabStats(false)} />
+          <BlockForm initialPartialData={permalinkData !== null ? permalinkData[0] : null} setInitialPartialData={() => setPermalinkData(null)} onClear={() => setTabStats(false)} />
 
           <BlockResultTabs isTabStats={isTabStats} setTabStats={setTabStats} />
         </>
