@@ -18,6 +18,7 @@ export function SurnameInput({ disabled }) {
             required
             placeholder={intl.formatMessage({ id: 'form.surnames_placeholder' })}
             disabled={disabled}
+            autoFocus
             {...input}
           />
         </>

@@ -3,11 +3,12 @@ import React, { useState } from 'react';
 import { Button, Col, Dropdown, Form, FormControl, Modal, ProgressBar, Row, Spinner } from 'react-bootstrap';
 import {
   ArrowsCollapse,
-  CheckLg, ExclamationTriangle,
+  CheckLg,
+  ExclamationTriangle,
   ExclamationTriangleFill,
   FileEarmarkArrowDownFill,
   FileEarmarkCode,
-  FileEarmarkSpreadsheet,
+  FileEarmarkSpreadsheet, InfoCircleFill,
 } from 'react-bootstrap-icons';
 import { Field, Form as FinalForm } from 'react-final-form';
 import { FormattedMessage, FormattedNumber, useIntl } from 'react-intl';
@@ -68,12 +69,14 @@ export function DownloadButton({ disabled, ...props }) {
   const [isDone, setDone] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isError, setError] = useState(false);
+  const [isCsvWarning, setCsvWarning] = useState(false);
   const handleButtonClick = e => {
     e.target.blur();
     setShow(true);
     setDone(false);
     setProgress(0);
     setError(false);
+    setCsvWarning(false);
   };
   const handleHide = () => {
     if(!isExporting) { // Cannot hide if exporting
@@ -176,7 +179,7 @@ export function DownloadButton({ disabled, ...props }) {
     element.click();
     document.body.removeChild(element);
   };
-  const renderForm = ({ handleSubmit, values, initialValues, form: { mutators: { setValue } } }) => {
+  const renderForm = ({ handleSubmit, values, form: { mutators: { setValue } } }) => {
     return (
       <Form onSubmit={handleSubmit}>
         <Modal.Header closeButton={!isExporting}>
@@ -188,6 +191,50 @@ export function DownloadButton({ disabled, ...props }) {
               <CheckLg className="icon" />
             </h1>
             <FormattedMessage id="export.success" />
+            {isCsvWarning && (
+              <div className="mt-5">
+                <h2 className="h5">
+                  <InfoCircleFill className="icon mr-2" />
+                  <FormattedMessage id="export.tips.csv.title" />
+                </h2>
+                <div className="text-left">
+                  <p>
+                    <FormattedMessage id="export.tips.csv.description" />
+                  </p>
+                  <ul className="pl-4">
+                    <li>
+                      <FormattedMessage id="export.tips.csv.charset_encoding" values={{ charset: <strong>Unicode</strong>, encoding: <strong>UTF-8</strong> }} />
+                    </li>
+                    <li>
+                      <FormattedMessage id="export.tips.csv.cells_format" />
+                      <ul className="pl-4">
+                        <li>
+                          <FormattedMessage id="export.tips.csv.cells_format_for_columns" values={{
+                            format: <strong><FormattedMessage id="export.tips.csv.cells_format_text" /></strong>,
+                            columns: <FormattedMessage id="export.tips.csv.columns_text" values={{
+                              surname: <code>{fieldNamesFrench.nom}</code>,
+                              given_name: <code>{fieldNamesFrench.prenom}</code>,
+                              gender: <code>{fieldNamesFrench.gender}</code>,
+                              birth_place: <code>{fieldNamesFrench.birthPlace}</code>,
+                              death_place: <code>{fieldNamesFrench.deathPlace}</code>,
+                            }} />
+                          }} />
+                        </li>
+                        <li>
+                          <FormattedMessage id="export.tips.csv.cells_format_for_columns" values={{
+                            format: <strong><FormattedMessage id="export.tips.csv.cells_format_date" /></strong>,
+                            columns: <FormattedMessage id="export.tips.csv.columns_date" values={{
+                              birth_date: <code>{fieldNamesFrench.birthDate}</code>,
+                              death_date: <code>{fieldNamesFrench.deathDate}</code>,
+                            }} />
+                          }} />
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            )}
           </Modal.Body>
         ) : (
           <Modal.Body className="text-center">
@@ -347,6 +394,7 @@ export function DownloadButton({ disabled, ...props }) {
   const submitHandler = data => {
     const prefix = intl.formatMessage({ id: 'export.filename' });
     const filename = `${prefix}.${availableFileFormats[data.exportFileFormat].extension}`;
+    setCsvWarning(data.exportFileFormat === EXTENSION_CSV);
     if (data.exportSize === EXPORT_CURRENT) {
       const resultString = dataToString(formState.data.results, data.exportFileFormat, data);
       downloadStringAsFile(resultString, filename);
