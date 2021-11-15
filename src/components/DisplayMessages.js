@@ -1,14 +1,16 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { clearWarning, useFormContext } from '../state/form';
+import { ErrorUnavailable } from '../api';
+import { clearError, clearWarning, useFormContext } from '../state/form';
 import { hideNewsMessage, useSettingsContext } from '../state/settings';
-import { NetworkErrorMessage, NewsMessage, UserWarningMessage } from './messages';
+import { NetworkErrorMessage, NewsMessage, ServiceUnavailableMessage, UserWarningMessage } from './messages';
 
 export function DisplayMessages({ legacyUrl }) {
   const { state: { error, warnings }, dispatch: dispatchForm } = useFormContext();
   const { state: { data: { messageNewsVisible } }, dispatch: dispatchSettings } = useSettingsContext();
   const hideNewsMessageDispatch = () => dispatchSettings(hideNewsMessage());
   const clearWarningDispatch = () => dispatchForm(clearWarning());
+  const clearErrorDispatch = () => dispatchForm(clearError());
 
   const [initialized, setInitialized] = useState(false); // In case of server-side rendering
   useEffect(() => setInitialized(true), []);
@@ -19,7 +21,11 @@ export function DisplayMessages({ legacyUrl }) {
         <NewsMessage onClose={hideNewsMessageDispatch} legacyUrl={legacyUrl} />
       )}
       {error !== null && (
-        <NetworkErrorMessage />
+        error instanceof ErrorUnavailable ? (
+          <ServiceUnavailableMessage serverMessage={error.message} onClose={clearErrorDispatch} />
+        ) : (
+          <NetworkErrorMessage onClose={clearErrorDispatch} />
+        )
       )}
       {warnings !== null && warnings.length > 0 && (
         <UserWarningMessage warnings={warnings} onClose={clearWarningDispatch} />

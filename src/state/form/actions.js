@@ -15,6 +15,7 @@ export const ERROR = 'form/ERROR';
 export const CLEAR_SEARCH = 'form/CLEAR_SEARCH';
 export const LIVE = 'form/LIVE';
 export const CLEAR_WARNING = 'form/CLEAR_WARNING';
+export const CLEAR_ERROR = 'form/CLEAR_ERROR';
 
 const listWarnings = (form, result) => {
   const MIN_YEAR_BIRTH = 1850;
@@ -177,5 +178,11 @@ export const setLiveFormData = values => async dispatch => {
 export const clearWarning = () => async dispatch => {
   dispatch({
     type: CLEAR_WARNING,
+  });
+};
+
+export const clearError = () => async dispatch => {
+  dispatch({
+    type: CLEAR_ERROR,
   });
 };

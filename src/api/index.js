@@ -1,5 +1,8 @@
 import qs from 'query-string';
 import { API_ENDPOINT } from '../config';
+import { ErrorTimeout, ErrorUnavailable } from './errors';
+
+export { ErrorTimeout, ErrorUnavailable };
 
 export const EVENT_TYPE_BIRTH = 'birth';
 export const EVENT_TYPE_DEATH = 'death';
@@ -21,7 +24,7 @@ function timeoutFetch(url) {
     const signal = controller.signal;
     const timer = setTimeout(() => {
       controller.abort();
-      reject(new Error('Timeout'));
+      reject(new ErrorTimeout());
     }, FETCH_TIMEOUT);
 
     fetch(url, { signal })
@@ -31,9 +34,9 @@ function timeoutFetch(url) {
         if (value.code >= 200 && value.code < 400) {
           resolve(value);
         } else if (value.code === 503) {
-          reject(new Error()); // TODO
+          reject(new ErrorUnavailable(value.information)); // This string field is an optional
         } else {
-          reject(new Error());
+          reject(new Error(`HTTP ${value.code}`));
         }
       })
       .catch(reason => {

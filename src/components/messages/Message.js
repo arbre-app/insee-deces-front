@@ -6,8 +6,8 @@ export function Message({ onClose, variant, icon, children }) {
   return (
     <Alert variant={variant} dismissible onClose={onClose}>
       <Row>
-        <Col xs="x" className="my-auto">
-          <IconCmp className="ml-2" style={{ fontSize: '24px' }} />
+        <Col xs="x" className="my-auto"> {/* The "x" is not a typo */}
+          <IconCmp className="ml-2 h4 my-0" />
         </Col>
         <Col>
           {children}

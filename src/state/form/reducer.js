@@ -6,7 +6,7 @@ import {
   LIVE,
   RESULT_STATS_GEOGRAPHY,
   RESULT_STATS_TIME,
-  CLEAR_WARNING,
+  CLEAR_WARNING, CLEAR_ERROR,
 } from './actions';
 
 const initialStateStats = {
@@ -96,6 +96,11 @@ export const formReducer = (state, action) => {
       return {
         ...state,
         warnings: null,
+      };
+    case CLEAR_ERROR:
+      return {
+        ...state,
+        error: null,
       };
     default:
       return state;
