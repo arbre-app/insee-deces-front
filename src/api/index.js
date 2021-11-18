@@ -20,17 +20,28 @@ function buildURL(root, parameters) {
 
 function timeoutFetch(url) {
   return new Promise((resolve, reject) => {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    const timer = setTimeout(() => {
-      controller.abort();
-      reject(new ErrorTimeout());
-    }, FETCH_TIMEOUT);
+    let controller = null;
+    try {
+      controller = new AbortController();
+    } catch(e) {
+      // AbortController not available (observed on Firefox ESR 52)
+    }
 
-    fetch(url, { signal })
+    let signal = null, timer = null;
+    if(controller !== null) {
+      signal = controller.signal;
+      timer = setTimeout(() => {
+        controller.abort();
+        reject(new ErrorTimeout());
+      }, FETCH_TIMEOUT);
+    }
+
+    fetch(url, signal !== null ? { signal } : undefined)
       .then(result => result.json())
       .then(value => {
-        clearTimeout(timer);
+        if(timer !== null) {
+          clearTimeout(timer);
+        }
         if (value.code >= 200 && value.code < 400) {
           resolve(value);
         } else if (value.code === 503) {
@@ -40,7 +51,9 @@ function timeoutFetch(url) {
         }
       })
       .catch(reason => {
-        clearTimeout(timer);
+        if(timer !== null) {
+          clearTimeout(timer);
+        }
         reject(reason);
       });
   });
