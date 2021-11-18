@@ -15,5 +15,5 @@ export { InternalLink } from './InternalLink';
 export { DisplayMessages } from './DisplayMessages';
 export { PermalinkButton } from './PermalinkButton';
 export { ResultListTable } from './ResultListTable';
-export { SmallPagination } from '../form/SmallPagination';
+export { SmallPagination } from './SmallPagination';
 export { TimeVisualization } from './TimeVisualization';

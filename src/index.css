@@ -47,10 +47,6 @@ body.theme-dark, .theme-dark .table, .theme-dark .input-group-text {
     border: 1px solid gray;
 }
 
-.block-form {
-    margin-top: 20px;
-}
-
 .block-tab {
     border-top-left-radius: 0;
 }

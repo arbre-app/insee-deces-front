@@ -106,7 +106,7 @@ export function BlockForm({ initialPartialData, setInitialPartialData, onClear, 
   };
 
   return (
-    <div className="block block-form">
+    <div className="block block-tab">
       <FinalForm
         onSubmit={onSubmit}
         initialValues={formState.liveForm !== null ? formState.liveForm : (initialPartialData !== null ? initialPartialData : initialValues)}

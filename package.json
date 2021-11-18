@@ -30,6 +30,7 @@
     "react-helmet": "^6.1.0",
     "react-intl": "^5.20.10",
     "react-scripts": "4.0.3",
+    "read-gedcom": "^0.3.1",
     "redux-thunk": "^2.3.0"
   },
   "scripts": {

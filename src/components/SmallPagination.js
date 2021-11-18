@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Pagination } from 'react-bootstrap';
 import { FormattedNumber } from 'react-intl';
 
-export function SmallPagination({ currentPage, totalPages, onChange, disabled }) {
+export function SmallPagination({ currentPage, totalPages, onChange, disabled, ...other }) {
   const renderPageItems = () => {
     const pages = [];
     if(totalPages <= 7) { // Display all page buttons
@@ -36,7 +36,7 @@ export function SmallPagination({ currentPage, totalPages, onChange, disabled })
   const isFirst = currentPage <= 1, isLast = currentPage >= totalPages;
 
   return (
-    <Pagination className="justify-content-center">
+    <Pagination className="justify-content-center" {...other}>
       <Pagination.Prev disabled={isFirst || disabled} onClick={() => !isFirst && onChange(currentPage - 1)} />
       {renderPageItems()}
       <Pagination.Next disabled={isLast || disabled} onClick={() => !isLast && onChange(currentPage + 1)} />

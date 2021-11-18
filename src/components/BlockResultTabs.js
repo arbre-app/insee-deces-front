@@ -12,10 +12,10 @@ export function BlockResultTabs({ isTabStats, setTabStats }) {
   const { state: { data } } = useFormContext();
   return !!data && (
     <Tabs activeKey={isTabStats ? TAB_STATISTICS : TAB_RESULTS} onSelect={k => setTabStats(k === TAB_STATISTICS)} id="search-results" className="tabs" transition={false}>
-      <Tab eventKey="results-tab" title={<FormattedMessage id="result.tab.results" />}>
+      <Tab eventKey={TAB_RESULTS} title={<FormattedMessage id="result.tab.results" />}>
         <BlockResultTabList />
       </Tab>
-      <Tab eventKey="statistics-tab" title={<FormattedMessage id="result.tab.statistics" />}>
+      <Tab eventKey={TAB_STATISTICS} title={<FormattedMessage id="result.tab.statistics" />}>
         <BlockResultTabStatistics />
       </Tab>
     </Tabs>

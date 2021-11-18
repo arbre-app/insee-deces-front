@@ -8,7 +8,7 @@ import { SettingsButton } from './SettingsButton';
 import { DownloadButton } from './DownloadButton';
 import { PermalinkButton } from './PermalinkButton';
 import { ResultListTable } from './ResultListTable';
-import { SmallPagination } from '../form/SmallPagination';
+import { SmallPagination } from './SmallPagination';
 
 export function BlockResultTabList() {
   const { state: { data, form, loading }, dispatch: dispatchForm } = useFormContext();

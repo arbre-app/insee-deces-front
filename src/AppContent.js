@@ -4,6 +4,8 @@ import { Container } from 'react-bootstrap';
 import { useIntl } from 'react-intl';
 import { BlockForm, BlockInformation, BlockResultTabs, Footer, Header, DisplayMessages } from './components';
 import { BlockApi } from './components/BlockApi';
+import { BlockGedcomMatches } from './components/BlockGedcomMatches';
+import { BlockSearchModeTabs } from './components/BlockSearchModeTabs';
 import { extractAndParsePermalink } from './permalink';
 import { useFormContext } from './state/form';
 import { useSettingsContext } from './state/settings';
@@ -22,6 +24,7 @@ export function AppContent({ locale, legacyUrl, headerCmp: HeaderCmp, helmetCmp:
   const { state: { data: { theme } } } = useSettingsContext();
   const [visiblePage, setVisiblePage] = useState(PAGE_MAIN);
   const [isTabStats, setTabStats] = useState(false);
+  const [isTabForm, setTabForm] = useState(true);
   useEffect(() => {
     if(permalinkData !== null && permalinkData[1]) {
       setTabStats(true);
@@ -48,11 +51,15 @@ export function AppContent({ locale, legacyUrl, headerCmp: HeaderCmp, helmetCmp:
 
       {visiblePage === PAGE_MAIN ? (
         <>
-          <DisplayMessages legacyUrl={legacyUrl} />
+          <DisplayMessages legacyUrl={legacyUrl} isTabForm={isTabForm} />
 
-          <BlockForm initialPartialData={permalinkData !== null ? permalinkData[0] : null} setInitialPartialData={() => setPermalinkData(null)} onClear={() => setTabStats(false)} focused={focused} />
+          <BlockSearchModeTabs setTabForm={setTabForm} isTabForm={isTabForm} setTabStats={setTabStats} permalinkData={permalinkData} setPermalinkData={setPermalinkData} focused={focused} />
 
-          <BlockResultTabs isTabStats={isTabStats} setTabStats={setTabStats} />
+          {isTabForm ? (
+            <BlockResultTabs isTabStats={isTabStats} setTabStats={setTabStats} />
+          ) : (
+            <BlockGedcomMatches />
+          )}
         </>
       ) : visiblePage === PAGE_INFORMATIONS ? (
         <BlockInformation onBackClick={() => setVisiblePage(PAGE_MAIN)} />
