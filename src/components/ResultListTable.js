@@ -7,7 +7,7 @@ import { EVENT_TYPE_BIRTH, EVENT_TYPE_DEATH } from '../api';
 import { RANGE_ABOUT, RANGE_AFTER, RANGE_BEFORE, RANGE_BETWEEN, RANGE_EXACT } from '../form/DateRangeGroup';
 import { normalizeTextToken, selectElementText, tokenizeAndNormalizeText, tokenizeText } from '../utils';
 
-export function ResultListTable({ results, formData, disabled, withHighlights }) {
+export function ResultListTable({ results, formData, disabled, withHighlights, columnEventType, columnActCode }) {
   const intl = useIntl();
   const renderRow = (entry, index) => {
     const GenderCmp = entry.gender ? GenderMale : GenderFemale;
@@ -75,7 +75,9 @@ export function ResultListTable({ results, formData, disabled, withHighlights })
           </td>
           <TextTd rowSpan={2}><HighlightFuzzy text={entry.nom} needles={surnameNeedles} /></TextTd>
           <TextTd rowSpan={2}><HighlightFuzzy text={entry.prenom} needles={givenNameNeedles} /></TextTd>
-          <td><FormattedMessage id="common.event.birth" /></td>
+          {columnEventType && (
+            <td><FormattedMessage id="common.event.birth" /></td>
+          )}
           <TextTd>
             <HighlightConditional isHighlighted={formData.sortBy === EVENT_TYPE_BIRTH && hasYearFilter}>
             {entry.birthDate ? (
@@ -84,9 +86,16 @@ export function ResultListTable({ results, formData, disabled, withHighlights })
           </HighlightConditional>
           </TextTd>
           <TextTd><HighlightSuffix text={entry.birthPlace} suffix={placeText} /></TextTd>
+          {columnActCode && !!entry.actCode && (
+            <td rowSpan={2} className="text-center">
+              <FormattedMessage id="common.numbering" values={{ number: entry.actCode }} />
+            </td>
+          )}
         </tr>
         <tr>
-          <td><FormattedMessage id="common.event.death" /></td>
+          {columnEventType && (
+            <td><FormattedMessage id="common.event.death" /></td>
+          )}
           <TextTd><HighlightConditional isHighlighted={formData.sortBy === EVENT_TYPE_DEATH && hasYearFilter}>
             {entry.deathDate ? (
               <time dateTime={entry.deathDate}><FormattedDate value={entry.deathDate} /></time>
@@ -105,9 +114,14 @@ export function ResultListTable({ results, formData, disabled, withHighlights })
         <th><FormattedMessage id="result.header.gender" /></th>
         <th><FormattedMessage id="result.header.surnames" /></th>
         <th><FormattedMessage id="result.header.given_names" /></th>
-        <th><FormattedMessage id="result.header.event" /></th>
+        {columnEventType && (
+          <th><FormattedMessage id="result.header.event" /></th>
+        )}
         <th><FormattedMessage id="result.header.date" /></th>
         <th><FormattedMessage id="result.header.place" /></th>
+        {columnActCode && (
+          <th><FormattedMessage id="result.header.act_code" /></th>
+        )}
       </tr>
       </thead>
       {results.map(renderRow)}
@@ -128,9 +142,13 @@ ResultListTable.propTypes = {
   formData: PropTypes.object.isRequired,
   disabled: PropTypes.bool,
   withHighlights: PropTypes.bool,
+  columnEventType: PropTypes.bool,
+  columnActCode: PropTypes.bool,
 };
 
 ResultListTable.defaultProps = {
   disabled: false,
   withHighlights: false,
+  columnEventType: false,
+  columnActCode: false,
 };

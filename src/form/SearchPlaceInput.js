@@ -4,6 +4,7 @@ import { Button, Dropdown, FormControl, InputGroup, Spinner } from 'react-bootst
 import { XLg } from 'react-bootstrap-icons';
 import { Field } from 'react-final-form';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { INPUT_MAX_LENGTH } from '../config';
 import { PlaceProvider, searchAutocomplete, usePlaceContext } from '../state/place';
 
 function SearchPlaceField({ value, onChange, disabled }) {
@@ -89,6 +90,7 @@ function SearchPlaceField({ value, onChange, disabled }) {
             onChange={handleChange}
             value={query}
             onKeyPress={handleKeyPress}
+            maxLength={INPUT_MAX_LENGTH}
           />
           <InputGroup.Append>
             <Button variant="outline-secondary" disabled={!query} onClick={handleClear}><XLg /></Button>

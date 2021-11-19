@@ -72,6 +72,7 @@ export function BlockApi({ onBackClick }) {
             count: 1,
             results: [
               {
+                actCode: '129',
                 birthDate: '1932-11-29',
                 birthPlace: 'Paris 5e Arrondissement, Paris, Île-de-France, France',
                 deathDate: '2019-09-26',

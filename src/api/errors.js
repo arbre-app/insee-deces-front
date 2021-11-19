@@ -11,3 +11,10 @@ export class ErrorUnavailable extends Error {
     this.name = this.constructor.name;
   }
 }
+
+export class ErrorBadRequest extends Error {
+  constructor(message) {
+    super(message);
+    this.name = this.constructor.name;
+  }
+}

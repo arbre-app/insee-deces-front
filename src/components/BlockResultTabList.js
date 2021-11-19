@@ -12,7 +12,7 @@ import { SmallPagination } from '../form/SmallPagination';
 
 export function BlockResultTabList() {
   const { state: { data, form, loading }, dispatch: dispatchForm } = useFormContext();
-  const { state: { data: { matchesHighlighting } } } = useSettingsContext();
+  const { state: { data: { matchesHighlighting, columnEventType, columnActCode } } } = useSettingsContext();
   const setCurrentPageDispatch = currentPage => dispatchForm(setCurrentPage(currentPage));
   const handlePageChange = newPage => {
     setCurrentPageDispatch(newPage);
@@ -56,7 +56,7 @@ export function BlockResultTabList() {
       </Row>
       {data.count > 0 ? (
         <>
-          <ResultListTable results={data.results} formData={form} disabled={loading} withHighlights={matchesHighlighting} />
+          <ResultListTable results={data.results} formData={form} disabled={loading} withHighlights={matchesHighlighting} columnEventType={columnEventType} columnActCode={columnActCode} />
           <SmallPagination currentPage={form.currentPage} totalPages={totalPages} onChange={handlePageChange} disabled={loading} />
         </>
       ) : (

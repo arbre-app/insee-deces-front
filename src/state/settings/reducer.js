@@ -1,10 +1,19 @@
-import { HIDE_MESSAGE_NEWS, SET_MATCHES_HIGHLIGHTING, SET_THEME, THEME_DARK, THEME_LIGHT } from './actions';
+import {
+  HIDE_MESSAGE_NEWS, RESET, SET_COLUMN_ACT_CODE,
+  SET_COLUMN_EVENT_TYPE,
+  SET_MATCHES_HIGHLIGHTING,
+  SET_THEME,
+  THEME_DARK,
+  THEME_LIGHT,
+} from './actions';
 
 export const defaultState = {
   data: {
     theme: THEME_LIGHT,
     matchesHighlighting: true,
     messageNewsVisible: true,
+    columnEventType: true,
+    columnActCode: false,
   },
 };
 
@@ -22,12 +31,14 @@ const loadState = () => {
         return defaultState;
       }
       const validateCategory = allowed => (value, defaultValue) => allowed.includes(value) ? value : defaultValue;
-      const categoryBooleans = [false, true];
+      const validateBoolean = (value, defaultValues) => validateCategory([false, true])(value, defaultValues);
       return {
         data: {
           theme: validateCategory([THEME_LIGHT, THEME_DARK])(data.theme, defaultState.data.theme),
-          matchesHighlighting: validateCategory(categoryBooleans)(data.matchesHighlighting, defaultState.data.matchesHighlighting),
-          messageNewsVisible: validateCategory(categoryBooleans)(data.messageNewsVisible, defaultState.data.messageNewsVisible),
+          matchesHighlighting: validateBoolean(data.matchesHighlighting, defaultState.data.matchesHighlighting),
+          messageNewsVisible: validateBoolean(data.messageNewsVisible, defaultState.data.messageNewsVisible),
+          columnEventType: validateBoolean(data.columnEventType, defaultState.data.columnEventType),
+          columnActCode: validateBoolean(data.columnActCode, defaultState.data.columnActCode),
         }
       };
     } catch(e) { // Invalid configuration format (?)
@@ -50,16 +61,21 @@ export const settingsReducer = (state, action) => {
   switch (action.type) {
     case SET_THEME:
     case SET_MATCHES_HIGHLIGHTING:
+    case SET_COLUMN_EVENT_TYPE:
+    case SET_COLUMN_ACT_CODE:
     case HIDE_MESSAGE_NEWS:
       const merged = {
         data: {
           ...state.data,
           ...action.data,
         },
-        bla: 'abc',
       };
       saveState(merged); // Persist
       return merged;
+    case RESET:
+      const newState = defaultState;
+      saveState(newState);
+      return newState;
     default:
       throw new Error();
   }

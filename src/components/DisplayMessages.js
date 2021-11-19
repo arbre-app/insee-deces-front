@@ -1,9 +1,16 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { ErrorUnavailable } from '../api';
+import { ErrorBadRequest } from '../api/errors';
 import { clearError, clearWarning, useFormContext } from '../state/form';
 import { hideNewsMessage, useSettingsContext } from '../state/settings';
-import { NetworkErrorMessage, NewsMessage, ServiceUnavailableMessage, UserWarningMessage } from './messages';
+import {
+  BadRequestErrorMessage,
+  NetworkErrorMessage,
+  NewsMessage,
+  ServiceUnavailableMessage,
+  UserWarningMessage,
+} from './messages';
 
 export function DisplayMessages({ legacyUrl }) {
   const { state: { error, warnings }, dispatch: dispatchForm } = useFormContext();
@@ -23,6 +30,8 @@ export function DisplayMessages({ legacyUrl }) {
       {error !== null && (
         error instanceof ErrorUnavailable ? (
           <ServiceUnavailableMessage serverMessage={error.message} onClose={clearErrorDispatch} />
+        ) : error instanceof ErrorBadRequest ? (
+          <BadRequestErrorMessage onClose={clearErrorDispatch} />
         ) : (
           <NetworkErrorMessage onClose={clearErrorDispatch} />
         )

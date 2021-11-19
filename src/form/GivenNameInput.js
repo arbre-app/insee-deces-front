@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { Form } from 'react-bootstrap';
 import { Field } from 'react-final-form';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { INPUT_MAX_LENGTH } from '../config';
 
 export function GivenNameInput({ disabled }) {
   const intl = useIntl();
@@ -16,6 +17,7 @@ export function GivenNameInput({ disabled }) {
           <Form.Control
             placeholder={intl.formatMessage({ id: 'form.given_names_placeholder' })}
             disabled={disabled}
+            maxLength={INPUT_MAX_LENGTH}
             {...input}
           />
         </>

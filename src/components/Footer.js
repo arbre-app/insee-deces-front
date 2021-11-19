@@ -6,7 +6,7 @@ import { FormattedDate, FormattedMessage, FormattedNumber, useIntl } from 'react
 import { CONTACT_EMAIL, DB_LAST_UPDATE, DB_TOTAL_RECORDS } from '../config';
 import { InlineCopy } from './InlineCopy';
 import { InternalLink } from './InternalLink';
-import { author, repository } from '../../package.json';
+import pkg from '../../package.json';
 
 export function Footer({ onInformationClick, onApiClick }) {
   const intl = useIntl();
@@ -58,7 +58,7 @@ export function Footer({ onInformationClick, onApiClick }) {
         <Col xs={12}>
           <em>
             <FormattedMessage id="footer.credit" values={{
-              author: <a href="https://florian.cassayre.me" target="_blank" rel="noopener">{author}</a>,
+              author: <a href="https://florian.cassayre.me" target="_blank" rel="noopener">{pkg.author}</a>,
               a: inseeData => <a href="https://www.insee.fr/fr/information/4190491" target="_blank" rel="noreferrer">{inseeData}</a>
             }} />
           </em>
@@ -80,7 +80,7 @@ export function Footer({ onInformationClick, onApiClick }) {
           </InternalLink>
         </Col>
         <Col xs={12} className="mt-2">
-          <a href={repository.url.replace('.git', '')} target="_blank" rel="noreferrer" className="link-dark" aria-label={intl.formatMessage({ id: 'footer.github' })}>
+          <a href={pkg.repository.url.replace('.git', '')} target="_blank" rel="noreferrer" className="link-dark" aria-label={intl.formatMessage({ id: 'footer.github' })}>
             <Github className="icon h2" />
           </a>
         </Col>

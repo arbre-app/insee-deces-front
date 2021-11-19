@@ -1,6 +1,6 @@
 import qs from 'query-string';
 import { API_ENDPOINT } from '../config';
-import { ErrorTimeout, ErrorUnavailable } from './errors';
+import { ErrorBadRequest, ErrorTimeout, ErrorUnavailable } from './errors';
 
 export { ErrorTimeout, ErrorUnavailable };
 
@@ -42,19 +42,23 @@ function timeoutFetch(url) {
         if(timer !== null) {
           clearTimeout(timer);
         }
-        if (value.code >= 200 && value.code < 400) {
+        if (value.code >= 200 && value.code < 400) { // OK
           resolve(value);
         } else if (value.code === 503) {
           reject(new ErrorUnavailable(value.information)); // This string field is an optional
         } else {
-          reject(new Error(`HTTP ${value.code}`));
+          reject(new ErrorBadRequest(`HTTP ${value.code}`)); // Typically 4XX or 5XX errors
         }
       })
       .catch(reason => {
-        if(timer !== null) {
-          clearTimeout(timer);
+        if(reason instanceof SyntaxError) {
+          reject(new ErrorBadRequest('Invalid JSON')); // Not json (indicates a major issue)
+        } else {
+          if(timer !== null) {
+            clearTimeout(timer);
+          }
+          reject(reason); // Probably timeout, no connection to server or cross origin policy issue
         }
-        reject(reason);
       });
   });
 }

@@ -127,8 +127,9 @@ export function DownloadButton({ disabled, ...props }) {
     birthPlace: 'lieu_naissance',
     deathDate: 'date_deces',
     deathPlace: 'lieu_deces',
+    actCode: 'acte',
   };
-  const fieldNamesOrder = ['nom', 'prenom', 'gender', 'birthDate', 'birthPlace', 'deathDate', 'deathPlace'];
+  const fieldNamesOrder = ['nom', 'prenom', 'gender', 'birthDate', 'birthPlace', 'deathDate', 'deathPlace', 'actCode'];
   const genderNamesFrench = {
     male: 'M',
     female: 'F',
@@ -217,6 +218,7 @@ export function DownloadButton({ disabled, ...props }) {
                               gender: <code>{fieldNamesFrench.gender}</code>,
                               birth_place: <code>{fieldNamesFrench.birthPlace}</code>,
                               death_place: <code>{fieldNamesFrench.deathPlace}</code>,
+                              act_code: <code>{fieldNamesFrench.actCode}</code>
                             }} />
                           }} />
                         </li>

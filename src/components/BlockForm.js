@@ -19,7 +19,7 @@ import { DEFAULT_RANGE, DEFAULT_YEAR_PLUS_MINUS } from '../form/DateRangeGroup';
 import { prefillForm, setLiveFormData, submitForm, useFormContext } from '../state/form';
 import { deepEqual } from '../utils';
 
-export function BlockForm({ initialPartialData, setInitialPartialData, onClear }) {
+export function BlockForm({ initialPartialData, setInitialPartialData, onClear, focused }) {
   const { state: formState, dispatch: dispatchForm } = useFormContext();
   const submitFormDispatch = formData => dispatchForm(submitForm(formData));
   const onSubmit = (data, e) => {
@@ -75,7 +75,7 @@ export function BlockForm({ initialPartialData, setInitialPartialData, onClear }
         </Row>
         <Row className="form-row">
           <Col md={3}>
-            <SurnameInput disabled={isLoading} />
+            <SurnameInput disabled={isLoading} focused={focused} />
           </Col>
           <Col md={3}>
             <GivenNameInput disabled={isLoading} />
@@ -120,6 +120,7 @@ BlockForm.propTypes = {
   initialPartialData: PropTypes.object,
   setInitialPartialData: PropTypes.func.isRequired,
   onClear: PropTypes.func.isRequired,
+  focused: PropTypes.bool.isRequired,
 };
 
 BlockForm.defaultProps = {

@@ -30,6 +30,9 @@ export function AppContent({ locale, legacyUrl, headerCmp: HeaderCmp, helmetCmp:
 
   const intl = useIntl();
 
+  const [focused, setFocused] = useState(true);
+  useEffect(() => setFocused(false), []);
+
   return (
     <Container>
       <HelmetCmp>
@@ -47,7 +50,7 @@ export function AppContent({ locale, legacyUrl, headerCmp: HeaderCmp, helmetCmp:
         <>
           <DisplayMessages legacyUrl={legacyUrl} />
 
-          <BlockForm initialPartialData={permalinkData !== null ? permalinkData[0] : null} setInitialPartialData={() => setPermalinkData(null)} onClear={() => setTabStats(false)} />
+          <BlockForm initialPartialData={permalinkData !== null ? permalinkData[0] : null} setInitialPartialData={() => setPermalinkData(null)} onClear={() => setTabStats(false)} focused={focused} />
 
           <BlockResultTabs isTabStats={isTabStats} setTabStats={setTabStats} />
         </>
