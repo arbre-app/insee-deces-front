@@ -81,14 +81,16 @@ export function ResultListTable({ results, formData, disabled, withHighlights, c
           <TextTd>
             <HighlightConditional isHighlighted={formData.sortBy === EVENT_TYPE_BIRTH && hasYearFilter}>
             {entry.birthDate ? (
-              <time dateTime={entry.birthDate}><FormattedDate value={entry.birthDate} /></time>
+              <time dateTime={entry.birthDate}><FormattedDate value={entry.birthDate} timeZone="UTC" /></time>
             ) : null}
           </HighlightConditional>
           </TextTd>
           <TextTd><HighlightSuffix text={entry.birthPlace} suffix={placeText} /></TextTd>
-          {columnActCode && !!entry.actCode && (
+          {columnActCode && (
             <td rowSpan={2} className="text-center">
-              <FormattedMessage id="common.numbering" values={{ number: entry.actCode }} />
+              {!!entry.actCode && (
+                <FormattedMessage id="common.numbering" values={{ number: entry.actCode }} />
+              )}
             </td>
           )}
         </tr>
@@ -98,7 +100,7 @@ export function ResultListTable({ results, formData, disabled, withHighlights, c
           )}
           <TextTd><HighlightConditional isHighlighted={formData.sortBy === EVENT_TYPE_DEATH && hasYearFilter}>
             {entry.deathDate ? (
-              <time dateTime={entry.deathDate}><FormattedDate value={entry.deathDate} /></time>
+              <time dateTime={entry.deathDate}><FormattedDate value={entry.deathDate} timeZone="UTC" /></time>
             ) : null}
           </HighlightConditional></TextTd>
           <TextTd><HighlightSuffix text={entry.deathPlace} suffix={placeText} /></TextTd>
