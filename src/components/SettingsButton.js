@@ -7,7 +7,7 @@ import {
   setColumnActCode,
   setColumnEventType,
   setMatchesHighlighting,
-  setTheme,
+  setTheme, setWikipediaLinks,
   THEME_DARK,
   THEME_LIGHT,
   useSettingsContext,
@@ -18,10 +18,11 @@ import { deepEqual } from '../utils';
 export function SettingsButton({ ...props }) {
   const [isShown, setIsShown] = useState(false);
   const { state, dispatch } = useSettingsContext();
-  const { data: { theme, matchesHighlighting, columnEventType, columnActCode } } = state;
+  const { data: { theme, matchesHighlighting, wikipediaLinks, columnEventType, columnActCode } } = state;
   const setThemeDispatch = theme => dispatch(setTheme(theme));
   const createThemeChangeHandler = theme => () => setThemeDispatch(theme);
   const setMatchesHighlightingDispatch = isEnabled => dispatch(setMatchesHighlighting(isEnabled));
+  const setWikipediaLinksDispatch = isEnabled => dispatch(setWikipediaLinks(isEnabled));
   const setColumnEventTypeDispatch = isEnabled => dispatch(setColumnEventType(isEnabled));
   const setColumnActCodeDispatch = isEnabled => dispatch(setColumnActCode(isEnabled));
   const resetSettingsDispatch = () => dispatch(resetSettings());
@@ -43,6 +44,10 @@ export function SettingsButton({ ...props }) {
       <Dropdown.Item onClick={() => setMatchesHighlightingDispatch(!matchesHighlighting)}>
         <CheckboxIcon isEnabled={matchesHighlighting} />
         <FormattedMessage id="settings.highlight" />
+      </Dropdown.Item>
+      <Dropdown.Item onClick={() => setWikipediaLinksDispatch(!wikipediaLinks)}>
+        <CheckboxIcon isEnabled={wikipediaLinks} />
+        <FormattedMessage id="settings.wikipedia_links" />
       </Dropdown.Item>
       <Dropdown.Header><FormattedMessage id="settings.columns" /></Dropdown.Header>
       <Dropdown.Item onClick={() => setColumnEventTypeDispatch(!columnEventType)}>

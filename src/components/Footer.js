@@ -41,7 +41,7 @@ export function Footer({ onInformationClick, onApiClick }) {
         <Col xs={12}>
           <FormattedMessage id="footer.current_data" values={{
             count: <strong><FormattedNumber value={DB_TOTAL_RECORDS} /></strong>,
-            date: <em><FormattedDate value={DB_LAST_UPDATE} month="long" year="numeric" /></em>,
+            date: <em><FormattedDate value={DB_LAST_UPDATE} month="long" year="numeric" timeZone="UTC" /></em>,
           }} />
         </Col>
         <Col xs={12}>

@@ -7,7 +7,7 @@ import { EVENT_TYPE_BIRTH, EVENT_TYPE_DEATH } from '../api';
 import { RANGE_ABOUT, RANGE_AFTER, RANGE_BEFORE, RANGE_BETWEEN, RANGE_EXACT } from '../form/DateRangeGroup';
 import { normalizeTextToken, selectElementText, tokenizeAndNormalizeText, tokenizeText } from '../utils';
 
-export function ResultListTable({ results, formData, disabled, withHighlights, columnEventType, columnActCode }) {
+export function ResultListTable({ results, formData, disabled, withHighlights, withLinks, columnEventType, columnActCode }) {
   const intl = useIntl();
   const renderRow = (entry, index) => {
     const GenderCmp = entry.gender ? GenderMale : GenderFemale;
@@ -33,7 +33,7 @@ export function ResultListTable({ results, formData, disabled, withHighlights, c
     const surnameNeedles = tokenizeAndNormalizeText(formData.surname || '');
     const givenNameNeedles = tokenizeAndNormalizeText(formData.givenName || '');
     const HighlightFuzzy = ({ text, needles }) => {
-      if(withHighlights) {
+      if(text && withHighlights) {
         const parts = tokenizeText(text);
         return parts.map((token, i) => (
           <React.Fragment key={i}>
@@ -43,11 +43,11 @@ export function ResultListTable({ results, formData, disabled, withHighlights, c
           </React.Fragment>
         ));
       } else {
-        return text;
+        return text || null;
       }
     };
     const HighlightSuffix = ({ text, suffix }) => {
-      if(withHighlights && suffix != null && text.endsWith(suffix)) {
+      if(text && withHighlights && suffix != null && text.endsWith(suffix)) {
         return (
           <>
             {text.substring(0, text.length - suffix.length)}
@@ -55,12 +55,24 @@ export function ResultListTable({ results, formData, disabled, withHighlights, c
           </>
         );
       } else {
-        return text;
+        return text || null;
       }
     };
     const HighlightConditional = ({ children, isHighlighted }) => withHighlights && isHighlighted ? (
       <strong onClick={handleChildClick}>{children}</strong>
     ) : children;
+    const LinkWhenAvailable = ({ children, urls }) => {
+      if(urls && withLinks) {
+        const url = urls[intl.locale] || urls['fr'] || urls['en']; // This should be the expected behavior
+        return url ? (
+          <a href={url} target="_blank" rel="noreferrer" className="table-row-link">
+            {children}
+          </a>
+        ) : children;
+      } else {
+        return children;
+      }
+    };
     const placeText = formData.place.length > 0 ? formData.place[0].fullname : null;
     const hasYearFilter =
       formData.rangeType === RANGE_BETWEEN && (formData.yearAfter !== undefined || formData.yearBefore !== undefined) ||
@@ -73,17 +85,25 @@ export function ResultListTable({ results, formData, disabled, withHighlights, c
               <GenderCmp className={`icon icon-gender ${genderColor}`} />
             </span>
           </td>
-          <TextTd rowSpan={2}><HighlightFuzzy text={entry.nom} needles={surnameNeedles} /></TextTd>
-          <TextTd rowSpan={2}><HighlightFuzzy text={entry.prenom} needles={givenNameNeedles} /></TextTd>
+          <TextTd rowSpan={2}>
+            <LinkWhenAvailable urls={entry.wikipedia}>
+              <HighlightFuzzy text={entry.nom} needles={surnameNeedles} />
+            </LinkWhenAvailable>
+          </TextTd>
+          <TextTd rowSpan={2}>
+            <LinkWhenAvailable urls={entry.wikipedia}>
+              <HighlightFuzzy text={entry.prenom} needles={givenNameNeedles} />
+            </LinkWhenAvailable>
+          </TextTd>
           {columnEventType && (
             <td><FormattedMessage id="common.event.birth" /></td>
           )}
           <TextTd>
             <HighlightConditional isHighlighted={formData.sortBy === EVENT_TYPE_BIRTH && hasYearFilter}>
-            {entry.birthDate ? (
-              <time dateTime={entry.birthDate}><FormattedDate value={entry.birthDate} timeZone="UTC" /></time>
-            ) : null}
-          </HighlightConditional>
+              {entry.birthDate ? (
+                <time dateTime={entry.birthDate}><FormattedDate value={entry.birthDate} timeZone="UTC" /></time>
+              ) : null}
+            </HighlightConditional>
           </TextTd>
           <TextTd><HighlightSuffix text={entry.birthPlace} suffix={placeText} /></TextTd>
           {columnActCode && (
@@ -99,10 +119,10 @@ export function ResultListTable({ results, formData, disabled, withHighlights, c
             <td><FormattedMessage id="common.event.death" /></td>
           )}
           <TextTd><HighlightConditional isHighlighted={formData.sortBy === EVENT_TYPE_DEATH && hasYearFilter}>
-            {entry.deathDate ? (
-              <time dateTime={entry.deathDate}><FormattedDate value={entry.deathDate} timeZone="UTC" /></time>
-            ) : null}
-          </HighlightConditional></TextTd>
+              {entry.deathDate ? (
+                <time dateTime={entry.deathDate}><FormattedDate value={entry.deathDate} timeZone="UTC" /></time>
+              ) : null}
+            </HighlightConditional></TextTd>
           <TextTd><HighlightSuffix text={entry.deathPlace} suffix={placeText} /></TextTd>
         </tr>
       </tbody>
@@ -144,6 +164,7 @@ ResultListTable.propTypes = {
   formData: PropTypes.object.isRequired,
   disabled: PropTypes.bool,
   withHighlights: PropTypes.bool,
+  withLinks: PropTypes.bool,
   columnEventType: PropTypes.bool,
   columnActCode: PropTypes.bool,
 };
@@ -151,6 +172,7 @@ ResultListTable.propTypes = {
 ResultListTable.defaultProps = {
   disabled: false,
   withHighlights: false,
+  withLinks: false,
   columnEventType: false,
   columnActCode: false,
 };

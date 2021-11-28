@@ -65,7 +65,7 @@ export function BlockInformation({ onBackClick }) {
         <h6 className="font-weight-bold"><FormattedMessage id="info.faq.cannot_find.question" /></h6>
         <p className="text-justify">
           <ArrowRightShort className="icon mr-1" />
-          <FormattedMessage id="info.faq.cannot_find.answer" values={{ date: <FormattedDate value={DB_LAST_UPDATE} month="long" year="numeric" /> }} />
+          <FormattedMessage id="info.faq.cannot_find.answer" values={{ date: <FormattedDate value={DB_LAST_UPDATE} month="long" year="numeric" timeZone="UTC" /> }} />
         </p>
         <h6 className="font-weight-bold"><FormattedMessage id="info.faq.found_error.question" /></h6>
         <p className="text-justify">

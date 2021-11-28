@@ -80,6 +80,10 @@ export function BlockApi({ onBackClick }) {
                 gender: true,
                 nom: 'CHIRAC',
                 prenom: 'Jacques René',
+                wikipedia: {
+                  fr: 'https://fr.wikipedia.org/wiki/Jacques_Chirac',
+                  en: 'https://en.wikipedia.org/wiki/Jacques_Chirac'
+                },
               }
             ],
           }}

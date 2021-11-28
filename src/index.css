@@ -195,3 +195,7 @@ table.result-table > tbody > tr > td {
 .cursor-pointer{
     cursor: pointer;
 }
+
+tbody:hover .table-row-link {
+    text-decoration: underline;
+}
