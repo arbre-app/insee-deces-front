@@ -48,6 +48,13 @@ export function BlockApi({ onBackClick }) {
         <p className="text-justify">
           <FormattedMessage id="api.technical_details.description.authentication" />
         </p>
+        <p className="text-justify">
+          <FormattedMessage id="api.technical_details.url.wikipedia_url_encoding">
+            {url => (
+              <FormattedMessage id="api.technical_details.description.url_encoding" values={{ a: encoding => <a href={url} target="_blank" rel="noreferrer">{encoding}</a> }} />
+            )}
+          </FormattedMessage>
+        </p>
         <h4><FormattedMessage id="api.quota.title" /></h4>
         <p className="text-justify">
           <FormattedMessage id="api.quota.description" values={{ limit: <strong><FormattedNumber value={3600} /></strong>, useragent: <code>User-Agent</code> }} />
