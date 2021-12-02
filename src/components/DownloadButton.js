@@ -32,7 +32,7 @@ function SelectionInput({ name, value, values, label, renderValue, setValue }) {
         {label}
       </Col>
       <Col xs={6} sm={7}>
-        <Dropdown as="span">
+        <Dropdown as="span" onClick={(e) => e.stopPropagation()}>
           <Dropdown.Toggle variant="light" id="dropdown-basic">
             {renderValue(values[value])}
           </Dropdown.Toggle>

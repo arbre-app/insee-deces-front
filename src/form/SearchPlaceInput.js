@@ -75,7 +75,7 @@ function SearchPlaceField({ value, onChange, disabled }) {
   }, [open]);
 
   return (
-    <Dropdown onToggle={handleToggle}>
+    <Dropdown onToggle={handleToggle} onClick={(e) => e.stopPropagation()}> {/* See https://github.com/react-bootstrap/react-bootstrap/issues/5409 */}
       <Dropdown.Toggle variant="light" disabled={disabled} id="place-dropdown" className="text-left btn-block text-nowrap overflow-hidden">
         {value.length > 0 ? value[0].fullname : (
           <FormattedMessage id="form.place" />

@@ -26,7 +26,8 @@ export function PermalinkButton({ disabled, isTabStats, ...props }) {
         </Popover>
       }
     >
-      <Button variant="info" disabled={disabled} {...props}>
+      {/* The workaround needs to be applied to the button, rather than the `OverlayTrigger` */}
+      <Button variant="info" onClick={(e) => e.stopPropagation()} disabled={disabled} {...props}>
         <PinFill className="icon" />
       </Button>
     </OverlayTrigger>

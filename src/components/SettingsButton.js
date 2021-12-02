@@ -39,7 +39,16 @@ export function SettingsButton({ ...props }) {
   const isSettingsUntouched = deepEqual(state, defaultState);
 
   return (
-    <DropdownButton variant="secondary" id="dropdown-advanced-configuration" title={<GearFill className="icon" />} as="span" show={isShown} onToggle={(isOpen, event, metadata) => setIsShown(isOpen ? true : metadata.source === 'select')} {...props}>
+    <DropdownButton
+      variant="secondary"
+      id="dropdown-advanced-configuration"
+      title={<GearFill className="icon" />}
+      as="span"
+      show={isShown}
+      onToggle={(isOpen, event, metadata) => setIsShown(isOpen ? true : metadata.source === 'select')}
+      onClick={(e) => e.stopPropagation()}
+      {...props}
+    >
       <Dropdown.Header><FormattedMessage id="settings.search" /></Dropdown.Header>
       <Dropdown.Item onClick={() => setMatchesHighlightingDispatch(!matchesHighlighting)}>
         <CheckboxIcon isEnabled={matchesHighlighting} />

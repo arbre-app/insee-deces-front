@@ -9,7 +9,7 @@ export function ResultsPerPageSelect({ values, disabled, ...props }) {
   const setCurrentPageDispatch = currentPage => dispatchForm(setResultsPerPage(currentPage));
   const value = form.resultsPerPage;
   return (
-    <Dropdown className="results-per-page-select" {...props}>
+    <Dropdown className="results-per-page-select" onClick={(e) => e.stopPropagation()} {...props}>
       <Dropdown.Toggle variant="light" id="dropdown-basic" disabled={disabled}>
         {value}
       </Dropdown.Toggle>
