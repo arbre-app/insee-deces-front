@@ -51,7 +51,7 @@ export function BlockApi({ onBackClick }) {
         <p className="text-justify">
           <FormattedMessage id="api.technical_details.url.wikipedia_url_encoding">
             {url => (
-              <FormattedMessage id="api.technical_details.description.url_encoding" values={{ a: encoding => <a href={url} target="_blank" rel="noreferrer">{encoding}</a> }} />
+              <FormattedMessage id="api.technical_details.description.url_encoding" values={{ a: encoding => <a href={url} target="_blank" rel="noreferrer">{encoding}</a>, maximum_length: <FormattedNumber value={2048} /> }} />
             )}
           </FormattedMessage>
         </p>
