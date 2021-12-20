@@ -6,13 +6,13 @@ import { BlockGedcomTab } from './BlockGedcomTab';
 const TAB_FORM = 'search-form';
 const TAB_GEDCOM = 'search-gedcom';
 
-export function BlockSearchModeTabs({ isTabForm, setTabForm, setTabStats, permalinkData, setPermalinkData }) {
+export function BlockSearchModeTabs({ isTabForm, setTabForm, setTabStats, permalinkData, setPermalinkData, focused }) {
   return (
     <Tabs activeKey={isTabForm ? TAB_FORM : TAB_GEDCOM} onSelect={k => setTabForm(k === TAB_FORM)} className="tabs" transition={false}>
       <Tab eventKey={TAB_FORM} title="Recherche">
-        <BlockForm initialPartialData={permalinkData !== null ? permalinkData[0] : null} setInitialPartialData={() => setPermalinkData(null)} onClear={() => setTabStats(false)} />
+        <BlockForm initialPartialData={permalinkData !== null ? permalinkData[0] : null} setInitialPartialData={() => setPermalinkData(null)} onClear={() => setTabStats(false)} focused={focused} />
       </Tab>
-      <Tab eventKey={TAB_GEDCOM} title="Gedcom">
+      <Tab eventKey={TAB_GEDCOM} title="Correspondance Gedcom">
         <BlockGedcomTab />
       </Tab>
     </Tabs>
@@ -25,6 +25,7 @@ BlockSearchModeTabs.propTypes = {
   setTabStats: PropTypes.func.isRequired,
   permalinkData: PropTypes.object,
   setPermalinkData: PropTypes.func.isRequired,
+  focused: PropTypes.bool.isRequired,
 };
 
 BlockSearchModeTabs.defaultProps = {

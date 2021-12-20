@@ -59,7 +59,7 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
 
   const withAddedYears = (date, years) => {
     const newDate = new Date(date.getTime());
-    newDate.setFullYear(newDate.getFullYear() + years);
+    newDate.setUTCFullYear(newDate.getFullYear() + years);
     return newDate;
   };
   const compareDates = (date1, date2) => {
@@ -83,6 +83,7 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
       }
     }
   };
+  const isValidDate = d => d instanceof Date && !isNaN(d);
 
   const intervals = Object.fromEntries(topological.map(id => {
     const individual = gedcom.getIndividualRecord(id);
@@ -93,15 +94,15 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
         if(date.day != null) {
           // Nothing to do
         } else if(date.month != null) {
-          jsDate.setDate(1);
-          jsDate.setMonth(jsDate.getMonth() + 1);
-          jsDate.setDate(-1); // Remove one day
+          jsDate.setUTCDate(1);
+          jsDate.setUTCMonth(jsDate.getMonth() + 1);
+          jsDate.setUTCDate(-1); // Remove one day
           // FIXME this won't work correctly for other calendars!
         } else {
-          jsDate.setDate(1);
-          jsDate.setMonth(0); // (0 for January)
-          jsDate.setFullYear(jsDate.getFullYear() + 1);
-          jsDate.setDate(-1); // Remove one day
+          jsDate.setUTCDate(1);
+          jsDate.setUTCMonth(0); // (0 for January)
+          jsDate.setUTCFullYear(jsDate.getFullYear() + 1);
+          jsDate.setUTCDate(-1); // Remove one day
           // FIXME similar problem
         }
       }
@@ -122,8 +123,10 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
             before = withAddedYears(toJsDateUpperBound(date.date, new Date(dt.getTime())), cycleOfLifeParameters.datePlusMinus);
           }
         } else { // Interpreted (text) or normal
-          after = dt;
-          before = toJsDateUpperBound(date.date, new Date(date.date, dt.getTime())); // Clone to avoid issues further on
+          if(dt !== null) {
+            after = dt;
+            before = toJsDateUpperBound(date.date, new Date(dt.getTime())); // Clone to avoid issues further on
+          }
         }
       } else if(date.isDateRange) {
         if(date.dateAfter != null) {
@@ -270,7 +273,7 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
       // TODO case equal ids
 
       if(updated !== null) {
-        [updated].forEach(v => { // TODO no need of `forEach`
+        [x, y].forEach(v => { // TODO no need of `forEach`
           const meta = getMetaData(v);
           const { interval } = meta;
           if(interval[0] !== null && interval[1] !== null && compareDates(interval[0], interval[1]) > 0) {
