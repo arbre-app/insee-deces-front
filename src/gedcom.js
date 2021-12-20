@@ -57,15 +57,37 @@ export const cycleOfLifeParameters = {
 export const computeIndividualBirthDeathIntervals = gedcom => {
   const topological = topologicalSortIndividuals(gedcom); // (biological) children first, parents after
 
+  const withAddedYears = (date, years) => {
+    const newDate = new Date(date.getTime());
+    newDate.setFullYear(newDate.getFullYear() + years);
+    return newDate;
+  };
+  const compareDates = (date1, date2) => {
+    if(date1.getFullYear() < date2.getFullYear()) {
+      return -1;
+    } else if(date1.getFullYear() > date2.getFullYear()) {
+      return 1;
+    } else {
+      if(date1.getMonth() < date2.getMonth()) {
+        return -1;
+      } else if(date1.getMonth() > date2.getMonth()) {
+        return 1;
+      } else {
+        if(date1.getDate() < date2.getDate()) {
+          return -1;
+        } else if(date1.getDate() > date2.getDate()) {
+          return 1;
+        } else {
+          return 0;
+        }
+      }
+    }
+  };
+
   const intervals = Object.fromEntries(topological.map(id => {
     const individual = gedcom.getIndividualRecord(id);
     const getDatesForTags = tags => individual.get(tags).as(SelectionIndividualEvent).getDate().valueAsDate().filter(d => d !== null)[0];
     const birthDate = getDatesForTags([Tag.Birth, Tag.Baptism]), deathDate = getDatesForTags([Tag.Death, Tag.Cremation, Tag.Burial]);
-    const withAddedYears = (date, years) => {
-      const newDate = new Date(date.getTime());
-      newDate.setFullYear(newDate.getFullYear() + years);
-      return newDate;
-    };
     const toJsDateUpperBound = (date, jsDate) => {
       if(jsDate !== null) { // This is the hard case
         if(date.day != null) {
@@ -123,28 +145,6 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
     };
     const birthDateInterval = dateToInterval(birthDate), deathDateInterval = dateToInterval(deathDate);
 
-    const compareDates = (date1, date2) => {
-      if(date1.getFullYear() < date2.getFullYear()) {
-        return -1;
-      } else if(date1.getFullYear() > date2.getFullYear()) {
-        return 1;
-      } else {
-        if(date1.getMonth() < date2.getMonth()) {
-          return -1;
-        } else if(date1.getMonth() > date2.getMonth()) {
-          return 1;
-        } else {
-          if(date1.getDate() < date2.getDate()) {
-            return -1;
-          } else if(date1.getDate() > date2.getDate()) {
-            return 1;
-          } else {
-            return 0;
-          }
-        }
-      }
-    };
-
     return [id, { birth: birthDateInterval, death: deathDateInterval }];
   }));
 
@@ -175,7 +175,7 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
       { x: { id, event: EVENT_DEATH, bound: BOUND_BEFORE }, y: { id, event: EVENT_BIRTH, bound: BOUND_BEFORE }, c: cycleOfLifeParameters.maxAge }
     ];
     // Child/parents relations
-    const childParentsConstraints = parents.map(({ parentId, gender }) => {
+    const childParentsConstraints = parents.flatMap(({ parentId, gender }) => {
       const valueFor = (fatherValue, motherValue) => {
         return gender === ValueSex.Male ? fatherValue
           : gender === ValueSex.Female ? motherValue
@@ -199,5 +199,114 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
     ].flat();
   });
 
-  return intervals;
+  // The constraint propagation algorithm works as follows:
+  // - initially no variable is frozen
+  // - repeat these steps until convergence, or timeout
+
+  // The constraint propagation algorithm devised here works in two phases:
+  // We start by propagating the known values to the unknowns (nulls), in a BFS fashion and according to the constraints
+  // Once all the values have been propagated, any remaining null will stay that way in the final result; so we may completely ignore them
+  // The second phase consists of creating a feasible solution
+  // The last phase will attempt to optimize the variables assignment
+
+  // Each variable is now assigned a meta interval
+  // (the term "meta intervals" is used to distinguish them with the dates intervals)
+  // The computed meta intervals will allow us to find a feasible solution to the system, and later optimize it
+
+  const metaData = Object.fromEntries(topological.map(id => {
+    const generateEvent = ([after, before]) => {
+      const generateMetaInterval = value => ({ interval: [value, value], index: [], marked: true });
+      return { after: generateMetaInterval(after), before: generateMetaInterval(before) };
+    };
+    const interval = intervals[id];
+    return [id, { birth: generateEvent(interval.birth), death: generateEvent(interval.death) }];
+  }));
+
+  const getMetaData = ({ id, event, bound }) => {
+    const interval = metaData[id];
+    const withEvent = event === EVENT_BIRTH ? interval.birth : interval.death;
+    return bound === BOUND_AFTER ? withEvent.after : withEvent.before;
+  };
+
+  const queue = topological.flatMap(id => [EVENT_BIRTH, EVENT_DEATH].flatMap(event => [BOUND_AFTER, BOUND_BEFORE].map(bound => ({ id, event, bound }))));
+
+  const isSameIds = ({ id: id1, event: event1, bound: bound1 }, { id: id2, event: event2, bound: bound2 }) => id1 === id2 && event1 === event2 && bound1 === bound2;
+
+  constraints.forEach(constraint => {
+    const { x, y } = constraint;
+    [x, y].forEach(idVector => {
+      const { index } = getMetaData(idVector);
+      if(!index.some(other => isSameIds(other, idVector))) { // Caution, might be slow
+        index.push(constraint);
+      }
+    });
+  });
+
+  let inconsistent = false;
+  let i = 0;
+  const maxIterations = 10000; // TODO
+  while(queue.length > 0 && i < maxIterations && !inconsistent) {
+    const variable = queue.pop();
+
+    const variableMetaData = getMetaData(variable);
+    variableMetaData.marked = false;
+
+    variableMetaData.index.forEach(({ x, y, c }) => { // x - y <= c
+      const intervalX = getMetaData(x).interval, intervalY = getMetaData(y).interval;
+      let updated = null;
+      if(intervalX[0] !== null) { // y >= x - c
+        const xcDate = withAddedYears(intervalX[0], -c);
+        if(intervalY[0] === null || compareDates(intervalY[0], xcDate) < 0) {
+          intervalY[0] = xcDate;
+          updated = y;
+        }
+      } else if(intervalY[1] !== null) { // x <= y + c
+        const ycDate = withAddedYears(intervalY[1], c);
+        if(intervalX[1] === null || compareDates(intervalX[1], ycDate) > 0) {
+          intervalX[1] = ycDate;
+          updated = x;
+        }
+      }
+      // TODO case equal ids
+
+      if(updated !== null) {
+        [updated].forEach(v => { // TODO no need of `forEach`
+          const meta = getMetaData(v);
+          const { interval } = meta;
+          if(interval[0] !== null && interval[1] !== null && compareDates(interval[0], interval[1]) > 0) {
+            // Inconsistent
+            inconsistent = true;
+          }
+          if(!meta.marked) {
+            queue.push(v);
+            meta.marked = true;
+          }
+        });
+      }
+    });
+
+    i++;
+  }
+
+  const hasFinishedGracefully = !queue.length && !inconsistent;
+
+  if(!hasFinishedGracefully) {
+    throw new Error('X');
+  }
+
+  const result = Object.fromEntries(topological.map(id => {
+    const getEvent = event => {
+      const getBound = bound => {
+        const meta = getMetaData({ id, event, bound });
+        const metaBound = bound === BOUND_AFTER ? 0 : 1;
+        return meta.interval[metaBound];
+      };
+      return [getBound(BOUND_AFTER), getBound(BOUND_BEFORE)];
+    };
+    return [id, { birth: getEvent(EVENT_BIRTH), death: getEvent(EVENT_DEATH) }];
+  }));
+
+  console.log(result);
+
+  return result;
 };

@@ -12,28 +12,32 @@ export const loadGedcomFile = file => async (dispatch, getState) => {
   });
 
   const reader = new FileReader();
-  reader.onload = e => {
-    const buffer = e.target.result;
+  reader.onload = event => {
+    const buffer = event.target.result;
 
     let gedcom;
     try {
       gedcom = readGedcom(buffer);
     } catch(e) { // Can't read file
+      console.log(e);
       dispatch({
         type: ERROR,
         error: e,
       });
+      //event.target.value = null;
       return;
     }
 
     let intervals;
     try {
       intervals = computeIndividualBirthDeathIntervals(gedcom);
-    } catch(e) { // Cycle
+    } catch(e) { // Problem with static analysis
+      console.log(e);
       dispatch({
         type: ERROR,
         error: e,
       });
+      //event.target.value = null;
       return;
     }
 
