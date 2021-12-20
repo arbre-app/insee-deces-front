@@ -52,9 +52,12 @@ export const cycleOfLifeParameters = {
   maxMotherAge: 75,
   maxPregnancyDuration: 2,
   datePlusMinus: 3,
+  maxYear: new Date().getFullYear(), // (beware, this value will change over time -- don't store it)
 };
 
 export const computeIndividualBirthDeathIntervals = gedcom => {
+  const maxDate = new Date(Date.UTC(cycleOfLifeParameters.maxYear, 12 - 1, 31));
+
   const topological = topologicalSortIndividuals(gedcom); // (biological) children first, parents after
 
   const withAddedYears = (date, years) => {
@@ -194,6 +197,7 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
       ];
     });
 
+    // Note that there is an additional constraint in the form `x <= maxYear` that is handled separately (below)
     return [
       eventIsIntervalConstraints,
       birthBeforeDeathConstraints,
@@ -254,26 +258,37 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
     const variableMetaData = getMetaData(variable);
     variableMetaData.marked = false;
 
+    // That person is know to have been alive, so their birth cannot occur in the future
+    if(variable.event === EVENT_BIRTH && variable.bound === BOUND_BEFORE) {
+      if(variableMetaData.interval[1] === null || compareDates(variableMetaData.interval[1], maxDate) > 0) {
+        variableMetaData.interval[1] = maxDate;
+        // Invariant: `!marked`
+        variableMetaData.marked = true;
+        queue.push(variable);
+      }
+    }
+
     variableMetaData.index.forEach(({ x, y, c }) => { // x - y <= c
       const intervalX = getMetaData(x).interval, intervalY = getMetaData(y).interval;
-      let updated = null;
+      let updated = false;
       if(intervalX[0] !== null) { // y >= x - c
         const xcDate = withAddedYears(intervalX[0], -c);
         if(intervalY[0] === null || compareDates(intervalY[0], xcDate) < 0) {
           intervalY[0] = xcDate;
-          updated = y;
+          updated = true;
         }
-      } else if(intervalY[1] !== null) { // x <= y + c
+      }
+      if(intervalY[1] !== null) { // x <= y + c
         const ycDate = withAddedYears(intervalY[1], c);
         if(intervalX[1] === null || compareDates(intervalX[1], ycDate) > 0) {
           intervalX[1] = ycDate;
-          updated = x;
+          updated = true;
         }
       }
       // TODO case equal ids
 
-      if(updated !== null) {
-        [x, y].forEach(v => { // TODO no need of `forEach`
+      if(updated) {
+        [x, y].forEach(v => {
           const meta = getMetaData(v);
           const { interval } = meta;
           if(interval[0] !== null && interval[1] !== null && compareDates(interval[0], interval[1]) > 0) {
@@ -291,6 +306,8 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
     i++;
   }
 
+  console.log(getMetaData({ id: '@I0000@', event: EVENT_DEATH, bound: BOUND_BEFORE }));
+
   const hasFinishedGracefully = !queue.length && !inconsistent;
 
   if(!hasFinishedGracefully) {
@@ -302,6 +319,9 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
       const getBound = bound => {
         const meta = getMetaData({ id, event, bound });
         const metaBound = bound === BOUND_AFTER ? 0 : 1;
+        // v-- this is probably wrong
+        //if(meta.interval[metaBound] !== null)
+        //  meta.interval[1 - metaBound] = meta.interval[metaBound];
         return meta.interval[metaBound];
       };
       return [getBound(BOUND_AFTER), getBound(BOUND_BEFORE)];
