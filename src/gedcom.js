@@ -177,9 +177,9 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
       { x: { id, event: EVENT_BIRTH, bound }, y: { id, event: EVENT_DEATH, bound }, c: 0 }
     ));
     // An individual cannot live older than a certain age
-    const maximumAgeConstraints = [
-      { x: { id, event: EVENT_DEATH, bound: BOUND_BEFORE }, y: { id, event: EVENT_BIRTH, bound: BOUND_BEFORE }, c: cycleOfLifeParameters.maxAge }
-    ];
+    const maximumAgeConstraints = [BOUND_BEFORE, BOUND_AFTER].map(bound => (
+      { x: { id, event: EVENT_DEATH, bound }, y: { id, event: EVENT_BIRTH, bound }, c: cycleOfLifeParameters.maxAge }
+    ));
     // Child/parents relations
     const childParentsConstraints = parents.flatMap(({ parentId, gender }) => {
       const valueFor = (fatherValue, motherValue) => {
@@ -251,7 +251,7 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
 
   let inconsistent = false;
   let i = 0;
-  const maxIterations = 10000; // TODO
+  const maxIterations = 1000000; // TODO
   while(queue.length > 0 && i < maxIterations && !inconsistent) {
     const variable = queue.pop();
 
@@ -306,7 +306,7 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
     i++;
   }
 
-  console.log(getMetaData({ id: '@I0000@', event: EVENT_DEATH, bound: BOUND_BEFORE }));
+  //console.log(getMetaData({ id: '@I0000@', event: EVENT_DEATH, bound: BOUND_BEFORE }));
 
   const hasFinishedGracefully = !queue.length && !inconsistent;
 
