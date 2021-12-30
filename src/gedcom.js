@@ -291,11 +291,8 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
           updated = x;
         }
       } else if(x.bound === BOUND_BEFORE && y.bound === BOUND_BEFORE) {
-        if(metaX.assignment !== null) {
-          if(metaY.assignment === null) { // y := x - c
-            metaY.assignment = withAddedYears(metaX.assignment, -c);
-            updated = y;
-          } else if(isInequalityViolated) { // x := y + c
+        if(metaY.assignment !== null) {
+          if(metaX.assignment === null || isInequalityViolated) { // x := y + c
             metaX.assignment = withAddedYears(metaY.assignment, c);
             updated = x;
           }
