@@ -222,7 +222,7 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
 
   const metaData = Object.fromEntries(topological.map(id => {
     const generateEvent = ([after, before]) => {
-      const generateMetadata = value => ({ assignment: value, index: [], marked: true });
+      const generateMetadata = value => ({ assignment: value, index: [], marked: true, inconsistent: false });
       return { after: generateMetadata(after), before: generateMetadata(before) };
     };
     const interval = intervals[id];
@@ -250,18 +250,49 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
   });
 
   let inconsistent = false;
+
+  const markInconsistency = variable => {
+    inconsistent = true;
+    getMetaData(variable).inconsistent = true;
+    let bfs = [variable];
+    while(bfs.length > 0) {
+      const next = [];
+      bfs.forEach(variable => {
+        const meta = getMetaData(variable);
+        // Restore original data
+        const intervalData = intervals[variable.id];
+        const interval = variable.event === EVENT_BIRTH ? intervalData.birth : intervalData.death;
+        meta.assignment = interval[variable.bound === BOUND_AFTER ? 0 : 1];
+
+        meta.index.forEach(({ x, y }) => {
+          [x, y].forEach(neighbour => {
+            if(!neighbour.inconsistent) {
+              neighbour.inconsistent = true;
+              next.push(neighbour);
+            }
+          });
+        });
+      });
+      bfs = next;
+    }
+  };
+
   let i = 0;
   const maxIterations = 1000000; // TODO
-  while(queue.length > 0 && i < maxIterations && !inconsistent) {
+  while(queue.length > 0 && i < maxIterations) {
     const variable = queue.pop();
 
     const variableMetaData = getMetaData(variable);
     variableMetaData.marked = false;
 
+    if(variableMetaData.inconsistent) {
+      continue;
+    }
+
     // That person is known to have been alive, so their birth cannot occur in the future
     if(variable.event === EVENT_BIRTH) {
       if(variable.bound === BOUND_AFTER && variableMetaData.assignment !== null && compareDates(variableMetaData.assignment, maxDate) > 0) {
-        inconsistent = true;
+        markInconsistency(variable);
       } else if(variable.bound === BOUND_BEFORE && (variableMetaData.assignment === null || compareDates(variableMetaData.assignment, maxDate) > 0)) {
         variableMetaData.assignment = maxDate;
         // Invariant: `!marked`
@@ -272,65 +303,42 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
 
     variableMetaData.index.forEach(({ x, y, c }) => { // x - y <= c
       const metaX = getMetaData(x), metaY = getMetaData(y);
-      const isInequalityViolated = metaX.assignment !== null && metaY.assignment !== null && compareDates(metaX.assignment, withAddedYears(metaY.assignment, c)) > 0;
-      let updated = null;
-      if(isSameIds(x, y) && c < 0) { // Edge case: z - z <= c  <=>  c >= 0
-        inconsistent = true;
-      } else if(x.bound === BOUND_AFTER && y.bound === BOUND_BEFORE) {
-        if(metaX.assignment !== null && metaY.assignment !== null && isInequalityViolated) { // General inconsistency
-          inconsistent = true;
-        }
-      } else if(x.bound === BOUND_AFTER && y.bound === BOUND_AFTER) {
-        if(metaX.assignment !== null && (metaY.assignment === null || isInequalityViolated)) { // y := x - c
-          metaY.assignment = withAddedYears(metaX.assignment, -c);
-          updated = y;
-        }
-      } else if(x.bound === BOUND_BEFORE && y.bound === BOUND_AFTER) {
-        if(isInequalityViolated) { // x := y + c
-          metaX.assignment = withAddedYears(metaY.assignment, c);
-          updated = x;
-        }
-      } else if(x.bound === BOUND_BEFORE && y.bound === BOUND_BEFORE) {
-        if(metaY.assignment !== null) {
-          if(metaX.assignment === null || isInequalityViolated) { // x := y + c
-            metaX.assignment = withAddedYears(metaY.assignment, c);
-            updated = x;
+      if(!metaX.inconsistent && !metaY.inconsistent) {
+        const isInequalityViolated = metaX.assignment !== null && metaY.assignment !== null && compareDates(metaX.assignment, withAddedYears(metaY.assignment, c)) > 0;
+        let updated = null;
+        if(isSameIds(x, y) && c < 0) { // Edge case: z - z <= c  <=>  c >= 0
+          markInconsistency(x);
+        } else if(x.bound === BOUND_AFTER && y.bound === BOUND_BEFORE) {
+          if(metaX.assignment !== null && metaY.assignment !== null && isInequalityViolated) { // General inconsistency
+            markInconsistency(x);
           }
-        }
-      }
-
-      if(updated !== null) {
-        const meta = getMetaData(updated);
-        if(!meta.marked) {
-          queue.push(updated);
-          meta.marked = true;
-        }
-      }
-
-      // If inequality is not satisfied
-      /*
-      if(x.bound === y.bound) { // An update might take place
-          if(x.bound === BOUND_AFTER && metaX.assignment !== null) { // Update y: y >= x - c
+        } else if(x.bound === BOUND_AFTER && y.bound === BOUND_AFTER) {
+          if(metaX.assignment !== null && (metaY.assignment === null || isInequalityViolated)) { // y := x - c
             metaY.assignment = withAddedYears(metaX.assignment, -c);
-            updated = x;
-          } else if(x.bound === BOUND_BEFORE) { // Update x: x <= y + c
-            // In any case, y != null
+            updated = y;
+          }
+        } else if(x.bound === BOUND_BEFORE && y.bound === BOUND_AFTER) {
+          if(isInequalityViolated) { // x := y + c
             metaX.assignment = withAddedYears(metaY.assignment, c);
             updated = x;
           }
-
-          if(updated !== null) {
-            const meta = getMetaData(updated);
-            if(!meta.marked) {
-              queue.push(updated);
-              meta.marked = true;
+        } else if(x.bound === BOUND_BEFORE && y.bound === BOUND_BEFORE) {
+          if(metaY.assignment !== null) {
+            if(metaX.assignment === null || isInequalityViolated) { // x := y + c
+              metaX.assignment = withAddedYears(metaY.assignment, c);
+              updated = x;
             }
           }
-        } else {
-          inconsistent = true;
         }
-       */
 
+        if(updated !== null) {
+          const meta = getMetaData(updated);
+          if(!meta.marked) {
+            queue.push(updated);
+            meta.marked = true;
+          }
+        }
+      }
 
       // Else, nothing to do
     });
@@ -338,25 +346,16 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
     i++;
   }
 
-  //console.log(getMetaData({ id: '@I0000@', event: EVENT_DEATH, bound: BOUND_BEFORE }));
-
   const hasFinishedGracefully = !queue.length && !inconsistent;
 
   if(!hasFinishedGracefully) {
-    throw new Error(inconsistent ? 'Inconsistent' : 'Did not converge');
+    console.log(inconsistent ? 'Inconsistent' : 'Did not converge');
   }
 
   const result = Object.fromEntries(topological.map(id => {
     const getEvent = event => {
-      const getBound = bound => {
-        const meta = getMetaData({ id, event, bound });
-        //const metaBound = bound === BOUND_AFTER ? 0 : 1;
-        // v-- this is probably wrong
-        //if(meta.interval[metaBound] !== null)
-        //  meta.interval[1 - metaBound] = meta.interval[metaBound];
-        return meta.assignment;
-      };
-      return [getBound(BOUND_AFTER), getBound(BOUND_BEFORE)];
+      const metaAfter = getMetaData({ id, event, bound: BOUND_AFTER }), metaBefore = getMetaData({ id, event, bound: BOUND_BEFORE });
+      return [metaAfter.assignment, metaBefore.assignment, metaAfter.inconsistent || metaBefore.inconsistent];
     };
     return [id, { birth: getEvent(EVENT_BIRTH), death: getEvent(EVENT_DEATH) }];
   }));
