@@ -187,14 +187,14 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
           : gender === ValueSex.Female ? motherValue
             : Math.max(fatherValue, motherValue); // We take the maximum between the two, that way we are guaranteed to satisfy both branches: a <= max(a, b) and b <= max(a, b)
       };
-      return [
+      return [BOUND_BEFORE, BOUND_AFTER].flatMap(bound => [
         // An individual cannot be a father until a certain age
-        { x: { id: parentId, event: EVENT_BIRTH, bound: BOUND_AFTER }, y: { id, event: EVENT_BIRTH, bound: BOUND_AFTER }, c: valueFor(-cycleOfLifeParameters.minFatherAge, -cycleOfLifeParameters.minMotherAge) },
+        { x: { id: parentId, event: EVENT_BIRTH, bound }, y: { id, event: EVENT_BIRTH, bound }, c: valueFor(-cycleOfLifeParameters.minFatherAge, -cycleOfLifeParameters.minMotherAge) },
         // An individual cannot be a father of new children after a certain age
-        { x: { id, event: EVENT_BIRTH, bound: BOUND_BEFORE }, y: { id: parentId, event: EVENT_DEATH, bound: BOUND_BEFORE }, c: valueFor(cycleOfLifeParameters.maxFatherAge, cycleOfLifeParameters.maxMotherAge) },
+        { x: { id, event: EVENT_BIRTH, bound }, y: { id: parentId, event: EVENT_DEATH, bound }, c: valueFor(cycleOfLifeParameters.maxFatherAge, cycleOfLifeParameters.maxMotherAge) },
         // A man can die before they become a father of a child, a woman can't
-        { x: { id, event: EVENT_BIRTH, bound: BOUND_BEFORE }, y: { id: parentId, event: EVENT_DEATH, bound: BOUND_BEFORE }, c: valueFor(cycleOfLifeParameters.maxPregnancyDuration, 0) }, // These arguments are in the correct order
-      ];
+        { x: { id, event: EVENT_BIRTH, bound }, y: { id: parentId, event: EVENT_DEATH, bound }, c: valueFor(cycleOfLifeParameters.maxPregnancyDuration, 0) }, // These arguments are in the correct order
+      ]);
     });
 
     // Note that there is an additional constraint in the form `x <= maxYear` that is handled separately (below)
@@ -222,8 +222,8 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
 
   const metaData = Object.fromEntries(topological.map(id => {
     const generateEvent = ([after, before]) => {
-      const generateMetaInterval = value => ({ interval: [value, value], index: [], marked: true });
-      return { after: generateMetaInterval(after), before: generateMetaInterval(before) };
+      const generateMetadata = value => ({ assignment: value, index: [], marked: true });
+      return { after: generateMetadata(after), before: generateMetadata(before) };
     };
     const interval = intervals[id];
     return [id, { birth: generateEvent(interval.birth), death: generateEvent(interval.death) }];
@@ -258,10 +258,12 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
     const variableMetaData = getMetaData(variable);
     variableMetaData.marked = false;
 
-    // That person is know to have been alive, so their birth cannot occur in the future
-    if(variable.event === EVENT_BIRTH && variable.bound === BOUND_BEFORE) {
-      if(variableMetaData.interval[1] === null || compareDates(variableMetaData.interval[1], maxDate) > 0) {
-        variableMetaData.interval[1] = maxDate;
+    // That person is known to have been alive, so their birth cannot occur in the future
+    if(variable.event === EVENT_BIRTH) {
+      if(variable.bound === BOUND_AFTER && variableMetaData.assignment !== null && compareDates(variableMetaData.assignment, maxDate) > 0) {
+        inconsistent = true;
+      } else if(variable.bound === BOUND_BEFORE && (variableMetaData.assignment === null || compareDates(variableMetaData.assignment, maxDate) > 0)) {
+        variableMetaData.assignment = maxDate;
         // Invariant: `!marked`
         variableMetaData.marked = true;
         queue.push(variable);
@@ -269,38 +271,71 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
     }
 
     variableMetaData.index.forEach(({ x, y, c }) => { // x - y <= c
-      const intervalX = getMetaData(x).interval, intervalY = getMetaData(y).interval;
-      let updated = false;
-      if(intervalX[0] !== null) { // y >= x - c
-        const xcDate = withAddedYears(intervalX[0], -c);
-        if(intervalY[0] === null || compareDates(intervalY[0], xcDate) < 0) {
-          intervalY[0] = xcDate;
-          updated = true;
+      const metaX = getMetaData(x), metaY = getMetaData(y);
+      const isInequalityViolated = metaX.assignment !== null && metaY.assignment !== null && compareDates(metaX.assignment, withAddedYears(metaY.assignment, c)) > 0;
+      let updated = null;
+      if(isSameIds(x, y) && c < 0) { // Edge case: z - z <= c  <=>  c >= 0
+        inconsistent = true;
+      } else if(x.bound === BOUND_AFTER && y.bound === BOUND_BEFORE) {
+        if(metaX.assignment !== null && metaY.assignment !== null && isInequalityViolated) { // General inconsistency
+          inconsistent = true;
+        }
+      } else if(x.bound === BOUND_AFTER && y.bound === BOUND_AFTER) {
+        if(metaX.assignment !== null && (metaY.assignment === null || isInequalityViolated)) { // y := x - c
+          metaY.assignment = withAddedYears(metaX.assignment, -c);
+          updated = y;
+        }
+      } else if(x.bound === BOUND_BEFORE && y.bound === BOUND_AFTER) {
+        if(isInequalityViolated) { // x := y + c
+          metaX.assignment = withAddedYears(metaY.assignment, c);
+          updated = x;
+        }
+      } else if(x.bound === BOUND_BEFORE && y.bound === BOUND_BEFORE) {
+        if(metaX.assignment !== null) {
+          if(metaY.assignment === null) { // y := x - c
+            metaY.assignment = withAddedYears(metaX.assignment, -c);
+            updated = y;
+          } else if(isInequalityViolated) { // x := y + c
+            metaX.assignment = withAddedYears(metaY.assignment, c);
+            updated = x;
+          }
         }
       }
-      if(intervalY[1] !== null) { // x <= y + c
-        const ycDate = withAddedYears(intervalY[1], c);
-        if(intervalX[1] === null || compareDates(intervalX[1], ycDate) > 0) {
-          intervalX[1] = ycDate;
-          updated = true;
-        }
-      }
-      // TODO case equal ids
 
-      if(updated) {
-        [x, y].forEach(v => {
-          const meta = getMetaData(v);
-          const { interval } = meta;
-          if(interval[0] !== null && interval[1] !== null && compareDates(interval[0], interval[1]) > 0) {
-            // Inconsistent
-            inconsistent = true;
-          }
-          if(!meta.marked) {
-            queue.push(v);
-            meta.marked = true;
-          }
-        });
+      if(updated !== null) {
+        const meta = getMetaData(updated);
+        if(!meta.marked) {
+          queue.push(updated);
+          meta.marked = true;
+        }
       }
+
+      // If inequality is not satisfied
+      /*
+      if(x.bound === y.bound) { // An update might take place
+          if(x.bound === BOUND_AFTER && metaX.assignment !== null) { // Update y: y >= x - c
+            metaY.assignment = withAddedYears(metaX.assignment, -c);
+            updated = x;
+          } else if(x.bound === BOUND_BEFORE) { // Update x: x <= y + c
+            // In any case, y != null
+            metaX.assignment = withAddedYears(metaY.assignment, c);
+            updated = x;
+          }
+
+          if(updated !== null) {
+            const meta = getMetaData(updated);
+            if(!meta.marked) {
+              queue.push(updated);
+              meta.marked = true;
+            }
+          }
+        } else {
+          inconsistent = true;
+        }
+       */
+
+
+      // Else, nothing to do
     });
 
     i++;
@@ -311,18 +346,18 @@ export const computeIndividualBirthDeathIntervals = gedcom => {
   const hasFinishedGracefully = !queue.length && !inconsistent;
 
   if(!hasFinishedGracefully) {
-    throw new Error('X');
+    throw new Error(inconsistent ? 'Inconsistent' : 'Did not converge');
   }
 
   const result = Object.fromEntries(topological.map(id => {
     const getEvent = event => {
       const getBound = bound => {
         const meta = getMetaData({ id, event, bound });
-        const metaBound = bound === BOUND_AFTER ? 0 : 1;
+        //const metaBound = bound === BOUND_AFTER ? 0 : 1;
         // v-- this is probably wrong
         //if(meta.interval[metaBound] !== null)
         //  meta.interval[1 - metaBound] = meta.interval[metaBound];
-        return meta.interval[metaBound];
+        return meta.assignment;
       };
       return [getBound(BOUND_AFTER), getBound(BOUND_BEFORE)];
     };
