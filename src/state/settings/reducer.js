@@ -12,7 +12,7 @@ export const defaultState = {
     theme: THEME_LIGHT,
     matchesHighlighting: true,
     wikipediaLinks: true,
-    messageNewsVisible: true,
+    messageNewsVisible: true, // Not used anymore
     columnEventType: true,
     columnActCode: false,
   },

@@ -3,19 +3,15 @@ import { useEffect, useState } from 'react';
 import { ErrorUnavailable } from '../api';
 import { ErrorBadRequest } from '../api/errors';
 import { clearError, clearWarning, useFormContext } from '../state/form';
-import { hideNewsMessage, useSettingsContext } from '../state/settings';
 import {
   BadRequestErrorMessage,
   NetworkErrorMessage,
-  NewsMessage,
   ServiceUnavailableMessage,
   UserWarningMessage,
 } from './messages';
 
 export function DisplayMessages({ legacyUrl }) {
   const { state: { error, warnings }, dispatch: dispatchForm } = useFormContext();
-  const { state: { data: { messageNewsVisible } }, dispatch: dispatchSettings } = useSettingsContext();
-  const hideNewsMessageDispatch = () => dispatchSettings(hideNewsMessage());
   const clearWarningDispatch = () => dispatchForm(clearWarning());
   const clearErrorDispatch = () => dispatchForm(clearError());
 
@@ -24,9 +20,6 @@ export function DisplayMessages({ legacyUrl }) {
 
   return initialized && (
     <>
-      {messageNewsVisible && (
-        <NewsMessage onClose={hideNewsMessageDispatch} legacyUrl={legacyUrl} />
-      )}
       {error !== null && (
         error instanceof ErrorUnavailable ? (
           <ServiceUnavailableMessage serverMessage={error.message} onClose={clearErrorDispatch} />
